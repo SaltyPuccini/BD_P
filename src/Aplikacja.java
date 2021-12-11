@@ -51,7 +51,7 @@ public class Aplikacja extends JFrame {
     private void inicjaliacja(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(layout);
-        add(ekranLogowania, "login");
+        add(ekranLogowania, "ekranLogowania");
         add(zmienPIN, "zmienPIN");
         add(dodaniePlacowki,"dodaniePlacowki");
     }
@@ -80,7 +80,7 @@ public class Aplikacja extends JFrame {
             }
         });
 
-        layout.show(getContentPane(), "dodaniePlacowki");
+        layout.show(getContentPane(), "l");
 
         pack();
         setLocationRelativeTo(null);
