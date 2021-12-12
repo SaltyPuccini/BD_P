@@ -1,3 +1,5 @@
+package Dyrektor;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -80,19 +82,19 @@ public class DodaniePlacowki extends JPanel {
         add(wroc,uklad);
     }
 
-    public String getEtykietaMiasto() {
+    public String getMiasto() {
         return wpiszMiasto.getText();
     }
 
-    public String getEtykietaUlica() {
+    public String getUlica() {
         return wpiszUlica.getText();
     }
 
-    public String getEtykietaNumer() {
+    public String getNumer() {
         return wpiszNumer.getText();
     }
 
-    public String getEtykietaLokal() {
+    public String getLokal() {
         return wpiszLokal.getText();
     }
 

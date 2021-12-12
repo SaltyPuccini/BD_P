@@ -10,7 +10,7 @@ public class EkranRzeczoznawcy extends JPanel {
     JLabel etykietaCena = new JLabel("Cena:");
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaCena,wpiszCena);
 
-    private Object[] gatunki={"strzelanki","strategiczne"};
+    private String[] gatunki={"strzelanki","strategiczne"};
     JComboBox gatunek = new JComboBox(gatunki);
 
     Object[][] zawartosc = new Object[][]{{1, "Stellaris"}};
@@ -54,7 +54,13 @@ public class EkranRzeczoznawcy extends JPanel {
         uklad.gridx = 0;
         uklad.gridy = 0;
         add(listaEgzemplarzy, uklad);
-
-
     }
+
+    public Integer getCena(){
+        return Integer.valueOf(wpiszCena.getText());
+    }
+    public String getGatunek(){
+        return (String) gatunek.getSelectedItem();
+    }
+
 }

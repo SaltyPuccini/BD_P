@@ -5,4 +5,6 @@ public class testy {
     private JComboBox comboBox1;
 
 
+    public testy() {
+    }
 }
