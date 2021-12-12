@@ -1,10 +1,12 @@
 import javax.swing.*;
 
 public class testy {
-    private JPanel panel1;
-    private JComboBox comboBox1;
-
-
-    public testy() {
-    }
+    private JButton dodajGręButton;
+    private JButton filtrujButton;
+    private JButton wróćButton;
+    private JButton dodajEgzemplarzeButton;
+    private JTextField tytułTextField;
+    private JTextField cenaTextField;
+    private JTable table1;
+    private JTextField liczbaTextField;
 }

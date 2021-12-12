@@ -1,5 +1,3 @@
-package Dyrektor;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -7,28 +5,26 @@ import java.awt.event.ActionListener;
 public class DodaniePlacowki extends JPanel {
     private final JButton dodajPlacowke = new JButton("Dodaj Placówkę");
     private final JButton wroc = new JButton("Wróć");
-    private final JButton generujID = new JButton("Generuj ID");
+    JButton generujID = new JButton("Generuj ID");
 
 
-    private final JTextArea napis = new JTextArea(1, 10);
-    private final JTextArea ID = new JTextArea(1, 3);
-    private final JSplitPane idPlacowki = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, napis, ID);
+    JLabel napis = new JLabel("ID placówki:");
+    JTextArea ID = new JTextArea(1, 3);
+    JSplitPane idPlacowki = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, napis, ID);
 
-    private final JLabel etykietaMiasto = new JLabel("Miasto:");
-    private final JTextField wpiszMiasto = new JTextField(20);
-    private final JSplitPane miasto = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaMiasto, wpiszMiasto);
+    JLabel etykietaMiasto = new JLabel("Miasto:");
+    JLabel etykietaUlica = new JLabel("Ulica:");
+    JLabel etykietaNumer = new JLabel("Numer:");
+    JLabel etykietaLokal = new JLabel("Lokal:");
 
-    private final JLabel etykietaUlica = new JLabel("Ulica:");
-    private final JTextField wpiszUlica = new JTextField(20);
-    private final JSplitPane ulica = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaUlica, wpiszUlica);
-
-    private final JLabel etykietaNumer = new JLabel("Numer:");
-    private final JTextField wpiszNumer = new JTextField(20);
-    private final JSplitPane numer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaNumer, wpiszNumer);
-
-    private final JLabel etykietaLokal = new JLabel("Lokal:");
-    private final JTextField wpiszLokal = new JTextField(20);
-    private final JSplitPane lokal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaLokal, wpiszLokal);
+    JTextField wpiszMiasto = new JTextField(20);
+    JSplitPane miasto = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaMiasto, wpiszMiasto);
+    JTextField wpiszUlica = new JTextField(20);
+    JSplitPane ulica = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaUlica, wpiszUlica);
+    JTextField wpiszNumer = new JTextField(20);
+    JSplitPane numer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaNumer, wpiszNumer);
+    JTextField wpiszLokal = new JTextField(20);
+    JSplitPane lokal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaLokal, wpiszLokal);
 
 
     public void addActionListener(ActionListener listener) {
@@ -46,8 +42,6 @@ public class DodaniePlacowki extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         dodajPlacowke.setActionCommand("dodajPlacowke");
         wroc.setActionCommand("wroc");
-        napis.setText("ID placówki:");
-        ID.setText("");
 
         uklad.gridx=0;//
         uklad.gridy=0;
@@ -82,19 +76,19 @@ public class DodaniePlacowki extends JPanel {
         add(wroc,uklad);
     }
 
-    public String getMiasto() {
+    public String getEtykietaMiasto() {
         return wpiszMiasto.getText();
     }
 
-    public String getUlica() {
+    public String getEtykietaUlica() {
         return wpiszUlica.getText();
     }
 
-    public String getNumer() {
+    public String getEtykietaNumer() {
         return wpiszNumer.getText();
     }
 
-    public String getLokal() {
+    public String getEtykietaLokal() {
         return wpiszLokal.getText();
     }
 
