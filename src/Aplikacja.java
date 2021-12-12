@@ -22,6 +22,7 @@ public class Aplikacja extends JFrame {
     DyrektorPrzegladEgzemplarzy dyrektorPrzegladEgzemplarzy = new DyrektorPrzegladEgzemplarzy();
     DyrektorPrzegladLogow dyrektorPrzegladLogow = new DyrektorPrzegladLogow();
     InterfejsZmianyDanych interfejsZmianyDanych = new InterfejsZmianyDanych();
+    PrzegladPlacowek przegladPlacowek = new PrzegladPlacowek();
 
 
     public static void main(String[] args) {
@@ -64,6 +65,8 @@ public class Aplikacja extends JFrame {
         add(dyrektorPrzegladEgzemplarzy,"dyrektorPrzegladEgzemplarzy");
         add(dyrektorPrzegladLogow, "dyrektorPrzegladLogow");
         add(interfejsZmianyDanych, "interfejsZmianyDanych");
+        add(przegladPlacowek, "przegladPlacowek");
+
 
     }
 
@@ -178,7 +181,7 @@ public class Aplikacja extends JFrame {
             }
         });
 
-        layout.show(getContentPane(), "interfejsZmianyDanych");
+        layout.show(getContentPane(), "przegladPlacowek");
 
         pack();
         setLocationRelativeTo(null);
