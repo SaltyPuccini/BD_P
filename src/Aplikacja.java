@@ -268,15 +268,83 @@ public class Aplikacja extends JFrame {
     }
 
     void dyrektor() {
+        interfejsDyrektora.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "dyrektorPracownicy":
+                        layout.show(getContentPane(), "dodaniePracownika");
+                        break;
+                    case "dyrektorGry":
+                        layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
+                        break;
+                    case "dyrektorPlacowki":
+                        layout.show(getContentPane(), "dodaniePlacowki");
+                        break;
+                    case "dyrektorLogiSprzedazy":
+                        layout.show(getContentPane(), "dyrektorPrzegladLogow");
+                        break;
+                    case "dyrektorWyloguj":
+                        layout.show(getContentPane(), "ekranLogowania");
+                        break;
+                }
+            }
+        });
+        dyrektorPrzegladEgzemplarzy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "filtruj":
+
+                        break;
+                    case "wroc":
+                        layout.show(getContentPane(), "interfejsDyrektora");
+                        break;
+                    case "dodajGre":
+
+                        break;
+                    case "dodajEgzemplarze":
+
+                        break;
+                }
+            }
+        });
+        dyrektorPrzegladLogow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "powrot":
+                        layout.show(getContentPane(), "interfejsDyrektora");
+                        break;
+                }
+            }
+        });
         dodaniePlacowki.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String akcja = e.getActionCommand();
-                System.out.println(akcja);
-                switch (akcja) {
-                    case "dodajPlacowke":
-                        break;
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
                     case "wroc":
+                        layout.show(getContentPane(), "interfejsDyrektora");
+                        break;
+                }
+            }
+        });
+        dodaniePracownika.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "wroc":
+                        layout.show(getContentPane(), "interfejsDyrektora");
                         break;
                 }
             }
