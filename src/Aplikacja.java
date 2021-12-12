@@ -17,6 +17,7 @@ public class Aplikacja extends JFrame {
     EkranLogowania ekranLogowania = new EkranLogowania();
     ZmienPIN zmienPIN = new ZmienPIN();
     DodaniePlacowki dodaniePlacowki=new DodaniePlacowki();
+    InterfejsDyrektora interfejsDyrektora=new InterfejsDyrektora();
 
 
     public static void main(String[] args) {
@@ -54,6 +55,7 @@ public class Aplikacja extends JFrame {
         add(ekranLogowania, "ekranLogowania");
         add(zmienPIN, "zmienPIN");
         add(dodaniePlacowki,"dodaniePlacowki");
+        add(interfejsDyrektora,"interfejsDyrektora");
     }
 
     public Aplikacja() {
@@ -80,7 +82,7 @@ public class Aplikacja extends JFrame {
             }
         });
 
-        layout.show(getContentPane(), "l");
+        layout.show(getContentPane(), "interfejsDyrektora");
 
         pack();
         setLocationRelativeTo(null);
