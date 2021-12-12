@@ -1,3 +1,5 @@
+package Dyrektor;
+
 public class Placowka {
     int idPlacowki;
     String ulica;
