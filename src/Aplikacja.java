@@ -21,6 +21,12 @@ public class Aplikacja extends JFrame {
     KupnoEgzemplarza kupnoEgzemplarza = new KupnoEgzemplarza();
     EkranZamowien ekranZamowien = new EkranZamowien();
     EkranSprzedawcy ekranSprzedawcy= new EkranSprzedawcy();
+    DodaniePracownika dodaniePracownika=new DodaniePracownika();
+    InterfejsDyrektora interfejsDyrektora=new InterfejsDyrektora();
+    DyrektorPrzegladEgzemplarzy dyrektorPrzegladEgzemplarzy = new DyrektorPrzegladEgzemplarzy();
+    DyrektorPrzegladLogow dyrektorPrzegladLogow = new DyrektorPrzegladLogow();
+    InterfejsZmianyDanych interfejsZmianyDanych = new InterfejsZmianyDanych();
+    PrzegladPlacowek przegladPlacowek = new PrzegladPlacowek();
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
