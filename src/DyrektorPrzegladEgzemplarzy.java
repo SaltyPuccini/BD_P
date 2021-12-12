@@ -68,6 +68,10 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
         uklad.gridy=0;
         add(dodajGre,uklad);
 
+        uklad.gridx=3;
+        uklad.gridy=0;
+        add(dodajGre,uklad);
+
         uklad.gridx=0;
         uklad.gridy=4;
         add(scrollPane_1,uklad);

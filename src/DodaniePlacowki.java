@@ -8,7 +8,7 @@ public class DodaniePlacowki extends JPanel {
     JButton generujID = new JButton("Generuj ID");
 
 
-    JTextArea napis = new JTextArea(1, 10);
+    JLabel napis = new JLabel("ID placówki:");
     JTextArea ID = new JTextArea(1, 3);
     JSplitPane idPlacowki = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, napis, ID);
 
@@ -42,8 +42,6 @@ public class DodaniePlacowki extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         dodajPlacowke.setActionCommand("dodajPlacowke");
         wroc.setActionCommand("wroc");
-        napis.setText("ID placówki:");
-        ID.setText("");
 
         uklad.gridx=0;//
         uklad.gridy=0;
