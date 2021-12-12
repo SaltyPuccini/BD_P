@@ -5,13 +5,13 @@ import java.awt.event.ActionListener;
 
 public class EkranLogowania extends JPanel {
 
-    private final JTextField id;
-    private final JPasswordField PIN;
-    private final JButton zaloguj;
-    private final JButton wyjdz;
-    private final JButton zmienPIN;
-    private final JLabel etykietaID;
-    private final JLabel etykietaPIN;
+    private final JTextField id=new JTextField(30);
+    private final JPasswordField PIN=new JPasswordField(30);
+    private final JButton zaloguj=new JButton("Zaloguj");
+    private final JButton wyjdz=new JButton("Wyjdź");
+    private final JButton zmienPIN=new JButton("Zmień PIN");
+    private final JLabel etykietaID=new JLabel("ID:");
+    private final JLabel etykietaPIN=new JLabel("PIN:");
 
     public void addActionListener(ActionListener listener) {
         zaloguj.addActionListener(listener);
@@ -32,43 +32,36 @@ public class EkranLogowania extends JPanel {
         uklad.gridwidth = 1;
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
+        wyjdz.setActionCommand("wyjdz");
+        zaloguj.setActionCommand("zaloguj");
+        zmienPIN.setActionCommand("zmienPIN");
 
         uklad.gridx = 0;
         uklad.gridy = 0;
-        etykietaID=new JLabel("ID:");
         add(etykietaID, uklad);
 
         uklad.gridx = 1;
         uklad.gridy = 0;
-        id=new JTextField(30);
         add(id, uklad);
 
         uklad.gridx = 0;
         uklad.gridy = 1;
-        etykietaPIN=new JLabel("PIN:");
         add(etykietaPIN, uklad);
 
         uklad.gridx = 1;
         uklad.gridy = 1;
-        PIN=new JPasswordField(30);
         add(PIN,uklad);
 
         uklad.gridx = 1;
         uklad.gridy = 2;
-        zaloguj=new JButton("Zaloguj");
-        zaloguj.setActionCommand("zaloguj");
         add(zaloguj,uklad);
 
         uklad.gridx = 0;
         uklad.gridy = 3;
-        zmienPIN=new JButton("Zmień PIN");
-        zmienPIN.setActionCommand("zmienPIN");
         add(zmienPIN,uklad);
 
         uklad.gridx = 2;
         uklad.gridy = 3;
-        wyjdz=new JButton("Wyjdź");
-        wyjdz.setActionCommand("wyjdz");
         add(wyjdz,uklad);
     }
 
