@@ -1,7 +1,12 @@
 import javax.swing.*;
 
 public class testy {
-    private JTextPane textPane1;
-    private JTextArea textArea1;
-    private JTextArea textArea2;
+    private JButton dodajGręButton;
+    private JButton filtrujButton;
+    private JButton wróćButton;
+    private JButton dodajEgzemplarzeButton;
+    private JTextField tytułTextField;
+    private JTextField cenaTextField;
+    private JTable table1;
+    private JTextField liczbaTextField;
 }

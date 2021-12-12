@@ -18,6 +18,7 @@ public class Aplikacja extends JFrame {
     ZmienPIN zmienPIN = new ZmienPIN();
     DodaniePlacowki dodaniePlacowki=new DodaniePlacowki();
     InterfejsDyrektora interfejsDyrektora=new InterfejsDyrektora();
+    DyrektorPrzegladEgzemplarzy dyrektorPrzegladEgzemplarzy = new DyrektorPrzegladEgzemplarzy();
 
 
     public static void main(String[] args) {
@@ -56,6 +57,7 @@ public class Aplikacja extends JFrame {
         add(zmienPIN, "zmienPIN");
         add(dodaniePlacowki,"dodaniePlacowki");
         add(interfejsDyrektora,"interfejsDyrektora");
+        add(dyrektorPrzegladEgzemplarzy,"dyrektorPrzegladEgzemplarzy");
     }
 
     public Aplikacja() {
@@ -75,12 +77,38 @@ public class Aplikacja extends JFrame {
                         dispose();
                         break;
                     case "zaloguj":
-
                         layout.show(getContentPane(), "managerLogin");
                         break;
                 }
             }
         });
+
+
+        interfejsDyrektora.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "dyrektorPracownicy":
+                        layout.show(getContentPane(), "ekranLogowania");
+                        break;
+                    case "dyrektorGry":
+                        layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
+                        break;
+                    case "dyrektorPlacowki":
+                        layout.show(getContentPane(), "ekranLogowania");
+                        break;
+                    case "dyrektorLogiSprzedazy":
+                        layout.show(getContentPane(), "ekranLogowania");
+                        break;
+                    case "dyrektorWyloguj":
+                        layout.show(getContentPane(), "ekranLogowania");
+                        break;
+                }
+            }
+        });
+
 
         layout.show(getContentPane(), "interfejsDyrektora");
 

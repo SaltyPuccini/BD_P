@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class InterfejsDyrektora extends JPanel {
@@ -26,11 +27,13 @@ public class InterfejsDyrektora extends JPanel {
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
 
-        pracownicy.setActionCommand("pracownicy");
-        gry.setActionCommand("gry");
-        placowki.setActionCommand("placowki");
-        logiSprzedazy.setActionCommand("logiSprzedazy");
-        wyloguj.setActionCommand("wyloguj");
+        pracownicy.setActionCommand("dyrektorPracownicy");
+        gry.setActionCommand("dyrektorGry");
+        placowki.setActionCommand("dyrektorPlacowki");
+        logiSprzedazy.setActionCommand("dyrektorLogiSprzedazy");
+        wyloguj.setActionCommand("dyrektorWyloguj");
+
+
 
         uklad.gridx=0;//
         uklad.gridy=0;
