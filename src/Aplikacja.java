@@ -63,6 +63,12 @@ public class Aplikacja extends JFrame {
         add(kupnoEgzemplarza, "kupnoEgzemplarza");
         add(ekranZamowien,"ekranZamowien");
         add(ekranSprzedawcy,"ekranSprzedawcy");
+        add(dodaniePracownika,"dodaniePracownika");
+        add(interfejsDyrektora,"interfejsDyrektora");
+        add(dyrektorPrzegladEgzemplarzy,"dyrektorPrzegladEgzemplarzy");
+        add(dyrektorPrzegladLogow, "dyrektorPrzegladLogow");
+        add(interfejsZmianyDanych, "interfejsZmianyDanych");
+        add(przegladPlacowek, "przegladPlacowek");
     }
 
     public Aplikacja() {
@@ -135,7 +141,7 @@ public class Aplikacja extends JFrame {
         });
 
 
-        layout.show(getContentPane(), "ekranSprzedawcy");
+        layout.show(getContentPane(), "interfejsDyrektora");
         pack();
         setLocationRelativeTo(null);
     }
