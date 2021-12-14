@@ -145,7 +145,7 @@ public class Aplikacja extends JFrame {
         });
 
 
-        layout.show(getContentPane(), "ekranSprzedawcy");
+        layout.show(getContentPane(), "interfejsDyrektora");
         pack();
         setLocationRelativeTo(null);
 
