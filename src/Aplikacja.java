@@ -336,10 +336,8 @@ public class Aplikacja extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String command = e.getActionCommand();
                 System.out.println(command);
-                switch (command) {
-                    case "powrot":
-                        layout.show(getContentPane(), "interfejsDyrektora");
-                        break;
+                if ("powrot".equals(command)) {
+                    layout.show(getContentPane(), "interfejsDyrektora");
                 }
             }
         });
