@@ -18,7 +18,7 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
     JTable tabelaGier;
     JScrollPane scrollPane_1;
 
-    JLabel etykietaTytul = new JLabel("Tytuł::");
+    JLabel etykietaTytul = new JLabel("Tytuł:");
     JLabel etykietaCena = new JLabel("Cena:");
     JLabel etykietaLiczba = new JLabel("Liczba:");
 

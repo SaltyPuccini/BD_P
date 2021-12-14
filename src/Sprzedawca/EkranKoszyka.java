@@ -5,9 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class EkranKoszyka extends JPanel {
-    String[] kolumny = {"ID", "Tytuł", "Stan", "Wydawca", "Rok", "Cena"};
-    Object[][] dane = new Object[][]{{1, "Stellaris", "4", "Paradox", 2015, 150}};
-    JTable koszyk = new JTable(dane,kolumny);
+    JTable koszykLista = new JTable(new CustomTableModelKZ());
+    JScrollPane koszyk = new JScrollPane(koszykLista);
 
     JButton sprzedaj = new JButton("Sprzedaj");
     JButton usun = new JButton("Usuń egzemplarz");
@@ -24,18 +23,23 @@ public class EkranKoszyka extends JPanel {
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
         uklad.gridwidth = 3;
-        uklad.weightx = 3;
+        uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
         sprzedaj.setActionCommand("sprzedaj");
         usun.setActionCommand("usun");
         wroc.setActionCommand("wroc");
+
+        koszykLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
+        koszykLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
+        koszykLista.getColumnModel().getColumn(2).setHeaderValue("Wydawca");
+        koszykLista.getColumnModel().getColumn(3).setHeaderValue("Stan");
+        koszykLista.getColumnModel().getColumn(4).setHeaderValue("Cena");
 
         uklad.gridx = 0;
         uklad.gridy = 0;
         add(koszyk, uklad);
 
         uklad.gridwidth = 1;
-        uklad.weightx = 1;
         uklad.gridx = 0;
         uklad.gridy = 3;
         add(sprzedaj, uklad);

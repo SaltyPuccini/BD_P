@@ -141,7 +141,7 @@ public class Aplikacja extends JFrame {
         });
 
 
-        layout.show(getContentPane(), "interfejsDyrektora");
+        layout.show(getContentPane(), "ekranLogowania");
         pack();
         setLocationRelativeTo(null);
     }
@@ -150,17 +150,18 @@ public class Aplikacja extends JFrame {
         Statement zapytanie = null;
         ResultSet pracownik = null;
         String stanowisko = "";
-        try {
-            zapytanie = bazaDanych.createStatement();
-            pracownik = zapytanie.executeQuery("SELECT * FROM `00018732_kw`.Pracownicy WHERE idPracownika=103" + ekranLogowania.getId());
-            stanowisko = pracownik.getString("stanowisko");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
+//        try {
+//            zapytanie = bazaDanych.createStatement();
+//            pracownik = zapytanie.executeQuery("SELECT * FROM `00018732_kw`.Pracownicy WHERE idPracownika=103" + ekranLogowania.getId());
+//            stanowisko = pracownik.getString("stanowisko");
+//
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        }
+        stanowisko=ekranLogowania.getId();
         switch (stanowisko) {
             case "Dyrektor":
-
+                layout.show(getContentPane(), "interfejsDyrektora");
                 break;
             case "Rzeczoznawca":
                 layout.show(getContentPane(), "ekranRzeczoznawcy");
@@ -169,7 +170,7 @@ public class Aplikacja extends JFrame {
                 layout.show(getContentPane(), "ekranSerwisanta");
                 break;
             case "Sprzedawca":
-
+                layout.show(getContentPane(), "ekranSprzedawcy");
                 break;
         }
     }

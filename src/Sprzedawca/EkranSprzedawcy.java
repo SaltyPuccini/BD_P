@@ -32,8 +32,11 @@ public class EkranSprzedawcy extends JPanel {
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaGatunek, wpiszGatunek);
 
-    JTable gry = new JTable();
-    JTable egzemplarze = new JTable();
+    JTable gryLista = new JTable(new CustomTableModelGra());
+    JTable egzemplarzeLista = new JTable(new CustomTableModelEgzemplarz());
+
+    JScrollPane gry = new JScrollPane(gryLista);
+    JScrollPane egzemplarze = new JScrollPane(egzemplarzeLista);
 
     public void addActionListener(ActionListener listener) {
         dodaj.addActionListener(listener);
@@ -45,13 +48,11 @@ public class EkranSprzedawcy extends JPanel {
         wyloguj.addActionListener(listener);
     }
 
-    public EkranSprzedawcy(){
+    public EkranSprzedawcy() {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
-        uklad.gridwidth = 1;
-        uklad.weightx = 1;
-        uklad.insets = new Insets(10, 10, 10, 10);
+
         dodaj.setActionCommand("dodaj");
         koszyk.setActionCommand("koszyk");
         zamowienia.setActionCommand("zamowienia");
@@ -60,63 +61,82 @@ public class EkranSprzedawcy extends JPanel {
         zamow.setActionCommand("zamow");
         wyloguj.setActionCommand("wyloguj");
 
-        uklad.gridx=0;
-        uklad.gridy=2;
-        add(id,uklad);
-        uklad.gridx=0;
-        uklad.gridy=3;
-        add(koszyk,uklad);
-        uklad.gridx=0;
-        uklad.gridy=4;
-        add(kup,uklad);
+        gryLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
+        gryLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
+        gryLista.getColumnModel().getColumn(2).setHeaderValue("Gatunek");
+        egzemplarzeLista.getColumnModel().getColumn(0).setHeaderValue("Stan");
+        egzemplarzeLista.getColumnModel().getColumn(1).setHeaderValue("Placówka");
+        egzemplarzeLista.getColumnModel().getColumn(2).setHeaderValue("Cena");
 
-        uklad.gridx=1;
-        uklad.gridy=2;
-        add(dodaj,uklad);
-        uklad.gridx=1;
-        uklad.gridy=3;
-        add(zamowienia,uklad);
-        uklad.gridx=1;
-        uklad.gridy=4;
-        add(zamow,uklad);
+        uklad.gridwidth = 1;
+        uklad.gridheight = 1;
+        uklad.weightx = 1;
+        uklad.insets = new Insets(10, 10, 10, 10);
 
-        uklad.gridx=2;
-        uklad.gridy=0;
-        add(rok,uklad);
-        uklad.gridx=3;
-        uklad.gridy=0;
-        add(gatunek,uklad);
+        uklad.gridx = 0;
+        uklad.gridy = 2;
+        add(id, uklad);
+        uklad.gridx = 0;
+        uklad.gridy = 3;
+        add(koszyk, uklad);
+        uklad.gridx = 0;
+        uklad.gridy = 4;
+        add(kup, uklad);
+
+        uklad.gridx = 1;
+        uklad.gridy = 2;
+        add(dodaj, uklad);
+        uklad.gridx = 1;
+        uklad.gridy = 3;
+        add(zamowienia, uklad);
+        uklad.gridx = 1;
+        uklad.gridy = 4;
+        add(zamow, uklad);
+
+        uklad.gridx = 2;
+        uklad.gridy = 0;
+        add(rok, uklad);
+        uklad.gridx = 3;
+        uklad.gridy = 0;
+        add(gatunek, uklad);
 
         uklad.gridwidth = 2;
-        uklad.gridx=0;
-        uklad.gridy=0;
-        add(tytul,uklad);
-        uklad.gridx=0;
-        uklad.gridy=1;
-        add(szukaj,uklad);
-        uklad.gridx=0;
-        uklad.gridy=6;
-        add(wyloguj,uklad);
+        uklad.gridx = 0;
+        uklad.gridy = 0;
+        add(tytul, uklad);
+        uklad.gridx = 0;
+        uklad.gridy = 1;
+        add(szukaj, uklad);
+        uklad.gridx = 0;
+        uklad.gridy = 6;
+        add(wyloguj, uklad);
 
-        uklad.gridheight = 3;
-        uklad.gridx=2;
-        uklad.gridy=1;
-        add(gry,uklad);
-        uklad.gridx=2;
-        uklad.gridy=4;
-        add(egzemplarze,uklad);
+        gry.setPreferredSize(new Dimension(420,140));
+        egzemplarze.setPreferredSize(new Dimension(420,140));
+
+        uklad.gridwidth = 3;
+        uklad.gridheight = 2;
+        uklad.gridx = 2;
+        uklad.gridy = 1;
+        add(gry, uklad);
+        uklad.gridx = 2;
+        uklad.gridy = 3;
+        add(egzemplarze, uklad);
     }
 
-    public String getTytul(){
+    public String getTytul() {
         return wpiszTytul.getText();
     }
-    public Integer getID(){
+
+    public Integer getID() {
         return Integer.valueOf(wpiszID.getText());
     }
-    public Integer getRok(){
+
+    public Integer getRok() {
         return (Integer) wpiszRok.getSelectedItem();
     }
-    public String getGatunek(){
+
+    public String getGatunek() {
         return (String) wpiszGatunek.getSelectedItem();
     }
 

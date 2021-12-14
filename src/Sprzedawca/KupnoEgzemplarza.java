@@ -10,9 +10,8 @@ public class KupnoEgzemplarza extends JPanel {
     JButton filtruj = new JButton("Filtruj");
     JButton wroc = new JButton("Wróć");
 
-    String [] kolumny= {"Tytuł","Rok","Wydawca"};
-    Object[][] dane = new Object[][]{{"Stellaris",2015,"Paradox"}};
-    JTable gry = new JTable(dane,kolumny);
+    JTable gryLista = new JTable(new CustomTableModelKZ());
+    JScrollPane gry = new JScrollPane(gryLista);
 
     String[] stany={"dobry"};
     JLabel etykietaStan= new JLabel("Stan");
@@ -47,6 +46,12 @@ public class KupnoEgzemplarza extends JPanel {
         filtruj.setActionCommand("filtruj");
         generowanaCena.setText("");
 
+        gryLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
+        gryLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
+        gryLista.getColumnModel().getColumn(2).setHeaderValue("Wydawca");
+        gryLista.removeColumn(gryLista.getColumnModel().getColumn(4));
+        gryLista.removeColumn(gryLista.getColumnModel().getColumn(3));
+
         uklad.gridx=0;
         uklad.gridy=0;
         add(tytul,uklad);
@@ -76,7 +81,7 @@ public class KupnoEgzemplarza extends JPanel {
         add(wroc,uklad);
 
         uklad.gridwidth = 2;
-        uklad.weightx = 4;
+        uklad.gridheight=4;
         uklad.gridx=0;
         uklad.gridy=1;
         add(gry,uklad);

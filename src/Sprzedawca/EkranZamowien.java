@@ -5,10 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class EkranZamowien extends JPanel {
-    String[] kolumny = {"ID", "Tytuł"};
-    Object[][] dane = new Object[][]{{1, "Stellaris"}};
-    JTable wysylane = new JTable(dane, kolumny);
-    JTable odbierane = new JTable(dane, kolumny);
+    JTable wysylaneLista = new JTable(new CustomTableModelSR());
+    JTable odbieraneLista = new JTable(new CustomTableModelSR());
+    
+    JScrollPane wyslane = new JScrollPane(wysylaneLista);
+    JScrollPane odebrane = new JScrollPane(odbieraneLista);
 
     JButton wyslano = new JButton("Wysłano");
     JButton odebrano = new JButton("Odebrano");
@@ -31,13 +32,18 @@ public class EkranZamowien extends JPanel {
         odebrano.setActionCommand("odebrano");
         wroc.setActionCommand("wroc");
 
+        wysylaneLista.getColumnModel().getColumn(0).setHeaderValue("ID");
+        wysylaneLista.getColumnModel().getColumn(1).setHeaderValue("Tytuł");
+        odbieraneLista.getColumnModel().getColumn(0).setHeaderValue("ID");
+        odbieraneLista.getColumnModel().getColumn(1).setHeaderValue("Tytuł");
+
         uklad.gridx = 0;
         uklad.gridy = 0;
-        add(wysylane, uklad);
+        add(wyslane, uklad);
 
         uklad.gridx = 2;
         uklad.gridy = 0;
-        add(odbierane, uklad);
+        add(odebrane, uklad);
 
         uklad.gridwidth = 1;
         uklad.weightx = 1;
@@ -55,12 +61,12 @@ public class EkranZamowien extends JPanel {
     }
 
     public int getID(String tabela) {
-        int index;
+        int index = 0;
         if (tabela == "wyslane") {
-            index = wysylane.getSelectedRow();
+            //index = wyslane.getS
 
         } else {
-            index = odbierane.getSelectedRow();
+            //index = odebrane.getSelectedRow();
         }
         return index;
     }

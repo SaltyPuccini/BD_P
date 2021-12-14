@@ -1,3 +1,5 @@
+import Sprzedawca.CustomTableModelSR;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -6,16 +8,16 @@ public class EkranRzeczoznawcy extends JPanel {
     JButton wyloguj = new JButton("Wyloguj");
     JButton wycen = new JButton("Dokonano serwis");
 
-    JTextField wpiszCena=new JTextField(3);
+    JTextField wpiszCena = new JTextField(3);
     JLabel etykietaCena = new JLabel("Cena:");
-    JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaCena,wpiszCena);
+    JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
 
-    private String[] gatunki={"strzelanki","strategiczne"};
+    private String[] gatunki = {"strzelanki", "strategiczne"};
     JComboBox gatunek = new JComboBox(gatunki);
 
-    Object[][] zawartosc = new Object[][]{{1, "Stellaris"}};
-    String[] kolumny = {"ID", "Tytuł"};
-    JTable listaEgzemplarzy = new JTable(zawartosc, kolumny);
+
+    JTable listaEgzemplarzy = new JTable(new CustomTableModelSR());
+    JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
 
     public void addActionListener(ActionListener listener) {
         wyloguj.addActionListener(listener);
@@ -31,35 +33,37 @@ public class EkranRzeczoznawcy extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         wyloguj.setActionCommand("wyloguj");
         wycen.setActionCommand("wycen");
+        listaEgzemplarzy.getColumnModel().getColumn(0).setHeaderValue("ID");
+        listaEgzemplarzy.getColumnModel().getColumn(1).setHeaderValue("Tytuł");
 
         uklad.gridx = 3;
-        uklad.gridy = 2;
+        uklad.gridy = 1;
         add(cena, uklad);
 
         uklad.gridx = 3;
-        uklad.gridy = 3;
+        uklad.gridy = 2;
         add(gatunek, uklad);
 
         uklad.gridx = 3;
-        uklad.gridy = 4;
+        uklad.gridy = 3;
         add(wycen, uklad);
 
         uklad.gridx = 3;
-        uklad.gridy = 5;
+        uklad.gridy = 4;
         add(wyloguj, uklad);
 
 
-        uklad.gridwidth = 3;
-        uklad.weightx = 6;
+        uklad.gridheight = 5;
         uklad.gridx = 0;
         uklad.gridy = 0;
-        add(listaEgzemplarzy, uklad);
+        add(tabelaEgzemplarzy, uklad);
     }
 
-    public Integer getCena(){
+    public Integer getCena() {
         return Integer.valueOf(wpiszCena.getText());
     }
-    public String getGatunek(){
+
+    public String getGatunek() {
         return (String) gatunek.getSelectedItem();
     }
 

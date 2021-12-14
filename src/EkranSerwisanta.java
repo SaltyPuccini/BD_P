@@ -1,3 +1,5 @@
+import Sprzedawca.CustomTableModelSR;
+
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -8,9 +10,8 @@ public class EkranSerwisanta extends JPanel {
     JButton dyskwalifikacja = new JButton("Dyskwalifikacja");
     JButton serwis = new JButton("Dokonano serwis");
 
-    Object[][] zawartosc = new Object[][]{{1, "Stellaris"}};
-    String[] kolumny = {"ID", "Tytuł"};
-    JTable listaEgzemplarzy = new JTable(zawartosc, kolumny);
+    JTable listaEgzemplarzy = new JTable(new CustomTableModelSR());
+    JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
 
     public void addActionListener(ActionListener listener) {
         wyloguj.addActionListener(listener);
@@ -28,6 +29,8 @@ public class EkranSerwisanta extends JPanel {
         wyloguj.setActionCommand("wyloguj");
         serwis.setActionCommand("serwis");
         dyskwalifikacja.setActionCommand("dyskwalifikacja");
+        listaEgzemplarzy.getColumnModel().getColumn(0).setHeaderValue("ID");
+        listaEgzemplarzy.getColumnModel().getColumn(1).setHeaderValue("Tytuł");
 
         uklad.gridx = 3;
         uklad.gridy = 2;
@@ -42,11 +45,11 @@ public class EkranSerwisanta extends JPanel {
         add(wyloguj, uklad);
 
 
-        uklad.gridwidth = 3;
-        uklad.weightx = 5;
+        uklad.gridwidth =1;
+        uklad.gridheight = 5;
         uklad.gridx = 0;
         uklad.gridy = 0;
-        add(listaEgzemplarzy, uklad);
+        add(tabelaEgzemplarzy, uklad);
 
 
     }
