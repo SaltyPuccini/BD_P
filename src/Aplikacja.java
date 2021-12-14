@@ -27,6 +27,8 @@ public class Aplikacja extends JFrame {
     DyrektorPrzegladLogow dyrektorPrzegladLogow = new DyrektorPrzegladLogow();
     InterfejsZmianyDanych interfejsZmianyDanych = new InterfejsZmianyDanych();
     PrzegladPlacowek przegladPlacowek = new PrzegladPlacowek();
+    PrzegladPracownikow przegladPracownikow = new PrzegladPracownikow();
+    DyrektorDodanieGry dyrektorDodanieGry = new DyrektorDodanieGry();
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -69,6 +71,8 @@ public class Aplikacja extends JFrame {
         add(dyrektorPrzegladLogow, "dyrektorPrzegladLogow");
         add(interfejsZmianyDanych, "interfejsZmianyDanych");
         add(przegladPlacowek, "przegladPlacowek");
+        add(przegladPracownikow, "przegladPracownikow");
+        add(dyrektorDodanieGry, "dyrektorDodanieGry");
     }
 
     public Aplikacja() {
@@ -144,6 +148,7 @@ public class Aplikacja extends JFrame {
         layout.show(getContentPane(), "ekranLogowania");
         pack();
         setLocationRelativeTo(null);
+
     }
 
     void logowanie() {
@@ -288,13 +293,13 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "dyrektorPracownicy":
-                        layout.show(getContentPane(), "dodaniePracownika");
+                        layout.show(getContentPane(), "przegladPracownikow");
                         break;
                     case "dyrektorGry":
                         layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
                         break;
                     case "dyrektorPlacowki":
-                        layout.show(getContentPane(), "dodaniePlacowki");
+                        layout.show(getContentPane(), "przegladPlacowek");
                         break;
                     case "dyrektorLogiSprzedazy":
                         layout.show(getContentPane(), "dyrektorPrzegladLogow");
@@ -318,7 +323,7 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "interfejsDyrektora");
                         break;
                     case "dodajGre":
-
+                        layout.show(getContentPane(), "dyrektorDodanieGry");
                         break;
                     case "dodajEgzemplarze":
 
@@ -345,7 +350,7 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "wroc":
-                        layout.show(getContentPane(), "interfejsDyrektora");
+                        layout.show(getContentPane(), "przegladPlacowek");
                         break;
                 }
             }
@@ -357,11 +362,56 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "wroc":
-                        layout.show(getContentPane(), "interfejsDyrektora");
+                        layout.show(getContentPane(), "przegladPracownikow");
                         break;
                 }
             }
         });
+        przegladPracownikow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "wroc":
+                        layout.show(getContentPane(), "interfejsDyrektora");
+                        break;
+                    case"dodajPracownika":
+                        layout.show(getContentPane(), "dodaniePracownika");
+                        break;
+                }
+            }
+        });
+
+        przegladPlacowek.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "wroc":
+                        layout.show(getContentPane(), "interfejsDyrektora");
+                        break;
+                    case"dodajPlacowke":
+                        layout.show(getContentPane(), "dodaniePlacowki");
+                        break;
+                }
+            }
+        });
+
+        dyrektorDodanieGry.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                switch (command) {
+                    case "wroc":
+                        layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
+                        break;
+                }
+            }
+        });
+
     }
 
 }
