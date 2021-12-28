@@ -3,6 +3,10 @@ package Dyrektor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +35,7 @@ public class PrzegladPracownikow extends JPanel {
 
         scrollPane_1 = new JScrollPane();
         tabelaPracownikow=new JTable();
-        Pracownik pracownik = new Pracownik(1, 2,"3","3","3",false);
-        listaPracownikow.add(pracownik);
+
         tabelaPracownikow.setModel(new CustomTableModelPracownik(listaPracownikow));
         scrollPane_1.setViewportView(tabelaPracownikow);
 

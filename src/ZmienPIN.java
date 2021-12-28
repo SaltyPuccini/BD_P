@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class ZmienPIN extends JPanel {
     private final JLabel ID=new JLabel("ID:");
@@ -79,6 +80,12 @@ public class ZmienPIN extends JPanel {
     }
     public String getID(){
         return idPracownika.getText();
+    }
+    public void resetTextFields(){
+        idPracownika.setText("");
+        nowyPIN.setText("");
+        powtorzPIN.setText("");
+        token.setText("");
     }
 
 }

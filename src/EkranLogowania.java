@@ -72,4 +72,9 @@ public class EkranLogowania extends JPanel {
     public String getId() {
         return id.getText();
     }
+
+    public void resetTextFields(){
+        id.setText("");
+        PIN.setText("");
+    }
 }
