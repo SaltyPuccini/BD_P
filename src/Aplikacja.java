@@ -6,9 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.Objects;
 
 public class Aplikacja extends JFrame {
-    Connection bazaDanych;
+    public Connection bazaDanych;
     final CardLayout layout = new CardLayout();
 
     EkranLogowania ekranLogowania = new EkranLogowania();
@@ -20,9 +21,9 @@ public class Aplikacja extends JFrame {
     EkranKoszyka ekranKoszyka = new EkranKoszyka();
     KupnoEgzemplarza kupnoEgzemplarza = new KupnoEgzemplarza();
     EkranZamowien ekranZamowien = new EkranZamowien();
-    EkranSprzedawcy ekranSprzedawcy= new EkranSprzedawcy();
-    DodaniePracownika dodaniePracownika=new DodaniePracownika();
-    InterfejsDyrektora interfejsDyrektora=new InterfejsDyrektora();
+    EkranSprzedawcy ekranSprzedawcy = new EkranSprzedawcy();
+    DodaniePracownika dodaniePracownika = new DodaniePracownika();
+    InterfejsDyrektora interfejsDyrektora = new InterfejsDyrektora();
     DyrektorPrzegladEgzemplarzy dyrektorPrzegladEgzemplarzy = new DyrektorPrzegladEgzemplarzy();
     DyrektorPrzegladLogow dyrektorPrzegladLogow = new DyrektorPrzegladLogow();
     InterfejsZmianyDanych interfejsZmianyDanych = new InterfejsZmianyDanych();
@@ -63,11 +64,11 @@ public class Aplikacja extends JFrame {
         add(dodanieGry, "dodanieGry");
         add(ekranKoszyka, "ekranKoszyka");
         add(kupnoEgzemplarza, "kupnoEgzemplarza");
-        add(ekranZamowien,"ekranZamowien");
-        add(ekranSprzedawcy,"ekranSprzedawcy");
-        add(dodaniePracownika,"dodaniePracownika");
-        add(interfejsDyrektora,"interfejsDyrektora");
-        add(dyrektorPrzegladEgzemplarzy,"dyrektorPrzegladEgzemplarzy");
+        add(ekranZamowien, "ekranZamowien");
+        add(ekranSprzedawcy, "ekranSprzedawcy");
+        add(dodaniePracownika, "dodaniePracownika");
+        add(interfejsDyrektora, "interfejsDyrektora");
+        add(dyrektorPrzegladEgzemplarzy, "dyrektorPrzegladEgzemplarzy");
         add(dyrektorPrzegladLogow, "dyrektorPrzegladLogow");
         add(interfejsZmianyDanych, "interfejsZmianyDanych");
         add(przegladPlacowek, "przegladPlacowek");
@@ -87,12 +88,14 @@ public class Aplikacja extends JFrame {
                 switch (akcja) {
                     case "zmienPIN":
                         layout.show(getContentPane(), "zmienPIN");
+                        ekranLogowania.resetTextFields();
                         break;
                     case "wyjdz":
                         dispose();
                         break;
                     case "zaloguj":
                         logowanie();
+                        ekranLogowania.resetTextFields();
                         break;
                 }
             }
@@ -103,7 +106,8 @@ public class Aplikacja extends JFrame {
                 String akcja = e.getActionCommand();
                 System.out.println(akcja);
                 switch (akcja) {
-                    case "zmienPIN":
+                    case "zmienPin":
+                        zmienianiePINU();
                         break;
                     case "anuluj":
                         layout.show(getContentPane(), "ekranLogowania");
@@ -111,8 +115,11 @@ public class Aplikacja extends JFrame {
                 }
             }
         });
+
         sprzedawca();
+
         dyrektor();
+
         ekranSerwisanta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,9 +129,16 @@ public class Aplikacja extends JFrame {
                     case "dyskwalifikacja":
                         break;
                     case "wyloguj":
+
+                        ekranSerwisanta.czyscTabele();
                         layout.show(getContentPane(), "ekranLogowania");
+
                         break;
                     case "serwis":
+
+                        ekranSerwisanta.czyscTabele();
+                        //serwisantZaladujTabele();
+
                         break;
                 }
             }
@@ -136,9 +150,16 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "wyloguj":
+
+                        ekranRzeczoznawcy.czyscTabele();
                         layout.show(getContentPane(), "ekranLogowania");
+
                         break;
                     case "wycen":
+
+                        ekranRzeczoznawcy.czyscTabele();
+                        rzeczoznawcaZaladujTabele();
+
                         break;
                 }
             }
@@ -149,35 +170,6 @@ public class Aplikacja extends JFrame {
         pack();
         setLocationRelativeTo(null);
 
-    }
-
-    void logowanie() {
-        Statement zapytanie = null;
-        ResultSet pracownik = null;
-        String stanowisko = "";
-//        try {
-//            zapytanie = bazaDanych.createStatement();
-//            pracownik = zapytanie.executeQuery("SELECT * FROM `00018732_kw`.Pracownicy WHERE idPracownika=103" + ekranLogowania.getId());
-//            stanowisko = pracownik.getString("stanowisko");
-//
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
-        stanowisko=ekranLogowania.getId();
-        switch (stanowisko) {
-            case "Dyrektor":
-                layout.show(getContentPane(), "interfejsDyrektora");
-                break;
-            case "Rzeczoznawca":
-                layout.show(getContentPane(), "ekranRzeczoznawcy");
-                break;
-            case "Serwisant":
-                layout.show(getContentPane(), "ekranSerwisanta");
-                break;
-            case "Sprzedawca":
-                layout.show(getContentPane(), "ekranSprzedawcy");
-                break;
-        }
     }
 
     void sprzedawca() {
@@ -374,7 +366,7 @@ public class Aplikacja extends JFrame {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
                         break;
-                    case"dodajPracownika":
+                    case "dodajPracownika":
                         layout.show(getContentPane(), "dodaniePracownika");
                         break;
                 }
@@ -390,7 +382,7 @@ public class Aplikacja extends JFrame {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
                         break;
-                    case"dodajPlacowke":
+                    case "dodajPlacowke":
                         layout.show(getContentPane(), "dodaniePlacowki");
                         break;
                 }
@@ -410,6 +402,121 @@ public class Aplikacja extends JFrame {
             }
         });
 
+    }
+
+
+    void rzeczoznawcaZaladujTabele(){
+
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
+        ) {
+            System.out.println("JD");
+            while (resultSet.next()) {
+                int idEgzemplarza = resultSet.getInt("idEgzemplarza");
+                String nazwa = resultSet.getString("nazwa");
+                ekranRzeczoznawcy.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa});
+                System.out.println(idEgzemplarza);
+                System.out.println(nazwa);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    void serwisantZaladujTabele(){
+
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
+        ) {
+            System.out.println("JD");
+            while (resultSet.next()) {
+                int idEgzemplarza = resultSet.getInt("idEgzemplarza");
+                String nazwa = resultSet.getString("nazwa");
+                ekranSerwisanta.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa});
+                System.out.println(idEgzemplarza);
+                System.out.println(nazwa);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    void logowanie() {
+        String stanowisko = "";
+        int haslo = 0;
+        String id = ekranLogowania.getId();
+
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet pracownik = zapytanie.executeQuery("SELECT stanowisko FROM 00018732_kw.Pracownicy WHERE idPracownika=" + id);
+        ) {
+            if (pracownik.next())
+                stanowisko = pracownik.getString("stanowisko");
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet rshaslo = zapytanie.executeQuery("SELECT PIN FROM 00018732_kw.KodyDostępu WHERE idPracownika=" + id);
+        ) {
+            if (rshaslo.next())
+                haslo = rshaslo.getInt("PIN");
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        if (haslo == Integer.parseInt(String.valueOf(ekranLogowania.getPIN()))) {
+            switch (stanowisko) {
+                case "Dyrektor":
+                    layout.show(getContentPane(), "interfejsDyrektora");
+                    break;
+                case "Rzeczoznawca":
+                    rzeczoznawcaZaladujTabele();
+                    layout.show(getContentPane(), "ekranRzeczoznawcy");
+                    break;
+                case "Serwisant":
+                    serwisantZaladujTabele();
+                    layout.show(getContentPane(), "ekranSerwisanta");
+                    break;
+                case "Sprzedawca":
+                    layout.show(getContentPane(), "ekranSprzedawcy");
+                    break;
+            }
+        }
+    }
+
+    void zmienianiePINU(){
+        int TOKEN = 0;
+        String actualID = zmienPIN.getID();
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet resultSet = zapytanie.executeQuery("SELECT PIN FROM 00018732_kw.KodyDostępu WHERE idPracownika=" + zmienPIN.getID());
+        ) {
+            if (resultSet.next()) {
+                TOKEN = resultSet.getInt("PIN");
+            }
+            if (String.valueOf(zmienPIN.getNowyPIN()).equals(String.valueOf(zmienPIN.getPowtorzPIN()))) {
+                if (TOKEN == Integer.parseInt(String.valueOf(zmienPIN.getTOKEN()))) {
+                    zapytanie.executeUpdate("UPDATE 00018732_kw.KodyDostępu SET PIN=" + Integer.parseInt(String.valueOf(zmienPIN.getNowyPIN())) + " WHERE idPracownika=" + actualID + ";");
+                    JOptionPane.showMessageDialog(null, "Poprawnie zmieniono PIN!");
+                    zmienPIN.resetTextFields();
+                    layout.show(getContentPane(), "ekranLogowania");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nieprawidłowy TOKEN!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Nowy PIN musi być zgodny z powtórzonym nowym PINEM!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
