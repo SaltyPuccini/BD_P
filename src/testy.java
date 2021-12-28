@@ -1,3 +1,6 @@
+import Szyfrowanie.Deszyfrator;
+import Szyfrowanie.Szyfrator;
+
 import javax.swing.*;
 
 public class testy {
@@ -9,4 +12,13 @@ public class testy {
     private JTextField cenaTextField;
     private JTable table1;
     private JTextField liczbaTextField;
+
+    public static void main(String[] args) {
+
+
+    }
+
 }
+
+
+
