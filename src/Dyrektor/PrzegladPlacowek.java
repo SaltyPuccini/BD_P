@@ -1,6 +1,7 @@
 package Dyrektor;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,10 +12,10 @@ public class PrzegladPlacowek extends JPanel {
     private final JButton dodajPlacowke = new JButton("Dodaj placówkę");
     private final JButton zamknijPlacowke = new JButton("Zamknij placówkę");
     private final JButton wroc = new JButton("Wróć");
-    private List<Placowka> listaPlacowek = new ArrayList<>();
+
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Adres", "Numer", "Numer Lokalu", "Miasto"}, 0);
 
     JTable tabelaPlacowek;
-    JScrollPane scrollPane_1;
 
     public void addActionListener(ActionListener listener) {
         wroc.addActionListener(listener);
@@ -22,13 +23,17 @@ public class PrzegladPlacowek extends JPanel {
         zamknijPlacowke.addActionListener(listener);
     }
 
+    public void dodajDaneZBazy(Object[] obj){
+        model.addRow(obj);
+    }
+
+    public void czyscTabele(){
+        model.setRowCount(0);
+    }
+
     public PrzegladPlacowek(){
-        scrollPane_1 = new JScrollPane();
-        tabelaPlacowek=new JTable();
-        Placowka placowka = new Placowka(1, "xD", 2, "xDDD",3,true);
-        listaPlacowek.add(placowka);
-        tabelaPlacowek.setModel(new CustomTableModelPlacowki(listaPlacowek));
-        scrollPane_1.setViewportView(tabelaPlacowek);
+        tabelaPlacowek=new JTable(model);
+        JScrollPane scrollPane_1 = new JScrollPane(tabelaPlacowek);
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));

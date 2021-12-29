@@ -1,6 +1,7 @@
 package Dyrektor;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,8 +14,6 @@ public class DyrektorPrzegladLogow extends JPanel {
     private final JButton filtruj = new JButton("Filtruj");
 
     JTable tabelaLogow;
-    JScrollPane scrollPane_1;
-    private List<Log> listaLogow = new ArrayList<>();
 
 
     JLabel etykietaAkcja = new JLabel("Akcja:");
@@ -30,21 +29,25 @@ public class DyrektorPrzegladLogow extends JPanel {
     JTextField wpiszPracownik = new JTextField(5);
     JSplitPane pracownik = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaPracownik, wpiszPracownik);
 
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Pracownik", "Data", "Akcja"}, 0);
+
+
     public void addActionListener(ActionListener listener) {
         filtruj.addActionListener(listener);
         powrot.addActionListener(listener);
     }
 
-    public DyrektorPrzegladLogow() {
+    public void dodajDaneZBazy(Object[] obj){
+        model.addRow(obj);
+    }
 
-        scrollPane_1 = new JScrollPane();
+    public void czyscTabele(){
+        model.setRowCount(0);
+    }
+
+    public DyrektorPrzegladLogow() {
         tabelaLogow=new JTable();
-        Date today = new Date();
-        today.setDate(20);
-        Log log = new Log(1, 2, 3,"sprzedaż",today);
-        listaLogow.add(log);
-        tabelaLogow.setModel(new CustomTableModelLogi(listaLogow));
-        scrollPane_1.setViewportView(tabelaLogow);
+        JScrollPane scrollPane_1 = new JScrollPane(tabelaLogow);
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));

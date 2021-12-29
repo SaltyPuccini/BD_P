@@ -1,6 +1,7 @@
 package Dyrektor;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -20,8 +21,10 @@ public class PrzegladPracownikow extends JPanel {
     JTextField TOKEN = new JTextField(20);
     private List<Pracownik> listaPracownikow = new ArrayList<>();
 
+    DefaultTableModel model = new DefaultTableModel(new String[] {"ID", "Imie", "Nazwisko", "Placówka"}, 0);
+
     JTable tabelaPracownikow;
-    JScrollPane scrollPane_1;
+
 
     public void addActionListener(ActionListener listener) {
         wroc.addActionListener(listener);
@@ -31,13 +34,18 @@ public class PrzegladPracownikow extends JPanel {
         zmienDane.addActionListener(listener);
     }
 
+    public void dodajDaneZBazy(Object[] obj){
+        model.addRow(obj);
+    }
+
+    public void czyscTabele(){
+        model.setRowCount(0);
+    }
+
     public PrzegladPracownikow(){
 
-        scrollPane_1 = new JScrollPane();
-        tabelaPracownikow=new JTable();
-
-        tabelaPracownikow.setModel(new CustomTableModelPracownik(listaPracownikow));
-        scrollPane_1.setViewportView(tabelaPracownikow);
+        tabelaPracownikow = new JTable(model);
+        JScrollPane scrollPane_1 = new JScrollPane(tabelaPracownikow);
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));

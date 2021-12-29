@@ -100,7 +100,7 @@ public class Aplikacja extends JFrame {
                     case "serwis":
 
                         ekranSerwisanta.czyscTabele();
-                        //serwisantZaladujTabele();
+                        serwisantZaladujTabele();
 
                         break;
                 }
@@ -291,12 +291,14 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "dyrektorPracownicy":
+                        ladujPracownikow();
                         layout.show(getContentPane(), "przegladPracownikow");
                         break;
                     case "dyrektorGry":
                         layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
                         break;
                     case "dyrektorPlacowki":
+                        ladujPlacowki();
                         layout.show(getContentPane(), "przegladPlacowek");
                         break;
                     case "dyrektorLogiSprzedazy":
@@ -346,6 +348,8 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "wroc":
+                        przegladPlacowek.czyscTabele();
+                        ladujPlacowki();
                         layout.show(getContentPane(), "przegladPlacowek");
                         break;
                 }
@@ -358,6 +362,8 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "wroc":
+                        przegladPracownikow.czyscTabele();
+                        ladujPracownikow();
                         layout.show(getContentPane(), "przegladPracownikow");
                         break;
                 }
@@ -371,6 +377,7 @@ public class Aplikacja extends JFrame {
                 switch (command) {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
+                        przegladPracownikow.czyscTabele();
                         break;
                     case "dodajPracownika":
                         layout.show(getContentPane(), "dodaniePracownika");
@@ -387,6 +394,7 @@ public class Aplikacja extends JFrame {
                 switch (command) {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
+                        przegladPlacowek.czyscTabele();
                         break;
                     case "dodajPlacowke":
                         layout.show(getContentPane(), "dodaniePlacowki");
@@ -410,6 +418,67 @@ public class Aplikacja extends JFrame {
 
     }
 
+
+    void ladujPracownikow(){
+
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPracownika, imię, nazwisko, idPlacówki FROM 00018732_kw.Pracownicy;");
+        ) {
+            System.out.println("JD");
+            while (resultSet.next()) {
+                int idPracownika = resultSet.getInt("idPracownika");
+                String imie = resultSet.getString("imię");
+                String nazwisko = resultSet.getString("nazwisko");
+                int idPlacowki = resultSet.getInt("idPlacówki");
+                przegladPracownikow.dodajDaneZBazy(new Object[]{idPracownika, imie, nazwisko, idPlacowki});
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    void ladujLogi(){
+
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idLogu, idEgzemplarza, idPracownika, akcja, data FROM 00018732_kw.Placówki;");
+        ) {
+            System.out.println("JD");
+            while (resultSet.next()) {
+                int idLogu = resultSet.getInt("idLogu");
+                int idEgzemplarza = resultSet.getInt("idEgzemplarza");
+                int idPracownika = resultSet.getInt("idPracownika");
+                String akcja = resultSet.getString("akcja");
+                String data = resultSet.getDate("data").toString();
+
+                //DyrektorPrzegladLogow.dodajDaneZBazy(new Object[]{idLogu, idEgzemplarza, idPracownika, akcja, data});
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    void ladujPlacowki(){
+
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacówki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placówki;");
+        ) {
+            System.out.println("JD");
+            while (resultSet.next()) {
+                int idPlacowki = resultSet.getInt("idPlacówki");
+                String ulica = resultSet.getString("ulica");
+                int numer = resultSet.getInt("numer");
+                int numerLokalu = resultSet.getInt("numerLokalu");
+                String miasto = resultSet.getString("miasto");
+
+                przegladPlacowek.dodajDaneZBazy(new Object[]{idPlacowki, ulica, numer, numerLokalu, miasto});
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     void rzeczoznawcaZaladujTabele() {
 
@@ -533,5 +602,4 @@ public class Aplikacja extends JFrame {
 
 
     }
-
 }
