@@ -1,18 +1,15 @@
 package Szyfrowanie;
 
 public class Szyfrator {
-    private final int ID;
     private final Integer PIN;
-    private final long kluczPubliczny = 191714009L;
-    private final long modul = 2640601497976797L;
+    private final long kluczPubliczny =  3;
+    private final long modul = 10;
     private int szyfr;
 
 
-    public Szyfrator(int ID, int PIN) {
-        this.ID = ID;
+    public Szyfrator(int PIN) {
         this.PIN = PIN;
         szyfruj();
-        wyslij();
     }
 
     private int[] konwersja(Integer liczba) {
@@ -36,15 +33,16 @@ public class Szyfrator {
     public void szyfruj() {
         int[] doSzyfrowania = konwersja(PIN);
 
-        for (int i : doSzyfrowania) {
-            i = (int) (Math.pow(i, kluczPubliczny) % modul);
+        for(int i =0; i<doSzyfrowania.length; i++){
+            int temp =(int) (Math.pow(doSzyfrowania[i], kluczPubliczny) % modul);
+            doSzyfrowania[i] = temp;
         }
 
         szyfr = konwersja(doSzyfrowania);
     }
 
-    public void wyslij() {
-        //wysłanie szyfru do bazy dla danego ID
+    public int szyfr() {
+        return szyfr;
     }
 
 }

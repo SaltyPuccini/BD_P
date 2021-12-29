@@ -41,10 +41,6 @@ public class PrzegladPlacowek extends JPanel {
         wroc.setActionCommand("wroc");
         zamknijPlacowke.setActionCommand("zamknijPlacowke");
 
-        uklad.gridx=0;//
-        uklad.gridy=2;
-        add(scrollPane_1,uklad);
-
         uklad.gridx=1;
         uklad.gridy=0;
         add(dodajPlacowke,uklad);
@@ -54,9 +50,13 @@ public class PrzegladPlacowek extends JPanel {
         add(zamknijPlacowke,uklad);
 
         uklad.gridx=1;
-        uklad.gridy=3;
+        uklad.gridy=2;
         add(wroc,uklad);
 
+        uklad.gridheight=3;
+        uklad.gridx=0;//
+        uklad.gridy=0;
+        add(scrollPane_1,uklad);
     }
 
 
