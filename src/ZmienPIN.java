@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.Arrays;
 
 public class ZmienPIN extends JPanel {
     private final JLabel ID=new JLabel("ID:");
@@ -69,14 +70,14 @@ public class ZmienPIN extends JPanel {
 
     }
 
-    public char[] getNowyPIN(){
-        return nowyPIN.getPassword();
+    public String getNowyPIN(){
+        return String.valueOf(nowyPIN.getPassword());
     }
-    public char[] getPowtorzPIN(){
-        return powtorzPIN.getPassword();
+    public String getPowtorzPIN(){
+        return String.valueOf(powtorzPIN.getPassword());
     }
-    public char[] getTOKEN(){
-        return token.getPassword();
+    public String getTOKEN(){
+        return String.valueOf(token.getPassword());
     }
     public String getID(){
         return idPracownika.getText();

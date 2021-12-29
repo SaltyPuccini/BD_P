@@ -31,13 +31,9 @@ public class DyrektorPrzegladLogow extends JPanel {
     JSplitPane pracownik = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaPracownik, wpiszPracownik);
 
     public void addActionListener(ActionListener listener) {
-
         filtruj.addActionListener(listener);
         powrot.addActionListener(listener);
     }
-
-
-
 
     public DyrektorPrzegladLogow() {
 
@@ -53,36 +49,37 @@ public class DyrektorPrzegladLogow extends JPanel {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
-        uklad.gridwidth = 4;
-        uklad.weightx = 2;
+        uklad.gridwidth = 1;
+        uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
 
         filtruj.setActionCommand("filtruj");
         powrot.setActionCommand("powrot");
 
-        uklad.gridx=0;//
+        uklad.gridx=1;//
         uklad.gridy=0;
         add(wpiszAkcje,uklad);
 
-        uklad.gridx=0;//
+        uklad.gridx=1;//
         uklad.gridy=1;
         add(data,uklad);
 
-        uklad.gridx=0;//
+        uklad.gridx=1;//
         uklad.gridy=2;
         add(pracownik,uklad);
 
-        uklad.gridx=0;//
+        uklad.gridx=1;//
         uklad.gridy=3;
         add(filtruj,uklad);
 
-        uklad.gridx=2;//
-        uklad.gridy=2;
-        add(scrollPane_1,uklad);
-
-        uklad.gridx=4;
-        uklad.gridy=2;
+        uklad.gridx=1;
+        uklad.gridy=4;
         add(powrot,uklad);
+
+        uklad.gridheight=5;
+        uklad.gridx=0;//
+        uklad.gridy=0;
+        add(scrollPane_1,uklad);
 
     }
 }

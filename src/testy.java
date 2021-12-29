@@ -15,6 +15,9 @@ public class testy {
 
     public static void main(String[] args) {
 
+        Szyfrator szyfrator = new Szyfrator(402);
+        System.out.println(szyfrator.szyfr());
+
 
     }
 
