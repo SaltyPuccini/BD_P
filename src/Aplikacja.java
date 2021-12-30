@@ -45,9 +45,13 @@ public class Aplikacja extends JFrame {
                 switch (akcja) {
                     case "zmienPIN":
                         layout.show(getContentPane(), "zmienPIN");
-                        ekranLogowania.resetTextFields();
                         break;
                     case "wyjdz":
+                        try {
+                            bazaDanych.close();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                         dispose();
                         break;
                     case "zaloguj":
@@ -56,9 +60,10 @@ public class Aplikacja extends JFrame {
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
-                        ekranLogowania.resetTextFields();
+
                         break;
                 }
+                ekranLogowania.resetTextFields();
             }
         });
         zmienPIN.addActionListener(new ActionListener() {
@@ -70,6 +75,7 @@ public class Aplikacja extends JFrame {
                     case "zmienPin":
                         try {
                             zmienianiePINU();
+                            layout.show(getContentPane(), "ekranLogowania");
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
@@ -78,6 +84,7 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
                 }
+                zmienPIN.resetTextFields();
             }
         });
 
@@ -92,18 +99,17 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "dyskwalifikacja":
+                        dyskwalifikacja(ekranSerwisanta.getID());
                         break;
                     case "wyloguj":
-
-                        ekranSerwisanta.czyscTabele();
                         layout.show(getContentPane(), "ekranLogowania");
-
                         break;
                     case "serwis":
-
-                        ekranSerwisanta.czyscTabele();
-                        //serwisantZaladujTabele();
-
+                        try {
+                            serwis(ekranSerwisanta.getID());
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                         break;
                 }
             }
@@ -115,22 +121,27 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "wyloguj":
-
-                        ekranRzeczoznawcy.czyscTabele();
                         layout.show(getContentPane(), "ekranLogowania");
-
                         break;
                     case "wycen":
+                        int cena = ekranRzeczoznawcy.getCena();
+                        String gatunek = ekranRzeczoznawcy.getGatunek();
+                        int idEgzemplarza = ekranRzeczoznawcy.getID();
 
-                        ekranRzeczoznawcy.czyscTabele();
-                        rzeczoznawcaZaladujTabele();
-
+                        zmienCene(cena, idEgzemplarza);
+                        try {
+                            zmienGatunek(gatunek, idEgzemplarza);
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                         break;
                 }
+                ekranRzeczoznawcy.czyscTabele();
+                rzeczoznawcaZaladujTabele();
             }
         });
 
-        layout.show(getContentPane(), "interfejsDyrektora");
+        layout.show(getContentPane(), "ekranLogowania");
         pack();
         setLocationRelativeTo(null);
     }
@@ -359,7 +370,7 @@ public class Aplikacja extends JFrame {
                 switch (command) {
                     case "generujID":
                         String komenda = "SELECT COUNT(*) FROM 00018732_kw.Placówki;";
-                        int index=0;
+                        int index = 0;
                         try {
                             Statement zapytanie = bazaDanych.createStatement();
                             ResultSet wynik = zapytanie.executeQuery(komenda.toString());
@@ -373,10 +384,10 @@ public class Aplikacja extends JFrame {
                         break;
                     case "dodajPlacowke":
                         String ulica = dodaniePlacowki.getUlica();
-                        int numer= dodaniePlacowki.getNumer();
+                        int numer = dodaniePlacowki.getNumer();
                         String miasto = dodaniePlacowki.getMiasto();
-                        int numerLokalu= dodaniePlacowki.getLokal();
-                        dodajPlacowke(ulica,numer,miasto,numerLokalu,true);
+                        int numerLokalu = dodaniePlacowki.getLokal();
+                        dodajPlacowke(ulica, numer, miasto, numerLokalu, true);
 
                         layout.show(getContentPane(), "przegladPlacowek");
                         break;
@@ -394,7 +405,7 @@ public class Aplikacja extends JFrame {
                 int PIN;
                 switch (command) {
                     case "generujPIN":
-                        PIN = (int) (Math.random()*1000000);
+                        PIN = (int) (Math.random() * 1000000);
                         dodaniePracownika.setPIN(PIN);
                         break;
                     case "dodajPracownika":
@@ -402,13 +413,13 @@ public class Aplikacja extends JFrame {
                         int idPlacowki = dodaniePracownika.getPlacowka();
                         String imie = dodaniePracownika.getImie();
                         String nazwisko = dodaniePracownika.getNazwisko();
-                        String stanowisko= dodaniePracownika.getStanowisko();
-                        dodajPracownika(idPracownika, idPlacowki, imie,nazwisko,stanowisko,true);
+                        String stanowisko = dodaniePracownika.getStanowisko();
+                        dodajPracownika(idPracownika, idPlacowki, imie, nazwisko, stanowisko, true);
 
                         PIN = dodaniePracownika.getPIN();
                         Szyfrator szyfrator = new Szyfrator(PIN);
                         int szyfr = szyfrator.szyfr();
-                        dodajKodDostepu(idPracownika,szyfr);
+                        dodajKodDostepu(idPracownika, szyfr);
 
                         layout.show(getContentPane(), "przegladPracownikow");
                         break;
@@ -437,13 +448,13 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "dodaniePracownika");
                         break;
                     case "generujTOKEN":
-                        int TOKEN = (int) (Math.random()*1000000);
+                        int TOKEN = (int) (Math.random() * 1000000);
                         przegladPracownikow.setTOKEN(TOKEN);
                         int id = przegladPracownikow.getID();
 
                         Szyfrator szyfrator = new Szyfrator(TOKEN);
                         int szyfr = szyfrator.szyfr();
-                        generujTOKEN(id,szyfr);
+                        generujTOKEN(id, szyfr);
                         break;
                 }
             }
@@ -476,12 +487,12 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
                         break;
                     case "dodajGre":
-                        String nazwa=dyrektorDodanieGry.getTytul();
-                        String wydawca=dyrektorDodanieGry.getTytul();
-                        String gatunek=dyrektorDodanieGry.getTytul();
-                        String klasa=dyrektorDodanieGry.getTytul();
+                        String nazwa = dyrektorDodanieGry.getTytul();
+                        String wydawca = dyrektorDodanieGry.getTytul();
+                        String gatunek = dyrektorDodanieGry.getTytul();
+                        String klasa = dyrektorDodanieGry.getTytul();
                         int rokWydania = dyrektorDodanieGry.getRok();
-                        dodajGre(nazwa,rokWydania,wydawca,gatunek,klasa);
+                        dodajGre(nazwa, rokWydania, wydawca, gatunek, klasa);
 
                         layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
                         break;
@@ -726,14 +737,15 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void zmienGatunek(String gatunek, int idGry) {
+    private void zmienGatunek(String gatunek, int idEgzemplarza) throws SQLException {
+        Statement zapytanie = bazaDanych.createStatement();
+        ResultSet gra = zapytanie.executeQuery("SELECT idGry FROM 00018732_kw.Egzemplarze WHERE idEgzemplarza="+idEgzemplarza+";");
+        gra.next();
+        int idGry = gra.getInt("idGry");
+
         String komenda = "UPDATE 00018732_kw.Gry SET gatunek=" + gatunek + " WHERE idGry=" + idGry + ";";
-        try {
-            Statement zapytanie = bazaDanych.createStatement();
-            zapytanie.executeUpdate(komenda);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        zapytanie = bazaDanych.createStatement();
+        zapytanie.executeUpdate(komenda);
     }
 
     private void zmienCene(int cena, int idEgzemplarza) {
@@ -806,6 +818,32 @@ public class Aplikacja extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void dyskwalifikacja(int idEgzemplarza) {
+        String komenda = "UPDATE 00018732_kw.Egzemplarze SET status=zdyskwalifikowana WHERE idEgzemplarza=" + idEgzemplarza + ";";
+        try {
+            Statement zapytanie = bazaDanych.createStatement();
+            zapytanie.executeUpdate(komenda);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void serwis(int idEgzemplarza) throws SQLException {
+        Statement zapytanie = bazaDanych.createStatement();
+        ResultSet egzemplarz = zapytanie.executeQuery("SELECT stan FROM 00018732_kw.Egzemplarze WHERE idEgzemplarza=" + idEgzemplarza + ";");
+        egzemplarz.next();
+
+        int stan = egzemplarz.getInt("stan");
+        if (stan < 4) {
+            stan++;
+        }
+
+        String komenda = "UPDATE 00018732_kw.Egzemplarze SET stan=" + stan + " WHERE idEgzemplarza=" + idEgzemplarza + ";";
+        zapytanie = bazaDanych.createStatement();
+        zapytanie.executeUpdate(komenda);
+
     }
 
 
