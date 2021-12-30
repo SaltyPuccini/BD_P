@@ -1,12 +1,15 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class EkranZamowien extends JPanel {
-    JTable wysylaneLista = new JTable(new CustomTableModelSR());
-    JTable odbieraneLista = new JTable(new CustomTableModelSR());
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł"}, 0);
+    JTable wysylaneLista = new JTable(model);
+    JTable odbieraneLista = new JTable(model);
     
     JScrollPane wyslane = new JScrollPane(wysylaneLista);
     JScrollPane odebrane = new JScrollPane(odbieraneLista);
@@ -31,11 +34,6 @@ public class EkranZamowien extends JPanel {
         wyslano.setActionCommand("wyslano");
         odebrano.setActionCommand("odebrano");
         wroc.setActionCommand("wroc");
-
-        wysylaneLista.getColumnModel().getColumn(0).setHeaderValue("ID");
-        wysylaneLista.getColumnModel().getColumn(1).setHeaderValue("Tytuł");
-        odbieraneLista.getColumnModel().getColumn(0).setHeaderValue("ID");
-        odbieraneLista.getColumnModel().getColumn(1).setHeaderValue("Tytuł");
 
         uklad.gridx = 0;
         uklad.gridy = 0;
@@ -62,13 +60,14 @@ public class EkranZamowien extends JPanel {
 
     public int getID(String tabela) {
         int index = 0;
-        if (tabela == "wyslane") {
-            //index = wyslane.getS
+        if (Objects.equals(tabela, "wyslane")) {
+            index = wysylaneLista.getSelectedRow();
+            return (int) wysylaneLista.getValueAt(index,0);
 
         } else {
-            //index = odebrane.getSelectedRow();
+            index = odbieraneLista.getSelectedRow();
+            return (int) odbieraneLista.getValueAt(index,0);
         }
-        return index;
     }
 
 }

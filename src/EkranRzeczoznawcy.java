@@ -1,5 +1,3 @@
-import Sprzedawca.CustomTableModelSR;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -15,7 +13,7 @@ public class EkranRzeczoznawcy extends JPanel {
     JLabel etykietaCena = new JLabel("Cena:");
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
 
-    private String[] gatunki = {"strzelanki", "strategiczne"};
+    private String[] gatunki = {"strzelanka", "strategiczne","akcji","bijatyki","logiczne","platformówki","przygodowe","RPG","sportowa","symulacje","wyścigowe"};
     JComboBox gatunek = new JComboBox(gatunki);
 
 

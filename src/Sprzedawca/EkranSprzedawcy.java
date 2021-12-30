@@ -1,6 +1,7 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -22,18 +23,21 @@ public class EkranSprzedawcy extends JPanel {
     JButton zamow = new JButton("Zamów");
     JButton wyloguj = new JButton("Wyloguj");
 
-    Integer[] lata = {1990, 1991};
+    Integer [] lata = {1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021};
     JLabel etykietaRok = new JLabel("Rok:");
     JComboBox wpiszRok = new JComboBox(lata);
     JSplitPane rok = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaRok, wpiszRok);
 
-    private String[] gatunki = {"strzelanki", "strategiczne"};
+    private String[] gatunki = {"strzelanka", "strategiczne","akcji","bijatyki","logiczne","platformówki","przygodowe","RPG","sportowa","symulacje","wyścigowe"};
     JLabel etykietaGatunek = new JLabel("Gatunek:");
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaGatunek, wpiszGatunek);
 
-    JTable gryLista = new JTable(new CustomTableModelGra());//gry tytuł rok wydawnictewo
-        JTable egzemplarzeLista = new JTable(new CustomTableModelEgzemplarz());//egzemplarz ID, stan ,cena, placowka
+    DefaultTableModel modelGry = new DefaultTableModel(new String[] { "ID", "Tytuł","Rok wydania", "Wydawca"}, 0);
+    DefaultTableModel modelEgzemplarza = new DefaultTableModel(new String[] { "ID", "Stan","Cena", "Placówka"}, 0);
+
+    JTable gryLista = new JTable(modelGry);
+    JTable egzemplarzeLista = new JTable(modelEgzemplarza);
 
     JScrollPane gry = new JScrollPane(gryLista);
     JScrollPane egzemplarze = new JScrollPane(egzemplarzeLista);
@@ -60,13 +64,6 @@ public class EkranSprzedawcy extends JPanel {
         kup.setActionCommand("kup");
         zamow.setActionCommand("zamow");
         wyloguj.setActionCommand("wyloguj");
-
-        gryLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
-        gryLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
-        gryLista.getColumnModel().getColumn(2).setHeaderValue("Gatunek");
-        egzemplarzeLista.getColumnModel().getColumn(0).setHeaderValue("Stan");
-        egzemplarzeLista.getColumnModel().getColumn(1).setHeaderValue("Placówka");
-        egzemplarzeLista.getColumnModel().getColumn(2).setHeaderValue("Cena");
 
         uklad.gridwidth = 1;
         uklad.gridheight = 1;

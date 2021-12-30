@@ -1,6 +1,7 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -10,12 +11,13 @@ public class KupnoEgzemplarza extends JPanel {
     JButton filtruj = new JButton("Filtruj");
     JButton wroc = new JButton("Wróć");
 
-    JTable gryLista = new JTable(new CustomTableModelKZ());//id gry, tytuł, rok wydawca
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł", "Rok wydania", "Wydawca"}, 0);
+    JTable gryLista = new JTable(model);
     JScrollPane gry = new JScrollPane(gryLista);
 
-    String[] stany={"dobry"};
+
     JLabel etykietaStan= new JLabel("Stan");
-    JComboBox comboStan = new JComboBox(stany);
+    JComboBox comboStan = new JComboBox(new String [] {"wzorowy","dobry","używany","zły","fatalny"});
     JSplitPane stan= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaStan,comboStan);
 
     JLabel etykietaCena = new JLabel("Cena:");
@@ -45,12 +47,6 @@ public class KupnoEgzemplarza extends JPanel {
         wroc.setActionCommand("wroc");
         filtruj.setActionCommand("filtruj");
         generowanaCena.setText("");
-
-        gryLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
-        gryLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
-        gryLista.getColumnModel().getColumn(2).setHeaderValue("Wydawca");
-        gryLista.removeColumn(gryLista.getColumnModel().getColumn(4));
-        gryLista.removeColumn(gryLista.getColumnModel().getColumn(3));
 
         uklad.gridx=0;
         uklad.gridy=0;

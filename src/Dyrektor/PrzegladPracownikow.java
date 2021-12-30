@@ -19,7 +19,6 @@ public class PrzegladPracownikow extends JPanel {
     private final JButton zmienDane = new JButton("Zmień Dane");
     private final JButton wroc = new JButton("Wróć");
     JLabel TOKEN = new JLabel("");
-    private List<Pracownik> listaPracownikow = new ArrayList<>();
 
     DefaultTableModel model = new DefaultTableModel(new String[] {"ID", "Imie", "Nazwisko", "Placówka"}, 0);
 

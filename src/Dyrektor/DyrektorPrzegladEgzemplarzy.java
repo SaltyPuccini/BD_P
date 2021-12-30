@@ -14,7 +14,6 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
     private final JButton dodajGre = new JButton("Dodaj grę");
     private final JButton dodajEgzemplarze = new JButton("Dodaj egzemplarze");
     private final JButton wroc = new JButton("Wróć");
-    private List<Gra> listaGier = new ArrayList<>();
 
     JTable tabelaGier=new JTable(new DefaultTableModel(new String[]{"ID", "Tytuł","Wydawca","Rok"}, 0) );;
     JScrollPane scrollPane_1 = new JScrollPane(tabelaGier);

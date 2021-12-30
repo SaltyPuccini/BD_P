@@ -1,11 +1,13 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class EkranKoszyka extends JPanel {
-    JTable koszykLista = new JTable(new CustomTableModelKZ());//id, tytuł, stan,cena,rok ,wydawca
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł","Stan","Cena","Rok wydania", "Wydawca"}, 0);
+    JTable koszykLista = new JTable(model);
     JScrollPane koszyk = new JScrollPane(koszykLista);
 
     JButton sprzedaj = new JButton("Sprzedaj");
@@ -29,11 +31,6 @@ public class EkranKoszyka extends JPanel {
         usun.setActionCommand("usun");
         wroc.setActionCommand("wroc");
 
-        koszykLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
-        koszykLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
-        koszykLista.getColumnModel().getColumn(2).setHeaderValue("Wydawca");
-        koszykLista.getColumnModel().getColumn(3).setHeaderValue("Stan");
-        koszykLista.getColumnModel().getColumn(4).setHeaderValue("Cena");
 
         uklad.gridx = 0;
         uklad.gridy = 0;
