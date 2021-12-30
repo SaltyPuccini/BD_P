@@ -99,7 +99,7 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "dyskwalifikacja":
-                        dyskwalifikacja(ekranSerwisanta.getID());
+                        zmienStatus("zdyskwalifikowana",ekranSerwisanta.getID());
                         break;
                     case "wyloguj":
                         layout.show(getContentPane(), "ekranLogowania");
@@ -134,6 +134,7 @@ public class Aplikacja extends JFrame {
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
+                        zmienStatus("gotowa do sprzedaży",idEgzemplarza);
                         break;
                 }
                 ekranRzeczoznawcy.czyscTabele();
@@ -768,7 +769,7 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void zmienStan(String stan, int idEgzemplarza) {
+    private void zmienStan(int stan, int idEgzemplarza) {
         String komenda = "UPDATE 00018732_kw.Egzemplarze SET stan=" + stan + " WHERE idEgzemplarza=" + idEgzemplarza + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -820,16 +821,6 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void dyskwalifikacja(int idEgzemplarza) {
-        String komenda = "UPDATE 00018732_kw.Egzemplarze SET status=zdyskwalifikowana WHERE idEgzemplarza=" + idEgzemplarza + ";";
-        try {
-            Statement zapytanie = bazaDanych.createStatement();
-            zapytanie.executeUpdate(komenda);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void serwis(int idEgzemplarza) throws SQLException {
         Statement zapytanie = bazaDanych.createStatement();
         ResultSet egzemplarz = zapytanie.executeQuery("SELECT stan FROM 00018732_kw.Egzemplarze WHERE idEgzemplarza=" + idEgzemplarza + ";");
@@ -840,10 +831,7 @@ public class Aplikacja extends JFrame {
             stan++;
         }
 
-        String komenda = "UPDATE 00018732_kw.Egzemplarze SET stan=" + stan + " WHERE idEgzemplarza=" + idEgzemplarza + ";";
-        zapytanie = bazaDanych.createStatement();
-        zapytanie.executeUpdate(komenda);
-
+        zmienStan(stan,idEgzemplarza);
     }
 
 
