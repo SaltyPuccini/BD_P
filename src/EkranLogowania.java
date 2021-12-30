@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -65,11 +64,16 @@ public class EkranLogowania extends JPanel {
         add(wyjdz,uklad);
     }
 
-    public char[] getPIN() {
-        return PIN.getPassword();
+    public String getPIN() {
+        return String.valueOf(PIN.getPassword());
     }
 
-    public String getId() {
-        return id.getText();
+    public int getId() {
+        return Integer.parseInt(id.getText());
+    }
+
+    public void resetTextFields(){
+        id.setText("");
+        PIN.setText("");
     }
 }

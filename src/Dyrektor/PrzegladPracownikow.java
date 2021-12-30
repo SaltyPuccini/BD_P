@@ -3,6 +3,10 @@ package Dyrektor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +17,7 @@ public class PrzegladPracownikow extends JPanel {
     private final JButton generujTOKEN = new JButton("Generuj TOKEN");
     private final JButton zmienDane = new JButton("Zmień Dane");
     private final JButton wroc = new JButton("Wróć");
-    JTextField TOKEN = new JTextField(20);
+    JLabel TOKEN = new JLabel("");
     private List<Pracownik> listaPracownikow = new ArrayList<>();
 
     JTable tabelaPracownikow;
@@ -31,8 +35,7 @@ public class PrzegladPracownikow extends JPanel {
 
         scrollPane_1 = new JScrollPane();
         tabelaPracownikow=new JTable();
-        Pracownik pracownik = new Pracownik(1, 2,"3","3","3",false);
-        listaPracownikow.add(pracownik);
+
         tabelaPracownikow.setModel(new CustomTableModelPracownik(listaPracownikow));
         scrollPane_1.setViewportView(tabelaPracownikow);
 
@@ -78,4 +81,12 @@ public class PrzegladPracownikow extends JPanel {
         add(TOKEN,uklad);
     }
 
+    public void setTOKEN(int TOKEN){
+        this.TOKEN.setText(String.valueOf(TOKEN));
+    }
+
+    public int getID() {
+        int index=tabelaPracownikow.getSelectedRow();
+        return (int) tabelaPracownikow.getValueAt(index, 0);
+    }
 }

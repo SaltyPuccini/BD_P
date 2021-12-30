@@ -43,6 +43,7 @@ public class DodaniePlacowki extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         dodajPlacowke.setActionCommand("dodajPlacowke");
         wroc.setActionCommand("wroc");
+        generujID.setActionCommand("generujID");
 
         uklad.gridx=0;//
         uklad.gridy=0;
@@ -77,20 +78,20 @@ public class DodaniePlacowki extends JPanel {
         add(wroc,uklad);
     }
 
-    public String getEtykietaMiasto() {
+    public String getMiasto() {
         return wpiszMiasto.getText();
     }
 
-    public String getEtykietaUlica() {
+    public String getUlica() {
         return wpiszUlica.getText();
     }
 
-    public String getEtykietaNumer() {
-        return wpiszNumer.getText();
+    public int getNumer() {
+        return Integer.parseInt(wpiszNumer.getText());
     }
 
-    public String getEtykietaLokal() {
-        return wpiszLokal.getText();
+    public int getLokal() {
+        return Integer.parseInt(wpiszLokal.getText());
     }
 
     public void setID(Integer id) {

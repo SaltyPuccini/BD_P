@@ -1,12 +1,15 @@
 import Sprzedawca.CustomTableModelSR;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class EkranRzeczoznawcy extends JPanel {
     JButton wyloguj = new JButton("Wyloguj");
-    JButton wycen = new JButton("Dokonano serwis");
+    JButton wycen = new JButton("Dokonano wyceny");
+
+    JTable listaEgzemplarzy;
 
     JTextField wpiszCena = new JTextField(3);
     JLabel etykietaCena = new JLabel("Cena:");
@@ -16,15 +19,25 @@ public class EkranRzeczoznawcy extends JPanel {
     JComboBox gatunek = new JComboBox(gatunki);
 
 
-    JTable listaEgzemplarzy = new JTable(new CustomTableModelSR());
-    JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
+    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł"}, 0);
+
 
     public void addActionListener(ActionListener listener) {
         wyloguj.addActionListener(listener);
         wycen.addActionListener(listener);
     }
 
+    public void dodajDaneZBazy(Object[] obj){
+        model.addRow(obj);
+    }
+
+    public void czyscTabele(){
+        model.setRowCount(0);
+    }
+
     public EkranRzeczoznawcy() {
+        listaEgzemplarzy = new JTable(model);
+        JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
@@ -65,6 +78,11 @@ public class EkranRzeczoznawcy extends JPanel {
 
     public String getGatunek() {
         return (String) gatunek.getSelectedItem();
+    }
+
+    public int getID(){
+        int index = listaEgzemplarzy.getSelectedRow();
+        return (int) listaEgzemplarzy.getValueAt(index,0);
     }
 
 }

@@ -1,21 +1,23 @@
 package Szyfrowanie;
 
+import java.util.IllegalFormatCodePointException;
+
 public class Deszyfrator {
-    private final int ID;
-    private final long kluczPrywatny = 27547297L;
-    private final long modul = 2640601497976797L;
+    private final long kluczPrywatny =  7;
+    private final long modul = 10;
     private int szyfr;
     private int PIN;
 
 
-    public Deszyfrator(int ID) {
-        this.ID = ID;
-        pobierz();
+    public Deszyfrator(int szyfr) {
+        this.szyfr = szyfr;
         deszyfruj();
     }
 
     private int[] konwersja(Integer liczba) {
-        String temp = Integer.toString(liczba);
+        StringBuilder temp= new StringBuilder();
+        temp.append(liczba);
+
         int[] tablica = new int[temp.length()];
         for (int i = 0; i < temp.length(); i++) {
             tablica[i] = temp.charAt(i) - '0';
@@ -32,15 +34,12 @@ public class Deszyfrator {
         return Integer.parseInt(liczba.toString());
     }
 
-    private void pobierz() {
-        //pobranie z bazy
-    }
-
     private void deszyfruj() {
         int[] doOdszyfrowania = konwersja(szyfr);
 
-        for (int i : doOdszyfrowania) {
-            i = (int) (Math.pow(i, kluczPrywatny) % modul);
+        for (int i =0; i<doOdszyfrowania.length; i++) {
+            int temp =(int) (Math.pow(doOdszyfrowania[i], kluczPrywatny) % modul);
+            doOdszyfrowania[i] = temp;
         }
 
         PIN = konwersja(doOdszyfrowania);
