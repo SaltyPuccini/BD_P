@@ -11,13 +11,14 @@ public class DodaniePracownika extends JPanel {
 
 
     JLabel napis = new JLabel("PIN pracownika:");
-    JTextArea PIN = new JTextArea(1, 3);
+    JLabel PIN = new JLabel("");
     JSplitPane PINPracownika = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, napis, PIN);
 
     JLabel etykietaImie = new JLabel("Imię:");
     JLabel etykietaNazwisko = new JLabel("Nazwisko:");
     JLabel etykietaID = new JLabel("ID:");
-    JLabel etykietaPlacowka = new JLabel("Lokal:");
+    JLabel etykietaPlacowka = new JLabel("Placówka:");
+    JLabel etykietaStanowisko = new JLabel("Stanowisko:");
 
     JTextField wpiszImie = new JTextField(20);
     JSplitPane imie = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaImie, wpiszImie);
@@ -27,6 +28,8 @@ public class DodaniePracownika extends JPanel {
     JSplitPane ID = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaID, wpiszID);
     JTextField wpiszPlacowka = new JTextField(20);
     JSplitPane placowka = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaPlacowka, wpiszPlacowka);
+    JComboBox wpiszStanowisko = new JComboBox(new String[]{"Serwisant", "Sprzedawca"});
+    JSplitPane stanowisko = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaStanowisko, wpiszStanowisko);
 
 
     public void addActionListener(ActionListener listener) {
@@ -44,6 +47,7 @@ public class DodaniePracownika extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         dodajPracownika.setActionCommand("dodajPracownika");
         wroc.setActionCommand("wroc");
+        generujPIN.setActionCommand("generujPIN");
 
         uklad.gridx=0;//
         uklad.gridy=0;
@@ -60,6 +64,10 @@ public class DodaniePracownika extends JPanel {
         uklad.gridx=0;
         uklad.gridy=3;
         add(placowka,uklad);
+
+        uklad.gridx=0;
+        uklad.gridy=4;
+        add(stanowisko,uklad);
 
         uklad.gridx=1;//id
         uklad.gridy=0;
@@ -78,24 +86,32 @@ public class DodaniePracownika extends JPanel {
         add(wroc,uklad);
     }
 
-    public String getEtykietaImie() {
+    public String getImie() {
         return wpiszImie.getText();
     }
 
-    public String getEtykietaNazwisko() {
+    public String getNazwisko() {
         return wpiszNazwisko.getText();
     }
 
-    public String getEtykietaID() {
-        return wpiszID.getText();
+    public int getID() {
+        return Integer.parseInt(wpiszID.getText());
     }
 
-    public String getEtykietaPlacowka() {
-        return wpiszPlacowka.getText();
+    public int getPlacowka() {
+        return Integer.parseInt(wpiszPlacowka.getText());
+    }
+
+    public String getStanowisko(){
+        return String.valueOf(wpiszStanowisko.getSelectedItem());
     }
 
     public void setPIN(Integer id) {
         PIN.setText(id.toString());
+    }
+
+    public int getPIN(){
+        return Integer.parseInt(PIN.getText());
     }
 
 }

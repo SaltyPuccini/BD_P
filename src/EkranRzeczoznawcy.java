@@ -80,4 +80,9 @@ public class EkranRzeczoznawcy extends JPanel {
         return (String) gatunek.getSelectedItem();
     }
 
+    public int getID(){
+        int index = listaEgzemplarzy.getSelectedRow();
+        return (int) listaEgzemplarzy.getValueAt(index,0);
+    }
+
 }

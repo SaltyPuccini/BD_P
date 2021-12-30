@@ -18,7 +18,7 @@ public class PrzegladPracownikow extends JPanel {
     private final JButton generujTOKEN = new JButton("Generuj TOKEN");
     private final JButton zmienDane = new JButton("Zmień Dane");
     private final JButton wroc = new JButton("Wróć");
-    JTextField TOKEN = new JTextField(20);
+    JLabel TOKEN = new JLabel("");
     private List<Pracownik> listaPracownikow = new ArrayList<>();
 
     DefaultTableModel model = new DefaultTableModel(new String[] {"ID", "Imie", "Nazwisko", "Placówka"}, 0);
@@ -89,4 +89,12 @@ public class PrzegladPracownikow extends JPanel {
         add(TOKEN,uklad);
     }
 
+    public void setTOKEN(int TOKEN){
+        this.TOKEN.setText(String.valueOf(TOKEN));
+    }
+
+    public int getID() {
+        int index=tabelaPracownikow.getSelectedRow();
+        return (int) tabelaPracownikow.getValueAt(index, 0);
+    }
 }

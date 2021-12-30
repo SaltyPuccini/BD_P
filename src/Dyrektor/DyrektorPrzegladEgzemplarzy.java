@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class DyrektorPrzegladEgzemplarzy extends JPanel {
 
@@ -15,8 +16,8 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
     private final JButton wroc = new JButton("Wróć");
     private List<Gra> listaGier = new ArrayList<>();
 
-    JTable tabelaGier;
-    JScrollPane scrollPane_1;
+    JTable tabelaGier=new JTable(new DefaultTableModel(new String[]{"ID", "Tytuł","Wydawca","Rok"}, 0) );;
+    JScrollPane scrollPane_1 = new JScrollPane(tabelaGier);
 
     JLabel etykietaTytul = new JLabel("Tytuł:");
     JLabel etykietaCena = new JLabel("Cena:");
@@ -37,14 +38,6 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
     }
 
     public DyrektorPrzegladEgzemplarzy() {
-
-        scrollPane_1 = new JScrollPane();
-        tabelaGier=new JTable();
-        Gra gra = new Gra(1, "xD", "XD", "xDDD","xdd",2000);
-        listaGier.add(gra);
-        tabelaGier.setModel(new CustomTableModelGry(listaGier));
-        scrollPane_1.setViewportView(tabelaGier);
-
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
@@ -92,5 +85,15 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
         uklad.gridx=3;
         uklad.gridy=5;
         add(wroc,uklad);
+    }
+    public int gra(){
+        int index = tabelaGier.getSelectedRow();
+        return (int) tabelaGier.getValueAt(index,0);
+    }
+    public int cena(){
+        return Integer.parseInt(wpiszCena.getText());
+    }
+    public int liczba(){
+        return Integer.parseInt(wpiszLiczba.getText());
     }
 }

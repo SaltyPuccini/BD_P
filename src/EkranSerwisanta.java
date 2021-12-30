@@ -12,6 +12,7 @@ public class EkranSerwisanta extends JPanel {
     JButton serwis = new JButton("Dokonano serwis");
 
     DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł"}, 0);
+    JTable listaEgzemplarzy = new JTable(model);
 
 
     public void addActionListener(ActionListener listener) {
@@ -26,7 +27,6 @@ public class EkranSerwisanta extends JPanel {
 
     public EkranSerwisanta() {
 
-        JTable listaEgzemplarzy = new JTable(model);
         JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
@@ -64,5 +64,10 @@ public class EkranSerwisanta extends JPanel {
 
     public void czyscTabele() {
         model.setRowCount(0);
+    }
+
+    public int getID() {
+        int index = listaEgzemplarzy.getSelectedRow();
+        return (int) listaEgzemplarzy.getValueAt(index, 0);
     }
 }
