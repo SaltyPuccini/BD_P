@@ -68,19 +68,19 @@ public class DodanieGry extends JPanel {
         add(wroc,uklad);
     }
 
-    public String getWpiszTytul() {
+    public String getTytul() {
         return wpiszTytul.getText().toString();
     }
 
-    public String getWpiszWydawce() {
+    public String getWydawce() {
         return wpiszWydawce.getText().toString();
     }
 
-    public Integer getWpiszRok() {
+    public Integer getRok() {
         return (Integer) wpiszRok.getSelectedItem();
     }
 
-    public String getWpiszKlase() {
+    public String getKlase() {
         return wpiszKlase.getSelectedItem().toString();
     }
 }

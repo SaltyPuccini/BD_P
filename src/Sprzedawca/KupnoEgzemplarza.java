@@ -10,7 +10,7 @@ public class KupnoEgzemplarza extends JPanel {
     JButton filtruj = new JButton("Filtruj");
     JButton wroc = new JButton("Wróć");
 
-    JTable gryLista = new JTable(new CustomTableModelKZ());
+    JTable gryLista = new JTable(new CustomTableModelKZ());//id gry, tytuł, rok wydawca
     JScrollPane gry = new JScrollPane(gryLista);
 
     String[] stany={"dobry"};
@@ -87,13 +87,20 @@ public class KupnoEgzemplarza extends JPanel {
         add(gry,uklad);
     }
 
-    public String getStan(){
-        return comboStan.getSelectedItem().toString();
+    public int getStan(){
+        return (int) comboStan.getSelectedItem();
     }
     public void setCena(int cena){
         generowanaCena.setText(String.valueOf(cena));
     }
+    public int getCena(){
+        return Integer.parseInt(generowanaCena.getText());
+    }
     public String getTytul(){
         return wpiszTytul.getText();
+    }
+    public int getID(){
+        int index = gryLista.getSelectedRow();
+        return (int) gryLista.getValueAt(index, 0);
     }
 }

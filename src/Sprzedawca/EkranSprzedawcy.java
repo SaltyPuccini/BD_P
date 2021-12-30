@@ -32,8 +32,8 @@ public class EkranSprzedawcy extends JPanel {
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaGatunek, wpiszGatunek);
 
-    JTable gryLista = new JTable(new CustomTableModelGra());
-    JTable egzemplarzeLista = new JTable(new CustomTableModelEgzemplarz());
+    JTable gryLista = new JTable(new CustomTableModelGra());//gry tytuł rok wydawnictewo
+        JTable egzemplarzeLista = new JTable(new CustomTableModelEgzemplarz());//egzemplarz ID, stan ,cena, placowka
 
     JScrollPane gry = new JScrollPane(gryLista);
     JScrollPane egzemplarze = new JScrollPane(egzemplarzeLista);
@@ -128,8 +128,8 @@ public class EkranSprzedawcy extends JPanel {
         return wpiszTytul.getText();
     }
 
-    public Integer getID() {
-        return Integer.valueOf(wpiszID.getText());
+    public String getID() {
+        return wpiszID.getText();
     }
 
     public Integer getRok() {
@@ -140,4 +140,18 @@ public class EkranSprzedawcy extends JPanel {
         return (String) wpiszGatunek.getSelectedItem();
     }
 
+    public int getIDEgzemplarza(){
+        int index = egzemplarzeLista.getSelectedRow();
+        return (int) egzemplarzeLista.getValueAt(index, 0);
+    }
+
+    public int getPlacowka(){
+        int placowka,index = egzemplarzeLista.getSelectedRow();
+        placowka= (int) egzemplarzeLista.getValueAt(index, 3);
+        return placowka;
+    }
+
+    public void resetID(){
+        wpiszID.setText("");
+    }
 }

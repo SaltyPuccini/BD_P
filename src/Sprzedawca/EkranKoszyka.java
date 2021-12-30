@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class EkranKoszyka extends JPanel {
-    JTable koszykLista = new JTable(new CustomTableModelKZ());
+    JTable koszykLista = new JTable(new CustomTableModelKZ());//id, tytuł, stan,cena,rok ,wydawca
     JScrollPane koszyk = new JScrollPane(koszykLista);
 
     JButton sprzedaj = new JButton("Sprzedaj");
@@ -51,5 +51,10 @@ public class EkranKoszyka extends JPanel {
         uklad.gridx = 2;
         uklad.gridy = 3;
         add(wroc, uklad);
+    }
+
+    public int getID(){
+        int index = koszykLista.getSelectedRow();
+        return  (int) koszykLista.getValueAt(index, 0);
     }
 }
