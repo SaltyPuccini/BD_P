@@ -29,7 +29,7 @@ public class DyrektorPrzegladLogow extends JPanel {
     JTextField wpiszPracownik = new JTextField(5);
     JSplitPane pracownik = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaPracownik, wpiszPracownik);
 
-    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Pracownik", "Data", "Akcja"}, 0);
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Egzemplarz", "Pracownik", "Akcja", "Data"}, 0);
 
 
     public void addActionListener(ActionListener listener) {
@@ -46,7 +46,7 @@ public class DyrektorPrzegladLogow extends JPanel {
     }
 
     public DyrektorPrzegladLogow() {
-        tabelaLogow=new JTable();
+        tabelaLogow=new JTable(model);
         JScrollPane scrollPane_1 = new JScrollPane(tabelaLogow);
 
         setLayout(new GridBagLayout());

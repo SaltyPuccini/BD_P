@@ -320,6 +320,8 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "przegladPlacowek");
                         break;
                     case "dyrektorLogiSprzedazy":
+                        dyrektorPrzegladLogow.czyscTabele();
+                        ladujLogi();
                         layout.show(getContentPane(), "dyrektorPrzegladLogow");
                         break;
                     case "dyrektorWyloguj":
@@ -376,20 +378,6 @@ public class Aplikacja extends JFrame {
                 String command = e.getActionCommand();
                 System.out.println(command);
                 switch (command) {
-                    case "generujID":
-                        String komenda = "SELECT COUNT(*) FROM 00018732_kw.Placówki;";
-                        int index = 0;
-                        try {
-                            Statement zapytanie = bazaDanych.createStatement();
-                            ResultSet wynik = zapytanie.executeQuery(komenda.toString());
-                            wynik.next();
-                            index = wynik.getInt(0);
-                        } catch (SQLException exception) {
-                            exception.printStackTrace();
-                        }
-                        index++;
-                        dodaniePlacowki.setID(index);
-                        break;
                     case "dodajPlacowke":
                         String ulica = dodaniePlacowki.getUlica();
                         int numer = dodaniePlacowki.getNumer();
@@ -400,11 +388,12 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "przegladPlacowek");
                         break;
                     case "wroc":
-                        przegladPlacowek.czyscTabele();
-                        ladujPlacowki();
+
                         layout.show(getContentPane(), "przegladPlacowek");
                         break;
                 }
+                przegladPlacowek.czyscTabele();
+                ladujPlacowki();
             }
         });
         dodaniePracownika.addActionListener(new ActionListener() {
@@ -434,11 +423,11 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "przegladPracownikow");
                         break;
                     case "wroc":
-                        przegladPracownikow.czyscTabele();
-                        ladujPracownikow();
                         layout.show(getContentPane(), "przegladPracownikow");
                         break;
                 }
+                przegladPracownikow.czyscTabele();
+                ladujPracownikow();
             }
         });
         przegladPracownikow.addActionListener(new ActionListener() {
@@ -449,7 +438,6 @@ public class Aplikacja extends JFrame {
                 switch (command) {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
-                        przegladPracownikow.czyscTabele();
                         break;
                     case "zwolnijPracownika":
                         zwolnijPracownika(przegladPracownikow.getID());
@@ -465,11 +453,11 @@ public class Aplikacja extends JFrame {
                         przegladPracownikow.setTOKEN(TOKEN);
                         int id = przegladPracownikow.getID();
 
-                        Szyfrator szyfrator = new Szyfrator(TOKEN);
-                        int szyfr = szyfrator.szyfr();
-                        generujTOKEN(id, szyfr);
+                        generujTOKEN(id, TOKEN);
                         break;
                 }
+                przegladPracownikow.czyscTabele();
+                ladujPracownikow();
             }
         });
         przegladPlacowek.addActionListener(new ActionListener() {
@@ -480,7 +468,6 @@ public class Aplikacja extends JFrame {
                 switch (command) {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
-                        przegladPlacowek.czyscTabele();
                         break;
                     case "zamknijPlacowke":
                         zamknijPlacowke(przegladPlacowek.getPlacowka());
@@ -489,6 +476,8 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "dodaniePlacowki");
                         break;
                 }
+                przegladPlacowek.czyscTabele();
+                ladujPlacowki();
             }
         });
         dyrektorDodanieGry.addActionListener(new ActionListener() {
@@ -502,9 +491,9 @@ public class Aplikacja extends JFrame {
                         break;
                     case "dodajGre":
                         String nazwa = dyrektorDodanieGry.getTytul();
-                        String wydawca = dyrektorDodanieGry.getTytul();
-                        String gatunek = dyrektorDodanieGry.getTytul();
-                        String klasa = dyrektorDodanieGry.getTytul();
+                        String wydawca = dyrektorDodanieGry.getWydawce();
+                        String gatunek = dyrektorDodanieGry.getGatunek();
+                        String klasa = dyrektorDodanieGry.getKlase();
                         int rokWydania = dyrektorDodanieGry.getRok();
                         dodajGre(nazwa, rokWydania, wydawca, gatunek, klasa);
 
@@ -540,9 +529,9 @@ public class Aplikacja extends JFrame {
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idLogu, idEgzemplarza, idPracownika, akcja, data FROM 00018732_kw.Placówki;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idLogu, idEgzemplarza, idPracownika, akcja, data FROM 00018732_kw.Log;");
         ) {
-            System.out.println("JD");
+            System.out.println("kurcze....");
             while (resultSet.next()) {
                 int idLogu = resultSet.getInt("idLogu");
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
@@ -550,7 +539,10 @@ public class Aplikacja extends JFrame {
                 String akcja = resultSet.getString("akcja");
                 String data = resultSet.getDate("data").toString();
 
-                //DyrektorPrzegladLogow.dodajDaneZBazy(new Object[]{idLogu, idEgzemplarza, idPracownika, akcja, data});
+                System.out.println(idLogu);
+                System.out.println(idEgzemplarza);
+
+               dyrektorPrzegladLogow.dodajDaneZBazy(new Object[]{idLogu, idEgzemplarza, idPracownika, akcja, data});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -839,7 +831,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajLog(int idEgzemplarza, int idPracownika, String akcja) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Logi (idEgzemplarza, idPracownika, akcja, data) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Log (idEgzemplarza, idPracownika, akcja, data) VALUES (");
         komenda.append(idEgzemplarza);
         komenda.append(",");
         komenda.append(idPracownika);
@@ -957,44 +949,4 @@ public class Aplikacja extends JFrame {
         zmienStatus("do wyceny", idEgzemplarza);
         dodajLog(idEgzemplarza, zalogowanyPracownik, "serwis");
     }
-
-
-    void rzeczoznawcaZaladujTabele() {
-
-        try (
-                Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
-        ) {
-            System.out.println("JD");
-            while (resultSet.next()) {
-                int idEgzemplarza = resultSet.getInt("idEgzemplarza");
-                String nazwa = resultSet.getString("nazwa");
-                ekranRzeczoznawcy.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa});
-                System.out.println(idEgzemplarza);
-                System.out.println(nazwa);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    void serwisantZaladujTabele() {
-
-        try (
-                Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
-        ) {
-            System.out.println("JD");
-            while (resultSet.next()) {
-                int idEgzemplarza = resultSet.getInt("idEgzemplarza");
-                String nazwa = resultSet.getString("nazwa");
-                ekranSerwisanta.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa});
-                System.out.println(idEgzemplarza);
-                System.out.println(nazwa);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
 }

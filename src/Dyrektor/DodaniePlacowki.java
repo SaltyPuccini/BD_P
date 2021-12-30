@@ -9,9 +9,9 @@ public class DodaniePlacowki extends JPanel {
     JButton generujID = new JButton("Generuj ID");
 
 
-    JLabel napis = new JLabel("ID placówki:");
-    JTextArea ID = new JTextArea(1, 3);
-    JSplitPane idPlacowki = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, napis, ID);
+//    JLabel napis = new JLabel("ID placówki:");
+//    JTextArea ID = new JTextArea(1, 3);
+//    JSplitPane idPlacowki = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, napis, ID);
 
     JLabel etykietaMiasto = new JLabel("Miasto:");
     JLabel etykietaUlica = new JLabel("Ulica:");
@@ -61,9 +61,9 @@ public class DodaniePlacowki extends JPanel {
         uklad.gridy=3;
         add(lokal,uklad);
 
-        uklad.gridx=1;//id
-        uklad.gridy=0;
-        add(idPlacowki,uklad);
+//        uklad.gridx=1;//id
+//        uklad.gridy=0;
+//        add(idPlacowki,uklad);
 
         uklad.gridx=1;
         uklad.gridy=1;
@@ -94,8 +94,8 @@ public class DodaniePlacowki extends JPanel {
         return Integer.parseInt(wpiszLokal.getText());
     }
 
-    public void setID(Integer id) {
-        ID.setText(id.toString());
-    }
+//    public void setID(Integer id) {
+//        ID.setText(id.toString());
+//    }
 
 }

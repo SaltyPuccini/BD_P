@@ -23,6 +23,11 @@ public class PrzegladPlacowek extends JPanel {
         zamknijPlacowke.addActionListener(listener);
     }
 
+    public int getPlacowka() {
+        int index=tabelaPlacowek.getSelectedRow();
+        return (int) tabelaPlacowek.getValueAt(index, 0);
+    }
+
     public void dodajDaneZBazy(Object[] obj){
         model.addRow(obj);
     }
