@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Aplikacja extends JFrame {
     final CardLayout layout = new CardLayout();
     public Connection bazaDanych;
+    int zalogowanyPracownik;
     EkranLogowania ekranLogowania = new EkranLogowania();
     ZmienPIN zmienPIN = new ZmienPIN();
     DodaniePlacowki dodaniePlacowki = new DodaniePlacowki();
@@ -99,9 +100,11 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "dyskwalifikacja":
-                        zmienStatus("zdyskwalifikowana",ekranSerwisanta.getID());
+                        zmienStatus("zdyskwalifikowana", ekranSerwisanta.getID());
+                        dodajLog(ekranSerwisanta.getID(),zalogowanyPracownik,"dyskwalifikacja");
                         break;
                     case "wyloguj":
+                        zalogowanyPracownik = -1;
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
                     case "serwis":
@@ -121,6 +124,7 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "wyloguj":
+                        zalogowanyPracownik = -1;
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
                     case "wycen":
@@ -134,7 +138,7 @@ public class Aplikacja extends JFrame {
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
-                        zmienStatus("gotowa do sprzedaży",idEgzemplarza);
+                        zmienStatus("gotowa do sprzedaży", idEgzemplarza);
                         break;
                 }
                 ekranRzeczoznawcy.czyscTabele();
@@ -317,6 +321,7 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "dyrektorPrzegladLogow");
                         break;
                     case "dyrektorWyloguj":
+                        zalogowanyPracownik =-1;
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
                 }
@@ -505,7 +510,7 @@ public class Aplikacja extends JFrame {
 
     void logowanie() throws SQLException {
         String stanowisko = "";
-        String id = ekranLogowania.getId();
+        int id = ekranLogowania.getId();
         int szyfr;
         int PIN;
 
@@ -534,17 +539,21 @@ public class Aplikacja extends JFrame {
         switch (stanowisko) {
             case "Dyrektor":
                 layout.show(getContentPane(), "interfejsDyrektora");
+                zalogowanyPracownik = id;
                 break;
             case "Rzeczoznawca":
                 rzeczoznawcaZaladujTabele();
                 layout.show(getContentPane(), "ekranRzeczoznawcy");
+                zalogowanyPracownik = id;
                 break;
             case "Serwisant":
                 serwisantZaladujTabele();
                 layout.show(getContentPane(), "ekranSerwisanta");
+                zalogowanyPracownik = id;
                 break;
             case "Sprzedawca":
                 layout.show(getContentPane(), "ekranSprzedawcy");
+                zalogowanyPracownik = id;
                 break;
             default:
                 JOptionPane.showMessageDialog(null, "Oj, coś poszło nie tak. :(");
@@ -579,18 +588,12 @@ public class Aplikacja extends JFrame {
         Szyfrator szyfrator = new Szyfrator(PIN);
         szyfr = szyfrator.szyfr();
 
-
         zapytanie = bazaDanych.createStatement();
-
-
         zapytanie.executeUpdate("UPDATE 00018732_kw.KodyDostępu SET PIN=" + szyfr + " WHERE idPracownika=" + id + ";");
-
 
         JOptionPane.showMessageDialog(null, "Poprawnie zmieniono PIN!");
         zmienPIN.resetTextFields();
         layout.show(getContentPane(), "ekranLogowania");
-
-
     }
 
 
@@ -633,6 +636,12 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
+            zapytanie = bazaDanych.createStatement();
+            ResultSet ezgemplarz= zapytanie.executeQuery("SELECT max(idEgzemplarza) FROM 00018732_kw.Egzemplarze");
+            ezgemplarz.next();
+            int idEgzemplarza = ezgemplarz.getInt("idEgzemplarza");
+
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "dodano egzemplarz");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -714,6 +723,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zamowiono");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -740,7 +750,7 @@ public class Aplikacja extends JFrame {
 
     private void zmienGatunek(String gatunek, int idEgzemplarza) throws SQLException {
         Statement zapytanie = bazaDanych.createStatement();
-        ResultSet gra = zapytanie.executeQuery("SELECT idGry FROM 00018732_kw.Egzemplarze WHERE idEgzemplarza="+idEgzemplarza+";");
+        ResultSet gra = zapytanie.executeQuery("SELECT idGry FROM 00018732_kw.Egzemplarze WHERE idEgzemplarza=" + idEgzemplarza + ";");
         gra.next();
         int idGry = gra.getInt("idGry");
 
@@ -754,6 +764,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana ceny: "+ cena );
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -764,6 +775,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana statusu: "+status);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -774,6 +786,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana stanu: "+ stan);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -831,7 +844,9 @@ public class Aplikacja extends JFrame {
             stan++;
         }
 
-        zmienStan(stan,idEgzemplarza);
+        zmienStan(stan, idEgzemplarza);
+        zmienStatus("do wyceny", idEgzemplarza);
+        dodajLog(idEgzemplarza, zalogowanyPracownik, "serwis");
     }
 
 
