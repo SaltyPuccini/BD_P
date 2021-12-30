@@ -427,8 +427,23 @@ public class Aplikacja extends JFrame {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
                         break;
+                    case "zwolnijPracownika":
+                        zwolnijPracownika(przegladPracownikow.getID());
+                        break;
+                    case "zmienDane":
+                        //dodac zmiane danyhc
+                        break;
                     case "dodajPracownika":
                         layout.show(getContentPane(), "dodaniePracownika");
+                        break;
+                    case "generujTOKEN":
+                        int TOKEN = (int) (Math.random()*1000000);
+                        przegladPracownikow.setTOKEN(TOKEN);
+                        int id = przegladPracownikow.getID();
+
+                        Szyfrator szyfrator = new Szyfrator(TOKEN);
+                        int szyfr = szyfrator.szyfr();
+                        generujTOKEN(id,szyfr);
                         break;
                 }
             }
@@ -441,6 +456,9 @@ public class Aplikacja extends JFrame {
                 switch (command) {
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
+                        break;
+                    case "zamknijPlacowke":
+                        zamknijPlacowke(przegladPlacowek.getPlacowka());
                         break;
                     case "dodajPlacowke":
                         layout.show(getContentPane(), "dodaniePlacowki");
@@ -457,10 +475,19 @@ public class Aplikacja extends JFrame {
                     case "wroc":
                         layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
                         break;
+                    case "dodajGre":
+                        String nazwa=dyrektorDodanieGry.getTytul();
+                        String wydawca=dyrektorDodanieGry.getTytul();
+                        String gatunek=dyrektorDodanieGry.getTytul();
+                        String klasa=dyrektorDodanieGry.getTytul();
+                        int rokWydania = dyrektorDodanieGry.getRok();
+                        dodajGre(nazwa,rokWydania,wydawca,gatunek,klasa);
+
+                        layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
+                        break;
                 }
             }
         });
-
     }
 
 
