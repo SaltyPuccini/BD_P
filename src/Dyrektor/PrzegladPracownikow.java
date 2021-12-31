@@ -24,7 +24,6 @@ public class PrzegladPracownikow extends JPanel {
 
     JTable tabelaPracownikow;
 
-
     public void addActionListener(ActionListener listener) {
         wroc.addActionListener(listener);
         dodajPracownika.addActionListener(listener);

@@ -1,6 +1,8 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -33,7 +35,7 @@ public class EkranSprzedawcy extends JPanel {
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaGatunek, wpiszGatunek);
 
-    DefaultTableModel modelGry = new DefaultTableModel(new String[] { "ID", "Tytuł","Rok wydania", "Wydawca"}, 0);
+    DefaultTableModel modelGry = new DefaultTableModel(new String[] { "ID", "Tytuł","Rok wydania", "Wydawca", "Gatunek"}, 0);
     DefaultTableModel modelEgzemplarza = new DefaultTableModel(new String[] { "ID", "Stan","Cena", "Placówka"}, 0);
 
     JTable gryLista = new JTable(modelGry);
@@ -41,6 +43,12 @@ public class EkranSprzedawcy extends JPanel {
 
     JScrollPane gry = new JScrollPane(gryLista);
     JScrollPane egzemplarze = new JScrollPane(egzemplarzeLista);
+
+    public int getIdWybranejGry() {
+        return idWybranejGry;
+    }
+
+    int idWybranejGry = -1;
 
     public void addActionListener(ActionListener listener) {
         dodaj.addActionListener(listener);
@@ -50,6 +58,10 @@ public class EkranSprzedawcy extends JPanel {
         kup.addActionListener(listener);
         zamow.addActionListener(listener);
         wyloguj.addActionListener(listener);
+    }
+
+    public void addSelectionListener(ListSelectionListener listener) {
+        gryLista.getSelectionModel().addListSelectionListener(listener);
     }
 
     public EkranSprzedawcy() {
@@ -137,9 +149,9 @@ public class EkranSprzedawcy extends JPanel {
         return (String) wpiszGatunek.getSelectedItem();
     }
 
-    public int getIDEgzemplarza(){
-        int index = egzemplarzeLista.getSelectedRow();
-        return (int) egzemplarzeLista.getValueAt(index, 0);
+    public int getIDGry(){
+        int index = gryLista.getSelectedRow();
+        return (int) gryLista.getValueAt(index, 0);
     }
 
     public int getPlacowka(){
@@ -150,5 +162,26 @@ public class EkranSprzedawcy extends JPanel {
 
     public void resetID(){
         wpiszID.setText("");
+    }
+
+    public void czyscTabeleGry(){
+        modelGry.setRowCount(0);
+    }
+
+    public void czyscTabeleEgzemplarze(){
+        modelEgzemplarza.setRowCount(0);
+    }
+
+    public void dodajEgzemplarzZBazy(Object[] object) {
+        modelEgzemplarza.addRow(object);
+    }
+
+    public void dodajGreZBazy(Object[] object) {
+        modelGry.addRow(object);
+    }
+
+    public int getIDEgzemplarza() {
+        int index = egzemplarzeLista.getSelectedRow();
+        return (int) egzemplarzeLista.getValueAt(index, 0);
     }
 }

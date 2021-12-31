@@ -20,7 +20,7 @@ public class DyrektorPrzegladLogow extends JPanel {
     JLabel etykietaData = new JLabel("Data:");
     JLabel etykietaPracownik = new JLabel("Pracownik:");
 
-    String[] akcje = {"Zakup gry z rynku pierwotnego","Zakup gry z rynku wtórnego","Sprzedaż gry z placówki","Sprzedaż gry zamówionej","Zamówienie gry", "Odbiór zamówionej gry", "Dodanie pracownika", "Zwolnienie pracownika", "Dodanie placówki", "Zamknięcie placówki"};
+    String[] akcje = {"dyskwalifikacja", "dodano egzemplarz", "zamowiono", "zmiana ceny", "zmiana stanu", "zmiana statusu", "serwis"};
     JComboBox wpiszAkcje = new JComboBox(akcje);
 
     JTextField wpiszData = new JTextField(10);
