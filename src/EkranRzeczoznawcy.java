@@ -1,5 +1,3 @@
-import Sprzedawca.CustomTableModelSR;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -8,6 +6,7 @@ import java.awt.event.ActionListener;
 public class EkranRzeczoznawcy extends JPanel {
     JButton wyloguj = new JButton("Wyloguj");
     JButton wycen = new JButton("Dokonano wyceny");
+    JButton zamowienia = new JButton("Zamówienia");
 
     JTable listaEgzemplarzy;
 
@@ -15,7 +14,7 @@ public class EkranRzeczoznawcy extends JPanel {
     JLabel etykietaCena = new JLabel("Cena:");
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
 
-    private String[] gatunki = {"strzelanki", "strategiczne"};
+    private String[] gatunki = {"strzelanka", "strategiczne","akcji","bijatyki","logiczne","platformówki","przygodowe","RPG","sportowa","symulacje","wyścigowe"};
     JComboBox gatunek = new JComboBox(gatunki);
 
 
@@ -25,6 +24,7 @@ public class EkranRzeczoznawcy extends JPanel {
     public void addActionListener(ActionListener listener) {
         wyloguj.addActionListener(listener);
         wycen.addActionListener(listener);
+        zamowienia.addActionListener(listener);
     }
 
     public void dodajDaneZBazy(Object[] obj){
@@ -46,8 +46,7 @@ public class EkranRzeczoznawcy extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         wyloguj.setActionCommand("wyloguj");
         wycen.setActionCommand("wycen");
-        listaEgzemplarzy.getColumnModel().getColumn(0).setHeaderValue("ID");
-        listaEgzemplarzy.getColumnModel().getColumn(1).setHeaderValue("Tytuł");
+        zamowienia.setActionCommand("zamowienia");
 
         uklad.gridx = 3;
         uklad.gridy = 1;
@@ -63,6 +62,10 @@ public class EkranRzeczoznawcy extends JPanel {
 
         uklad.gridx = 3;
         uklad.gridy = 4;
+        add(zamowienia, uklad);
+
+        uklad.gridx = 3;
+        uklad.gridy = 5;
         add(wyloguj, uklad);
 
 

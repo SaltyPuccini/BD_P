@@ -1,21 +1,25 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class KupnoEgzemplarza extends JPanel {
     JButton dodajGre=new JButton("Dodaj grę");
     JButton zakup = new JButton("Zakup");
     JButton filtruj = new JButton("Filtruj");
     JButton wroc = new JButton("Wróć");
+    JButton generujCene = new JButton("Generuj cenę");
 
-    JTable gryLista = new JTable(new CustomTableModelKZ());
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł", "Rok wydania", "Wydawca"}, 0);
+    JTable gryLista = new JTable(model);
     JScrollPane gry = new JScrollPane(gryLista);
 
-    String[] stany={"dobry"};
+
     JLabel etykietaStan= new JLabel("Stan");
-    JComboBox comboStan = new JComboBox(stany);
+    JComboBox comboStan = new JComboBox(new String [] {"wzorowy","dobry","używany","zły","fatalny"});
     JSplitPane stan= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaStan,comboStan);
 
     JLabel etykietaCena = new JLabel("Cena:");
@@ -26,11 +30,22 @@ public class KupnoEgzemplarza extends JPanel {
     JTextField wpiszTytul = new JTextField(20);
     JSplitPane tytul = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaTytul,wpiszTytul);
 
+    public void dodajDaneZBazy(Object[] obj) {
+
+        model.addRow(obj);
+
+    }
+
+    public void czyscTabele() {
+        model.setRowCount(0);
+    }
+
     public void addActionListener(ActionListener listener) {
         wroc.addActionListener(listener);
         dodajGre.addActionListener(listener);
         zakup.addActionListener(listener);
         filtruj.addActionListener(listener);
+        generujCene.addActionListener(listener);
     }
 
     public KupnoEgzemplarza(){
@@ -44,13 +59,8 @@ public class KupnoEgzemplarza extends JPanel {
         zakup.setActionCommand("zakup");
         wroc.setActionCommand("wroc");
         filtruj.setActionCommand("filtruj");
+        generujCene.setActionCommand("generujCene");
         generowanaCena.setText("");
-
-        gryLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
-        gryLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
-        gryLista.getColumnModel().getColumn(2).setHeaderValue("Wydawca");
-        gryLista.removeColumn(gryLista.getColumnModel().getColumn(4));
-        gryLista.removeColumn(gryLista.getColumnModel().getColumn(3));
 
         uklad.gridx=0;
         uklad.gridy=0;
@@ -74,26 +84,56 @@ public class KupnoEgzemplarza extends JPanel {
 
         uklad.gridx=2;
         uklad.gridy=3;
-        add(zakup,uklad);
+        add(generujCene, uklad);
 
         uklad.gridx=2;
         uklad.gridy=4;
+        add(zakup,uklad);
+
+        uklad.gridx=2;
+        uklad.gridy=5;
         add(wroc,uklad);
 
         uklad.gridwidth = 2;
-        uklad.gridheight=4;
+        uklad.gridheight=5;
         uklad.gridx=0;
         uklad.gridy=1;
         add(gry,uklad);
     }
 
-    public String getStan(){
-        return comboStan.getSelectedItem().toString();
+    public int getStan(){
+        switch (comboStan.getSelectedItem().toString()) {
+            case "fatalny":
+                return 0;
+            case "zły":
+                return 1;
+
+            case "używany":
+                return 2;
+
+            case "dobry":
+                return 3;
+
+            case "wzorowy":
+                return 4;
+
+        }
+        return 0;
     }
+
+
+
     public void setCena(int cena){
         generowanaCena.setText(String.valueOf(cena));
     }
+    public int getCena(){
+        return Integer.parseInt(generowanaCena.getText());
+    }
     public String getTytul(){
         return wpiszTytul.getText();
+    }
+    public int getID(){
+        int index = gryLista.getSelectedRow();
+        return (int) gryLista.getValueAt(index, 0);
     }
 }

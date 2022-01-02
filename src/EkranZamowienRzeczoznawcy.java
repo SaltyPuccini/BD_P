@@ -1,16 +1,14 @@
-package Sprzedawca;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
-public class EkranZamowien extends JPanel {
+public class EkranZamowienRzeczoznawcy extends JPanel {
     DefaultTableModel model = new DefaultTableModel(new String[] { "IDZamówienia","IDEgzemplarza", "Tytuł"}, 0);
     JTable wysylaneLista = new JTable(model);
     JTable odbieraneLista = new JTable(model);
-    
+
     JScrollPane wyslane = new JScrollPane(wysylaneLista);
     JScrollPane odebrane = new JScrollPane(odbieraneLista);
 
@@ -24,7 +22,7 @@ public class EkranZamowien extends JPanel {
         wroc.addActionListener(listener);
     }
 
-    public EkranZamowien() {
+    public EkranZamowienRzeczoznawcy() {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();

@@ -1,6 +1,10 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -22,18 +26,21 @@ public class EkranSprzedawcy extends JPanel {
     JButton zamow = new JButton("Zamów");
     JButton wyloguj = new JButton("Wyloguj");
 
-    Integer[] lata = {1990, 1991};
+    Object [] lata = {"*",1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021};
     JLabel etykietaRok = new JLabel("Rok:");
     JComboBox wpiszRok = new JComboBox(lata);
     JSplitPane rok = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaRok, wpiszRok);
 
-    private String[] gatunki = {"strzelanki", "strategiczne"};
+    private String[] gatunki = {"*","strzelanka", "strategiczne","akcji","bijatyki","logiczne","platformówki","przygodowe","RPG","sportowa","symulacje","wyścigowe"};
     JLabel etykietaGatunek = new JLabel("Gatunek:");
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaGatunek, wpiszGatunek);
 
-    JTable gryLista = new JTable(new CustomTableModelGra());
-    JTable egzemplarzeLista = new JTable(new CustomTableModelEgzemplarz());
+    DefaultTableModel modelGry = new DefaultTableModel(new String[] { "ID", "Tytuł","Rok wydania", "Wydawca", "Gatunek"}, 0);
+    DefaultTableModel modelEgzemplarza = new DefaultTableModel(new String[] { "ID", "Stan","Cena", "Placówka"}, 0);
+
+    JTable gryLista = new JTable(modelGry);
+    JTable egzemplarzeLista = new JTable(modelEgzemplarza);
 
     JScrollPane gry = new JScrollPane(gryLista);
     JScrollPane egzemplarze = new JScrollPane(egzemplarzeLista);
@@ -48,6 +55,10 @@ public class EkranSprzedawcy extends JPanel {
         wyloguj.addActionListener(listener);
     }
 
+    public void addSelectionListener(ListSelectionListener listener) {
+        gryLista.getSelectionModel().addListSelectionListener(listener);
+    }
+
     public EkranSprzedawcy() {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
@@ -60,13 +71,6 @@ public class EkranSprzedawcy extends JPanel {
         kup.setActionCommand("kup");
         zamow.setActionCommand("zamow");
         wyloguj.setActionCommand("wyloguj");
-
-        gryLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
-        gryLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
-        gryLista.getColumnModel().getColumn(2).setHeaderValue("Gatunek");
-        egzemplarzeLista.getColumnModel().getColumn(0).setHeaderValue("Stan");
-        egzemplarzeLista.getColumnModel().getColumn(1).setHeaderValue("Placówka");
-        egzemplarzeLista.getColumnModel().getColumn(2).setHeaderValue("Cena");
 
         uklad.gridwidth = 1;
         uklad.gridheight = 1;
@@ -128,16 +132,66 @@ public class EkranSprzedawcy extends JPanel {
         return wpiszTytul.getText();
     }
 
-    public Integer getID() {
-        return Integer.valueOf(wpiszID.getText());
+    public String getID() {
+        return wpiszID.getText();
     }
 
     public Integer getRok() {
+        if(wpiszRok.getSelectedItem()=="*")
+            return null;
         return (Integer) wpiszRok.getSelectedItem();
     }
 
     public String getGatunek() {
+        if(wpiszGatunek.getSelectedItem()=="*")
+            return null;
         return (String) wpiszGatunek.getSelectedItem();
     }
 
+    public int getIDGry(){
+        int index = gryLista.getSelectedRow();
+        return (int) gryLista.getValueAt(index, 0);
+    }
+
+    public int getPlacowka(){
+        int index = egzemplarzeLista.getSelectedRow();
+        return (int) egzemplarzeLista.getValueAt(index, 3);
+    }
+
+    public void resetID(){
+        wpiszID.setText("");
+    }
+
+    public void czyscTabeleGry(){
+        while(modelGry.getRowCount() > 0)
+        {
+            modelGry.removeRow(0);
+        }
+        gryLista.setModel(modelGry);
+    }
+
+    public void czyscTabeleEgzemplarze(){
+        while(modelEgzemplarza.getRowCount() > 0)
+        {
+            modelEgzemplarza.removeRow(0);
+        }
+        egzemplarzeLista.setModel(modelEgzemplarza);
+    }
+
+    public void dodajEgzemplarzZBazy(Object[] object) {
+        modelEgzemplarza.addRow(object);
+    }
+
+    public void dodajGreZBazy(Object[] object) {
+        modelGry.addRow(object);
+    }
+
+    public int getIDEgzemplarza() {
+        int index = egzemplarzeLista.getSelectedRow();
+        return (int) egzemplarzeLista.getValueAt(index, 0);
+    }
+
+    public void czyscZaznaczenie(){
+
+    }
 }

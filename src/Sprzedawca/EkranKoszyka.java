@@ -1,11 +1,14 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class EkranKoszyka extends JPanel {
-    JTable koszykLista = new JTable(new CustomTableModelKZ());
+
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł","Stan","Cena","Rok wydania", "Wydawca"}, 0);
+    JTable koszykLista = new JTable(model);
     JScrollPane koszyk = new JScrollPane(koszykLista);
 
     JButton sprzedaj = new JButton("Sprzedaj");
@@ -16,6 +19,14 @@ public class EkranKoszyka extends JPanel {
         sprzedaj.addActionListener(listener);
         usun.addActionListener(listener);
         wroc.addActionListener(listener);
+    }
+
+    public void dodajDaneZBazy(Object[] obj){
+        model.addRow(obj);
+    }
+
+    public void czyscTabele(){
+        model.setRowCount(0);
     }
 
     public EkranKoszyka() {
@@ -29,11 +40,6 @@ public class EkranKoszyka extends JPanel {
         usun.setActionCommand("usun");
         wroc.setActionCommand("wroc");
 
-        koszykLista.getColumnModel().getColumn(0).setHeaderValue("Tytuł");
-        koszykLista.getColumnModel().getColumn(1).setHeaderValue("Rok");
-        koszykLista.getColumnModel().getColumn(2).setHeaderValue("Wydawca");
-        koszykLista.getColumnModel().getColumn(3).setHeaderValue("Stan");
-        koszykLista.getColumnModel().getColumn(4).setHeaderValue("Cena");
 
         uklad.gridx = 0;
         uklad.gridy = 0;
@@ -51,5 +57,10 @@ public class EkranKoszyka extends JPanel {
         uklad.gridx = 2;
         uklad.gridy = 3;
         add(wroc, uklad);
+    }
+
+    public int getID(){
+        int index = koszykLista.getSelectedRow();
+        return  (int) koszykLista.getValueAt(index, 0);
     }
 }
