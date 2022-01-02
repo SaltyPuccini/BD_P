@@ -13,6 +13,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Aplikacja extends JFrame {
@@ -45,6 +46,7 @@ public class Aplikacja extends JFrame {
             {80, 100, 120, 150, 200},
     };
     private List<Integer> koszyk = new ArrayList();
+    private List<Integer[]> zamowienia = new ArrayList();
 
     public Aplikacja() {
         polaczenie();
@@ -210,8 +212,6 @@ public class Aplikacja extends JFrame {
     }
 
     void sprzedawca() {
-
-
         ekranSprzedawcy.addSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -220,7 +220,6 @@ public class Aplikacja extends JFrame {
                 sprzedapwcaLadujEgzemplarze();
             }
         });
-
         dodanieGry.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -247,6 +246,11 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "usun":
+                        for (Integer[] integers : zamowienia) {
+                            if (integers[0] == ekranKoszyka.getID()) {
+                                usunZamowienie(integers[1]);
+                            }
+                        }
                         koszyk.remove(ekranKoszyka.getID());
                         ekranKoszyka.czyscTabele();
                         KoszykLadujEgzemplarze();
@@ -254,8 +258,15 @@ public class Aplikacja extends JFrame {
                     case "sprzedaj":
                         for (int i : koszyk) {
                             zmienStatus("sprzedana", i);
+
+                            for (Integer[] integers : zamowienia) {
+                                if (integers[0] == i) {
+                                    zmienSatusZamowienia("sprzedana",integers[1]);
+                                }
+                            }
                         }
                         koszyk.clear();
+                        zamowienia.clear();
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranSprzedawcy");
@@ -302,12 +313,15 @@ public class Aplikacja extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String akcja = e.getActionCommand();
                 System.out.println(akcja);
-                switch (akcja) {//dodac stan wysłki
+                int id;
+                switch (akcja) {
                     case "odebrano":
-
+                        id =ekranZamowien.getID("odebrane");
+                        zmienSatusZamowienia("do sprzedaży",id);
                         break;
                     case "wyslano":
-
+                        id =ekranZamowien.getID("wyslane");
+                        zmienSatusZamowienia("do odebrania",id);
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranSprzedawcy");
@@ -322,7 +336,7 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "dodaj":
-                        String id = ekranSprzedawcy.getID();//todo KACPER NAPRAW TO PROSZĘ KOCHANY KUMPLU
+                        String id = ekranSprzedawcy.getID();
                         if (Objects.equals(id, "")) {
                             id = String.valueOf(ekranSprzedawcy.getIDEgzemplarza());
                             koszyk.add(Integer.valueOf(id));
@@ -588,6 +602,7 @@ public class Aplikacja extends JFrame {
         });
 
     }
+
 
     void ladujPracownikow() {
 
@@ -1011,18 +1026,31 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajZamowienie(int idEgzemplarza, int idPlacowkiWysylajacej, int idPlacowkiOdbierajacej) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamówienia (idEgzemplarza, placówkaWysyłająca, placówkaOdbierająca) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamówienia (idEgzemplarza, placówkaWysyłająca, placówkaOdbierająca,status) VALUES (");
         komenda.append(idEgzemplarza);
         komenda.append(",");
         komenda.append(idPlacowkiWysylajacej);
         komenda.append(",");
         komenda.append(idPlacowkiOdbierajacej);
+        komenda.append(",");
+        komenda.append("do wysłania");
         komenda.append(");");
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
             dodajLog(idEgzemplarza, zalogowanyPracownik, "zamowiono");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void zmienSatusZamowienia(String status,int idZamowienia){
+        String komenda = "UPDATE 00018732_kw.Zamówienia SET status=" + status + " WHERE idZamówienia=" + idZamowienia + ";";
+        Statement zapytanie = null;
+        try {
+            zapytanie = bazaDanych.createStatement();
+            zapytanie.executeUpdate(komenda);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1166,14 +1194,31 @@ public class Aplikacja extends JFrame {
         int idEgzemplarza = -1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
-            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idEgzemplarza FROM 00018732_kw.Zamówienia WHERE idZamówienia=" + idZamowienia + ";");
+            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idEgzemplarza, status FROM 00018732_kw.Zamówienia WHERE idZamówienia=" + idZamowienia + ";");
             egzemplarz.next();
-            idEgzemplarza = egzemplarz.getInt("idPlacowki");
+            if(!egzemplarz.getString("status").contains("do sprzedaży")){
+                JOptionPane.showMessageDialog(null, "Brak zamowienia.");
+                return;
+            }
+            idEgzemplarza = egzemplarz.getInt("idEgzemplarza");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         koszyk.add(idEgzemplarza);
+
+        zmienSatusZamowienia("w koszyku", idZamowienia);
+        zamowienia.add(new Integer[]{idEgzemplarza, idZamowienia});
+    }
+
+    private void usunZamowienie(int idZamowienia){
+        try {
+            Statement zapytanie = bazaDanych.createStatement();
+            zapytanie.executeUpdate("UPDATE 00018732_kw.Zamówienia SET status=\"do sprzedaży\" WHERE idZamówienia=" + idZamowienia + ";");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private int klasaGry(int idGry) {

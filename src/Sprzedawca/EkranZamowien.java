@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class EkranZamowien extends JPanel {
-    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł"}, 0);
+    DefaultTableModel model = new DefaultTableModel(new String[] { "IDZamówienia","IDEgzemplarza", "Tytuł"}, 0);
     JTable wysylaneLista = new JTable(model);
     JTable odbieraneLista = new JTable(model);
     
