@@ -60,6 +60,7 @@ public class EkranSprzedawcy extends JPanel {
     }
 
     public EkranSprzedawcy() {
+
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
