@@ -36,6 +36,7 @@ public class Aplikacja extends JFrame {
     PrzegladPlacowek przegladPlacowek = new PrzegladPlacowek();
     PrzegladPracownikow przegladPracownikow = new PrzegladPracownikow();
     DyrektorDodanieGry dyrektorDodanieGry = new DyrektorDodanieGry();
+    EkranZamowienRzeczoznawcy ekranZamowienRzeczoznawcy = new EkranZamowienRzeczoznawcy();
     int[][] ceny = {
             {20, 40, 60, 80, 100},
             {0, 4, 15, 30, 50},
@@ -140,6 +141,9 @@ public class Aplikacja extends JFrame {
                         zalogowanyPracownik = -1;
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
+                    case "zamowienia":
+                        layout.show(getContentPane(), "ekranZamowienRzeczoznawcy");
+                        break;
                     case "wycen":
                         int cena = ekranRzeczoznawcy.getCena();
                         String gatunek = ekranRzeczoznawcy.getGatunek();
@@ -156,6 +160,27 @@ public class Aplikacja extends JFrame {
                 }
                 ekranRzeczoznawcy.czyscTabele();
                 rzeczoznawcaZaladujTabele();
+            }
+        });
+        ekranZamowienRzeczoznawcy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String akcja = e.getActionCommand();
+                System.out.println(akcja);
+                int id;
+                switch (akcja) {
+                    case "odebrano":
+                        id =ekranZamowien.getID("odebrane");
+                        zmienSatusZamowienia("dostarczone",id);
+                        break;
+                    case "wyslano":
+                        id =ekranZamowien.getID("wyslane");
+                        zmienSatusZamowienia("do odebrania",id);
+                        break;
+                    case "wroc":
+                        layout.show(getContentPane(), "ekranRzeczoznawcy");
+                        break;
+                }
             }
         });
 
@@ -207,6 +232,7 @@ public class Aplikacja extends JFrame {
         add(przegladPlacowek, "przegladPlacowek");
         add(przegladPracownikow, "przegladPracownikow");
         add(dyrektorDodanieGry, "dyrektorDodanieGry");
+        add(ekranZamowienRzeczoznawcy,"ekranZamowienRzeczoznawcy");
     }
 
     void sprzedawca() {
@@ -286,7 +312,9 @@ public class Aplikacja extends JFrame {
                         int idGry = kupnoEgzemplarza.getID();
                         stan = kupnoEgzemplarza.getStan();
                         cena = kupnoEgzemplarza.getCena();
-                        dodajEgzemplarz(idGry, 1, stan, cena, "do serwisu");
+                        int idPlacowki = placowka(zalogowanyPracownik);
+                        int idEgzemplarza = dodajEgzemplarz(idGry, idPlacowki, stan, cena, "do serwisu");
+                        dodajZamowienie(idEgzemplarza,idPlacowki,1);
                         break;
                     case "generujCene":
                         int klasa = klasaGry(kupnoEgzemplarza.getID());
@@ -880,7 +908,7 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void dodajEgzemplarz(int idGry, int idPlacowki, int stan, int cena, String status) {
+    private int dodajEgzemplarz(int idGry, int idPlacowki, int stan, int cena, String status) {
         StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Egzemplarze (idGry, idPlacówki, stan, cena, status) VALUES (");
         komenda.append(idGry);
         komenda.append(",");
@@ -894,18 +922,20 @@ public class Aplikacja extends JFrame {
         komenda.append("\");");
         System.out.println(komenda.toString());
 
+        int idEgzemplarza=-1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
             zapytanie = bazaDanych.createStatement();
             ResultSet ezgemplarz = zapytanie.executeQuery("SELECT max(idEgzemplarza) AS idEgzemplarza FROM 00018732_kw.Egzemplarze");
             ezgemplarz.next();
-            int idEgzemplarza = ezgemplarz.getInt("idEgzemplarza");
+            idEgzemplarza = ezgemplarz.getInt("idEgzemplarza");
 
             dodajLog(idEgzemplarza, zalogowanyPracownik, "dodano egzemplarz");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return idEgzemplarza;
     }
 
     private void dodajPracownika(int idPracownika, int idPlacowki, String imie, String nazwisko, String stanowisko, boolean status) {
