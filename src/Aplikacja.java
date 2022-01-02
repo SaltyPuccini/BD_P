@@ -215,9 +215,10 @@ public class Aplikacja extends JFrame {
         ekranSprzedawcy.addSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(e.getFirstIndex()!=-1)
+                if(e.getFirstIndex()!=-1){
                 ekranSprzedawcy.czyscTabeleEgzemplarze();
                 sprzedapwcaLadujEgzemplarze();
+            }
             }
         });
         dodanieGry.addActionListener(new ActionListener() {
@@ -251,13 +252,13 @@ public class Aplikacja extends JFrame {
                                 usunZamowienie(integers[1]);
                             }
                         }
-                        koszyk.remove(ekranKoszyka.getID());
+                        koszyk.remove((Object)ekranKoszyka.getID());
                         ekranKoszyka.czyscTabele();
-                        KoszykLadujEgzemplarze();
+                        wyswietlenieKoszyka();
                         break;
                     case "sprzedaj":
                         for (int i : koszyk) {
-                            zmienStatus("sprzedana", i);
+                            zmienStatus("\"sprzedana\"", i);
 
                             for (Integer[] integers : zamowienia) {
                                 if (integers[0] == i) {
@@ -267,6 +268,7 @@ public class Aplikacja extends JFrame {
                         }
                         koszyk.clear();
                         zamowienia.clear();
+                        ekranKoszyka.czyscTabele();
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranSprzedawcy");
@@ -346,13 +348,12 @@ public class Aplikacja extends JFrame {
                         ekranSprzedawcy.resetID();
                         ekranSprzedawcy.czyscTabeleGry();
                         ekranSprzedawcy.czyscTabeleEgzemplarze();
-                        sprzedapwcaLadujEgzemplarze();
                         sprzedawcaLadujGry(ladujGry());
                         break;
                     case "koszyk":
                         layout.show(getContentPane(), "ekranKoszyka");
                         ekranKoszyka.czyscTabele();
-                        KoszykLadujEgzemplarze();
+                        wyswietlenieKoszyka();
                         break;
                     case "zamowienia":
                         layout.show(getContentPane(), "ekranZamowien");
@@ -716,10 +717,6 @@ public class Aplikacja extends JFrame {
     List<Object[]> ladujEgzemplarze() {
 
         List<Object[]> object = new ArrayList<>();
-        if(ekranSprzedawcy.getIDGry()<0)
-        {
-            return object;
-        }
         try (
                 Statement zapytanie = bazaDanych.createStatement();
                 ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacówki FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry());
@@ -748,16 +745,6 @@ public class Aplikacja extends JFrame {
             ekranSprzedawcy.dodajEgzemplarzZBazy(ob);
         }
     }
-
-    void KoszykLadujEgzemplarze() {
-
-        List<Object[]> object = ladujEgzemplarze();
-        for (Object[] ob : object) {
-            if(koszyk.contains(ob[0]))
-            ekranKoszyka.dodajDaneZBazy(ob);
-        }
-    }
-
 
     List<Object[]> rzeczoznawcaISerwisantZaladujTabele() {
         List<Object[]> object = new ArrayList<>();
@@ -1210,6 +1197,34 @@ public class Aplikacja extends JFrame {
         zmienSatusZamowienia("w koszyku", idZamowienia);
         zamowienia.add(new Integer[]{idEgzemplarza, idZamowienia});
     }
+
+
+    void wyswietlenieKoszyka(){
+        for(int i =0; i< koszyk.size();i++){
+
+            try {
+                int idEgzemplarza, cena, rokWydania;
+                String nazwa, stan, wydawca;
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet egzemplarz = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa, e.stan, e.cena, g.rokWydania, g.wydawca  FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry WHERE e.idEgzemplarza=" + koszyk.get(i) + ";");
+                egzemplarz.next();
+
+                idEgzemplarza = egzemplarz.getInt("idEgzemplarza");
+                cena = egzemplarz.getInt("cena");
+                rokWydania = egzemplarz.getInt("rokWydania");
+                nazwa = egzemplarz.getString("nazwa");
+                stan = egzemplarz.getString("stan");
+                wydawca = egzemplarz.getString("wydawca");
+
+                ekranKoszyka.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa, stan, cena, rokWydania, wydawca});
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 
     private void usunZamowienie(int idZamowienia){
         try {

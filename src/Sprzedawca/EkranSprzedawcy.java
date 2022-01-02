@@ -170,11 +170,13 @@ public class EkranSprzedawcy extends JPanel {
     }
 
     public void czyscTabeleGry(){
-        modelGry.setRowCount(0);
+        modelGry.getDataVector().removeAllElements();
+        modelGry.fireTableDataChanged();
     }
 
     public void czyscTabeleEgzemplarze(){
-        modelEgzemplarza.setRowCount(0);
+        modelEgzemplarza.getDataVector().removeAllElements();
+        modelEgzemplarza.fireTableDataChanged();
     }
 
     public void dodajEgzemplarzZBazy(Object[] object) {
