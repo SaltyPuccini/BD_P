@@ -10,9 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -243,7 +241,7 @@ public class Aplikacja extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if(e.getFirstIndex()!=-1){
                 ekranSprzedawcy.czyscTabeleEgzemplarze();
-                sprzedapwcaLadujEgzemplarze();
+                sprzedawcaLadujEgzemplarze();
             }
             }
         });
@@ -406,7 +404,7 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "kupnoEgzemplarza");
                         break;
                     case "zamow":
-                        int idEgzemplarza = ekranSprzedawcy.getIDGry();
+                        int idEgzemplarza = ekranSprzedawcy.getIDEgzemplarza();
                         int idPlacowkiWysylajacej = ekranSprzedawcy.getPlacowka();
                         int idPlacowkiOdbierajacej = placowka(zalogowanyPracownik);
                         dodajZamowienie(idEgzemplarza, idPlacowkiWysylajacej, idPlacowkiOdbierajacej);
@@ -766,7 +764,7 @@ public class Aplikacja extends JFrame {
     }
 
 
-    void sprzedapwcaLadujEgzemplarze() {
+    void sprzedawcaLadujEgzemplarze() {
 
         List<Object[]> object = ladujEgzemplarze();
         for (Object[] ob : object) {
@@ -778,7 +776,7 @@ public class Aplikacja extends JFrame {
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, e.stan, e.cena g.nazwa, g.rokWydania, g.wydawca FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, e.stan, e.cena, g.nazwa, g.rokWydania, g.wydawca FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
         ) {
             while (resultSet.next()) {
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
@@ -1043,15 +1041,13 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajZamowienie(int idEgzemplarza, int idPlacowkiWysylajacej, int idPlacowkiOdbierajacej) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamówienia (idEgzemplarza, placówkaWysyłająca, placówkaOdbierająca,status) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamówienia (idEgzemplarza, placówkaWysyłająca, placówkaOdbierająca, status) VALUES (");
         komenda.append(idEgzemplarza);
         komenda.append(",");
         komenda.append(idPlacowkiWysylajacej);
         komenda.append(",");
         komenda.append(idPlacowkiOdbierajacej);
-        komenda.append(",");
-        komenda.append("do wysłania");
-        komenda.append(");");
+        komenda.append(", \"do wysłania\");");
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -1115,7 +1111,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void zmienStatus(String status, int idEgzemplarza) {
-        String komenda = "UPDATE 00018732_kw.Egzemplarze SET status=" + status + " WHERE idEgzemplarza=" + idEgzemplarza + ";";
+        String komenda = "UPDATE 00018732_kw.Egzemplarze SET status=\"" + status + "\" WHERE idEgzemplarza=" + idEgzemplarza + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
@@ -1197,9 +1193,9 @@ public class Aplikacja extends JFrame {
         int idPlacowki = -1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
-            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idPlacowki FROM 00018732_kw.Pracownicy WHERE idPracownika=" + idPracownika + ";");
+            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idPlacówki FROM 00018732_kw.Pracownicy WHERE idPracownika=" + idPracownika + ";");
             egzemplarz.next();
-            idPlacowki = egzemplarz.getInt("idPlacowki");
+            idPlacowki = egzemplarz.getInt("idPlacówki");
         } catch (SQLException e) {
             e.printStackTrace();
         }
