@@ -416,9 +416,7 @@ public class Aplikacja extends JFrame {
                         dodajPracownika(idPracownika, idPlacowki, imie, nazwisko, stanowisko, true);
 
                         PIN = dodaniePracownika.getPIN();
-                        Szyfrator szyfrator = new Szyfrator(PIN);
-                        int szyfr = szyfrator.szyfr();
-                        dodajKodDostepu(idPracownika, szyfr);
+                        dodajKodDostepu(idPracownika, PIN);
 
                         layout.show(getContentPane(), "przegladPracownikow");
                         break;
