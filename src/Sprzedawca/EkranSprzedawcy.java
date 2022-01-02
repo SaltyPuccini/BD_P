@@ -45,12 +45,6 @@ public class EkranSprzedawcy extends JPanel {
     JScrollPane gry = new JScrollPane(gryLista);
     JScrollPane egzemplarze = new JScrollPane(egzemplarzeLista);
 
-    public int getIdWybranejGry() {
-        return idWybranejGry;
-    }
-
-    int idWybranejGry = -1;
-
     public void addActionListener(ActionListener listener) {
         dodaj.addActionListener(listener);
         koszyk.addActionListener(listener);
@@ -160,9 +154,8 @@ public class EkranSprzedawcy extends JPanel {
     }
 
     public int getPlacowka(){
-        int placowka,index = egzemplarzeLista.getSelectedRow();
-        placowka= (int) egzemplarzeLista.getValueAt(index, 3);
-        return placowka;
+        int index = egzemplarzeLista.getSelectedRow();
+        return (int) egzemplarzeLista.getValueAt(index, 3);
     }
 
     public void resetID(){
@@ -170,11 +163,19 @@ public class EkranSprzedawcy extends JPanel {
     }
 
     public void czyscTabeleGry(){
-        gryLista = new JTable(modelGry);
+        while(modelGry.getRowCount() > 0)
+        {
+            modelGry.removeRow(0);
+        }
+        gryLista.setModel(modelGry);
     }
 
     public void czyscTabeleEgzemplarze(){
-        egzemplarzeLista = new JTable(modelEgzemplarza);
+        while(modelEgzemplarza.getRowCount() > 0)
+        {
+            modelEgzemplarza.removeRow(0);
+        }
+        egzemplarzeLista.setModel(modelEgzemplarza);
     }
 
     public void dodajEgzemplarzZBazy(Object[] object) {
@@ -188,5 +189,9 @@ public class EkranSprzedawcy extends JPanel {
     public int getIDEgzemplarza() {
         int index = egzemplarzeLista.getSelectedRow();
         return (int) egzemplarzeLista.getValueAt(index, 0);
+    }
+
+    public void czyscZaznaczenie(){
+
     }
 }

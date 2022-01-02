@@ -282,7 +282,7 @@ public class Aplikacja extends JFrame {
                         break;
                     case "sprzedaj":
                         for (int i : koszyk) {
-                            zmienStatus("\"sprzedana\"", i);
+                            zmienStatus("sprzedana", i);
 
                             for (Integer[] integers : zamowienia) {
                                 if (integers[0] == i) {
@@ -372,16 +372,17 @@ public class Aplikacja extends JFrame {
                             zamowienieDoKoszyka(Integer.parseInt(id));
                         }
                         ekranSprzedawcy.resetID();
-                        ekranSprzedawcy.czyscTabeleGry();
                         ekranSprzedawcy.czyscTabeleEgzemplarze();
-                        sprzedawcaLadujGry(ladujGry());
+                        sprzedawcaLadujEgzemplarze();
                         break;
                     case "koszyk":
+                        ekranSprzedawcy.czyscTabeleEgzemplarze();
                         layout.show(getContentPane(), "ekranKoszyka");
                         ekranKoszyka.czyscTabele();
                         wyswietlenieKoszyka();
                         break;
                     case "zamowienia":
+                        ekranSprzedawcy.czyscTabeleEgzemplarze();
                         layout.show(getContentPane(), "ekranZamowien");
                         break;
                     case "szukaj"://aktualizacja tablic
@@ -672,6 +673,7 @@ public class Aplikacja extends JFrame {
         }
     }
 
+
     List<Object[]> filtrujGry(String nazwa, String gatunek, String rokWydania, List<Object[]>aktualneGry){
 
         for(int i = 0; i < aktualneGry.size();i++){
@@ -740,18 +742,24 @@ public class Aplikacja extends JFrame {
         }
     }
 
+
     List<Object[]> ladujEgzemplarze() {
 
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacówki FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry());
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacówki, status FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry());
         ) {
             while (resultSet.next()) {
+                if(!Objects.equals(resultSet.getString("status"), "gotowa do sprzedaży")){
+                    continue;
+                }
+
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 String stan = resultSet.getString("stan");
                 int cena = resultSet.getInt("cena");
                 int placowka = resultSet.getInt("idPlacówki");
+
 
                 object.add(new Object[]{idEgzemplarza, stan, cena, placowka});
 
@@ -762,7 +770,6 @@ public class Aplikacja extends JFrame {
 
         return object;
     }
-
 
     void sprzedawcaLadujEgzemplarze() {
 
@@ -776,7 +783,7 @@ public class Aplikacja extends JFrame {
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, e.stan, e.cena, g.nazwa, g.rokWydania, g.wydawca FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT e.status, e.idEgzemplarza, e.stan, e.cena, g.nazwa, g.rokWydania, g.wydawca FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
         ) {
             while (resultSet.next()) {
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
@@ -785,7 +792,8 @@ public class Aplikacja extends JFrame {
                 int rokWydania = resultSet.getInt("rokWydania");
                 String wydawca = resultSet.getString("wydawca");
                 String nazwa = resultSet.getString("nazwa");
-                object.add(new Object[]{idEgzemplarza, nazwa, stan, cena, rokWydania, wydawca});
+                String status = resultSet.getString("status");
+                object.add(new Object[]{idEgzemplarza, nazwa, stan, cena, rokWydania, wydawca, status});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -820,6 +828,9 @@ public class Aplikacja extends JFrame {
     void rzeczoznawcaZaladujTabele() {
         List<Object[]> object = rzeczoznawcaISerwisantZaladujTabele();
         for (Object[] ob : object) {
+            if(ob[6]!="do wyceny"){
+                continue;
+            }
             Object[] nowyob = new Object[]{ob[0],ob[1]};
             ekranRzeczoznawcy.dodajDaneZBazy(nowyob);
         }
@@ -828,8 +839,21 @@ public class Aplikacja extends JFrame {
     void serwisantZaladujTabele() {
         List<Object[]> object = rzeczoznawcaISerwisantZaladujTabele();
         for (Object[] ob : object) {
+            if(ob[6]!="do serwisu"){
+                continue;
+            }
             Object[] nowyob = new Object[]{ob[0],ob[1]};
             ekranSerwisanta.dodajDaneZBazy(nowyob);
+        }
+    }
+
+    void wyswietlenieKoszyka(){
+        List<Object[]> objects = rzeczoznawcaISerwisantZaladujTabele();
+        for (Object[] ob : objects) {
+            if(koszyk.contains(ob[0])){
+                Object[] nowyob = new Object[]{ob[0],ob[1],ob[2],ob[3],ob[4],ob[5]};
+                ekranKoszyka.dodajDaneZBazy(nowyob);
+            }
         }
     }
 
@@ -1111,7 +1135,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void zmienStatus(String status, int idEgzemplarza) {
-        String komenda = "UPDATE 00018732_kw.Egzemplarze SET status=\"" + status + "\" WHERE idEgzemplarza=" + idEgzemplarza + ";";
+        String komenda = "UPDATE 00018732_kw.Egzemplarze SET status= \"" + status + "\" WHERE idEgzemplarza=" + idEgzemplarza + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
@@ -1223,34 +1247,6 @@ public class Aplikacja extends JFrame {
         zmienSatusZamowienia("w koszyku", idZamowienia);
         zamowienia.add(new Integer[]{idEgzemplarza, idZamowienia});
     }
-
-
-    void wyswietlenieKoszyka(){
-        for(int i =0; i< koszyk.size();i++){
-
-            try {
-                int idEgzemplarza, cena, rokWydania;
-                String nazwa, stan, wydawca;
-                Statement zapytanie = bazaDanych.createStatement();
-                ResultSet egzemplarz = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa, e.stan, e.cena, g.rokWydania, g.wydawca  FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry WHERE e.idEgzemplarza=" + koszyk.get(i) + ";");
-                egzemplarz.next();
-
-                idEgzemplarza = egzemplarz.getInt("idEgzemplarza");
-                cena = egzemplarz.getInt("cena");
-                rokWydania = egzemplarz.getInt("rokWydania");
-                nazwa = egzemplarz.getString("nazwa");
-                stan = egzemplarz.getString("stan");
-                wydawca = egzemplarz.getString("wydawca");
-
-                ekranKoszyka.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa, stan, cena, rokWydania, wydawca});
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
 
     private void usunZamowienie(int idZamowienia){
         try {
