@@ -1,6 +1,7 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -33,7 +34,7 @@ public class EkranSprzedawcy extends JPanel {
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaGatunek, wpiszGatunek);
 
-    DefaultTableModel modelGry = new DefaultTableModel(new String[] { "ID", "Tytuł","Rok wydania", "Wydawca"}, 0);
+    DefaultTableModel modelGry = new DefaultTableModel(new String[] { "ID", "Tytuł","Wydawca", "Rok"}, 0);
     DefaultTableModel modelEgzemplarza = new DefaultTableModel(new String[] { "ID", "Stan","Cena", "Placówka"}, 0);
 
     JTable gryLista = new JTable(modelGry);
@@ -50,6 +51,11 @@ public class EkranSprzedawcy extends JPanel {
         kup.addActionListener(listener);
         zamow.addActionListener(listener);
         wyloguj.addActionListener(listener);
+
+    }
+
+    public void addSelectionListener(ListSelectionListener listener) {
+        gryLista.getSelectionModel().addListSelectionListener(listener);
     }
 
     public EkranSprzedawcy() {

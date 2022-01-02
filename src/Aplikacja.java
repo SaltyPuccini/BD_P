@@ -4,6 +4,8 @@ import Szyfrowanie.Deszyfrator;
 import Szyfrowanie.Szyfrator;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -207,6 +209,12 @@ public class Aplikacja extends JFrame {
     }
 
     void sprzedawca() {
+        ekranSprzedawcy.addSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+
+            }
+        });
         dodanieGry.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -607,8 +615,8 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    void rzeczoznawcaZaladujTabele() {
-
+    List<Object[]> rzeczoznawcaZaladujTabele() {
+        List<Object[]> object = null;
         try (
                 Statement zapytanie = bazaDanych.createStatement();
                 ResultSet resultSet = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
@@ -617,13 +625,12 @@ public class Aplikacja extends JFrame {
             while (resultSet.next()) {
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 String nazwa = resultSet.getString("nazwa");
-                ekranRzeczoznawcy.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa});
-                System.out.println(idEgzemplarza);
-                System.out.println(nazwa);
+                
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        return object;
     }
 
     void serwisantZaladujTabele() {
@@ -850,18 +857,28 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajZamowienie(int idEgzemplarza, int idPlacowkiWysylajacej, int idPlacowkiOdbierajacej) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamówienia (idEgzemplarza, placówkaWysyłająca, placówkaOdbierająca) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamówienia (idEgzemplarza, placówkaWysyłająca, placówkaOdbierająca, status) VALUES (");
         komenda.append(idEgzemplarza);
         komenda.append(",");
         komenda.append(idPlacowkiWysylajacej);
         komenda.append(",");
         komenda.append(idPlacowkiOdbierajacej);
-        komenda.append(");");
+        komenda.append(",wysyłka);");
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
             dodajLog(idEgzemplarza, zalogowanyPracownik, "zamowiono");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void zmienStatusZamowienia(String status, int idZamowienia){
+        String komenda = "UPDATE 00018732_kw.Zamówienia SET status=" + status + " WHERE idZamówienia=" + idZamowienia + ";";
+        try {
+            Statement zapytanie = bazaDanych.createStatement();
+            zapytanie.executeUpdate(komenda);
         } catch (SQLException e) {
             e.printStackTrace();
         }
