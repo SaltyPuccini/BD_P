@@ -10,9 +10,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Aplikacja extends JFrame {
     final CardLayout layout = new CardLayout();
@@ -239,9 +241,10 @@ public class Aplikacja extends JFrame {
         ekranSprzedawcy.addSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(e.getFirstIndex()!=-1)
+                if(e.getFirstIndex()!=-1){
                 ekranSprzedawcy.czyscTabeleEgzemplarze();
                 sprzedapwcaLadujEgzemplarze();
+            }
             }
         });
         dodanieGry.addActionListener(new ActionListener() {
@@ -275,13 +278,13 @@ public class Aplikacja extends JFrame {
                                 usunZamowienie(integers[1]);
                             }
                         }
-                        koszyk.remove(ekranKoszyka.getID());
+                        koszyk.remove((Object)ekranKoszyka.getID());
                         ekranKoszyka.czyscTabele();
-                        KoszykLadujEgzemplarze();
+                        wyswietlenieKoszyka();
                         break;
                     case "sprzedaj":
                         for (int i : koszyk) {
-                            zmienStatus("sprzedana", i);
+                            zmienStatus("\"sprzedana\"", i);
 
                             for (Integer[] integers : zamowienia) {
                                 if (integers[0] == i) {
@@ -291,6 +294,7 @@ public class Aplikacja extends JFrame {
                         }
                         koszyk.clear();
                         zamowienia.clear();
+                        ekranKoszyka.czyscTabele();
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranSprzedawcy");
@@ -323,7 +327,10 @@ public class Aplikacja extends JFrame {
                         kupnoEgzemplarza.setCena(cena);
                         break;
                     case "filtruj":
-
+                        kupnoEgzemplarza.czyscTabele();
+                        String nazwa = kupnoEgzemplarza.getTytul();
+                        List<Object[]>gryPrzefiltrowane = filtrujGry(nazwa, null, null, ladujGry()) ;
+                        sprzedawcaLadujGryKupno(gryPrzefiltrowane);
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranSprzedawcy");
@@ -369,21 +376,33 @@ public class Aplikacja extends JFrame {
                         ekranSprzedawcy.resetID();
                         ekranSprzedawcy.czyscTabeleGry();
                         ekranSprzedawcy.czyscTabeleEgzemplarze();
-                        sprzedapwcaLadujEgzemplarze();
-                        sprzedawcaLadujGry();
+                        sprzedawcaLadujGry(ladujGry());
                         break;
                     case "koszyk":
                         layout.show(getContentPane(), "ekranKoszyka");
                         ekranKoszyka.czyscTabele();
-                        KoszykLadujEgzemplarze();
+                        wyswietlenieKoszyka();
                         break;
                     case "zamowienia":
                         layout.show(getContentPane(), "ekranZamowien");
                         break;
                     case "szukaj"://aktualizacja tablic
-
+                        ekranSprzedawcy.czyscTabeleGry();
+                        ekranSprzedawcy.czyscTabeleEgzemplarze();
+                        String nazwa = ekranSprzedawcy.getTytul();
+                        String gatunek = ekranSprzedawcy.getGatunek();
+                        Integer rokwydania = ekranSprzedawcy.getRok();
+                        String rok;
+                        if(rokwydania==null)
+                            rok = null;
+                        else
+                            rok = rokwydania.toString();
+                        List<Object[]>gryPrzefiltrowane = filtrujGry(nazwa, gatunek, rok, ladujGry()) ;
+                        sprzedawcaLadujGry(gryPrzefiltrowane);
                         break;
                     case "kup":
+                        kupnoEgzemplarza.czyscTabele();
+                        sprzedawcaLadujGryKupno(ladujGry());
                         layout.show(getContentPane(), "kupnoEgzemplarza");
                         break;
                     case "zamow":
@@ -415,7 +434,7 @@ public class Aplikacja extends JFrame {
                         break;
                     case "dyrektorGry":
                         dyrektorPrzegladGier.czyscTabele();
-                        dyrektorLadujGry();
+                        dyrektorLadujGry(ladujGry());
                         layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
                         break;
                     case "dyrektorPlacowki":
@@ -441,7 +460,10 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "filtruj":
-
+                        dyrektorPrzegladGier.czyscTabele();
+                        String nazwa = dyrektorPrzegladGier.getTytul();
+                        List<Object[]>gryPrzefiltrowane = filtrujGry(nazwa, null, null, ladujGry()) ;
+                        dyrektorLadujGry(gryPrzefiltrowane);
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "interfejsDyrektora");
@@ -604,7 +626,7 @@ public class Aplikacja extends JFrame {
                         break;
                 }
                 dyrektorPrzegladGier.czyscTabele();
-                dyrektorLadujGry();
+                dyrektorLadujGry(ladujGry());
             }
         });
 
@@ -652,6 +674,30 @@ public class Aplikacja extends JFrame {
         }
     }
 
+    List<Object[]> filtrujGry(String nazwa, String gatunek, String rokWydania, List<Object[]>aktualneGry){
+
+        for(int i = 0; i < aktualneGry.size();i++){
+            if(nazwa!=null && !aktualneGry.get(i)[1].toString().toLowerCase().contains(nazwa.toLowerCase())){
+                System.out.println("Usuwam po tytule "+aktualneGry.get(i)[1].toString().toLowerCase());
+                aktualneGry.remove(i);
+                i--;
+                continue;
+            }
+            if(gatunek!=null && !aktualneGry.get(i)[4].toString().toLowerCase().contains(gatunek.toLowerCase())){
+                System.out.println("Usuwam po gatunku "+aktualneGry.get(i)[4].toString().toLowerCase());
+                aktualneGry.remove(i);
+                i--;
+                continue;
+            }
+            if(rokWydania!=null && !aktualneGry.get(i)[2].toString().contains(rokWydania)){
+                System.out.println("Usuwam po rokWydania "+aktualneGry.get(i)[2].toString().toLowerCase());
+                aktualneGry.remove(i);
+                i--;
+                continue;
+            }
+        }
+        return aktualneGry;
+    }
 
     List<Object[]> ladujGry() {
 
@@ -678,20 +724,23 @@ public class Aplikacja extends JFrame {
         return object;
     }
 
-    void dyrektorLadujGry() {
-        List<Object[]> object = ladujGry();
+    void dyrektorLadujGry( List<Object[]> object) {
         for (Object[] ob : object) {
             dyrektorPrzegladGier.dodajDaneZBazy(ob);
         }
     }
 
-    void sprzedawcaLadujGry() {
-        List<Object[]> object = ladujGry();
+    void sprzedawcaLadujGry(List<Object[]> object) {
         for (Object[] ob : object) {
             ekranSprzedawcy.dodajGreZBazy(ob);
         }
     }
 
+    void sprzedawcaLadujGryKupno(List<Object[]> object) {
+        for (Object[] ob : object) {
+            kupnoEgzemplarza.dodajDaneZBazy(ob);
+        }
+    }
 
     List<Object[]> ladujEgzemplarze() {
 
@@ -716,6 +765,7 @@ public class Aplikacja extends JFrame {
         return object;
     }
 
+
     void sprzedapwcaLadujEgzemplarze() {
 
         List<Object[]> object = ladujEgzemplarze();
@@ -723,16 +773,6 @@ public class Aplikacja extends JFrame {
             ekranSprzedawcy.dodajEgzemplarzZBazy(ob);
         }
     }
-
-    void KoszykLadujEgzemplarze() {
-
-        List<Object[]> object = ladujEgzemplarze();
-        for (Object[] ob : object) {
-            if(koszyk.contains(ob[0]))
-            ekranKoszyka.dodajDaneZBazy(ob);
-        }
-    }
-
 
     List<Object[]> rzeczoznawcaISerwisantZaladujTabele() {
         List<Object[]> object = new ArrayList<>();
@@ -840,7 +880,7 @@ public class Aplikacja extends JFrame {
                 zalogowanyPracownik = id;
                 break;
             case "Sprzedawca":
-                sprzedawcaLadujGry();
+                sprzedawcaLadujGry(ladujGry());
                 layout.show(getContentPane(), "ekranSprzedawcy");
                 zalogowanyPracownik = id;
                 break;
@@ -1187,6 +1227,34 @@ public class Aplikacja extends JFrame {
         zmienSatusZamowienia("w koszyku", idZamowienia);
         zamowienia.add(new Integer[]{idEgzemplarza, idZamowienia});
     }
+
+
+    void wyswietlenieKoszyka(){
+        for(int i =0; i< koszyk.size();i++){
+
+            try {
+                int idEgzemplarza, cena, rokWydania;
+                String nazwa, stan, wydawca;
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet egzemplarz = zapytanie.executeQuery("SELECT e.idEgzemplarza, g.nazwa, e.stan, e.cena, g.rokWydania, g.wydawca  FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry WHERE e.idEgzemplarza=" + koszyk.get(i) + ";");
+                egzemplarz.next();
+
+                idEgzemplarza = egzemplarz.getInt("idEgzemplarza");
+                cena = egzemplarz.getInt("cena");
+                rokWydania = egzemplarz.getInt("rokWydania");
+                nazwa = egzemplarz.getString("nazwa");
+                stan = egzemplarz.getString("stan");
+                wydawca = egzemplarz.getString("wydawca");
+
+                ekranKoszyka.dodajDaneZBazy(new Object[]{idEgzemplarza, nazwa, stan, cena, rokWydania, wydawca});
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 
     private void usunZamowienie(int idZamowienia){
         try {
