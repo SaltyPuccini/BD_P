@@ -8,15 +8,15 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class DyrektorPrzegladEgzemplarzy extends JPanel {
+public class DyrektorPrzegladGier extends JPanel {
 
     private final JButton filtruj = new JButton("Filtruj");
     private final JButton dodajGre = new JButton("Dodaj grę");
     private final JButton dodajEgzemplarze = new JButton("Dodaj egzemplarze");
     private final JButton wroc = new JButton("Wróć");
 
-    JTable tabelaGier=new JTable(new DefaultTableModel(new String[]{"ID", "Tytuł","Wydawca","Rok"}, 0) );;
-    JScrollPane scrollPane_1 = new JScrollPane(tabelaGier);
+    JTable tabelaGier;
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł", "Rok wydania", "Wydawca", "Gatunek"},0);
 
     JLabel etykietaTytul = new JLabel("Tytuł:");
     JLabel etykietaCena = new JLabel("Cena:");
@@ -36,7 +36,10 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
         dodajEgzemplarze.addActionListener(listener);
     }
 
-    public DyrektorPrzegladEgzemplarzy() {
+    public DyrektorPrzegladGier() {
+        tabelaGier = new JTable(model);
+        JScrollPane scrollPane_1 = new JScrollPane(tabelaGier);
+
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
@@ -94,5 +97,13 @@ public class DyrektorPrzegladEgzemplarzy extends JPanel {
     }
     public int liczba(){
         return Integer.parseInt(wpiszLiczba.getText());
+    }
+
+    public void dodajDaneZBazy(Object[] obj){
+        model.addRow(obj);
+    }
+
+    public void czyscTabele(){
+        model.setRowCount(0);
     }
 }

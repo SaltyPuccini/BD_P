@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class EkranKoszyka extends JPanel {
+
     DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł","Stan","Cena","Rok wydania", "Wydawca"}, 0);
     JTable koszykLista = new JTable(model);
     JScrollPane koszyk = new JScrollPane(koszykLista);
@@ -18,6 +19,14 @@ public class EkranKoszyka extends JPanel {
         sprzedaj.addActionListener(listener);
         usun.addActionListener(listener);
         wroc.addActionListener(listener);
+    }
+
+    public void dodajDaneZBazy(Object[] obj){
+        model.addRow(obj);
+    }
+
+    public void czyscTabele(){
+        model.setRowCount(0);
     }
 
     public EkranKoszyka() {
