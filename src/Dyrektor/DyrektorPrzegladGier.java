@@ -16,7 +16,7 @@ public class DyrektorPrzegladGier extends JPanel {
     private final JButton wroc = new JButton("Wróć");
 
     JTable tabelaGier;
-    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł", "Rok wydania", "Wydawca", "Gatunek"},0);
+    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł", "Rok wydania", "Wydawca", "Gatunek"}, 0);
 
     JLabel etykietaTytul = new JLabel("Tytuł:");
     JLabel etykietaCena = new JLabel("Cena:");
@@ -52,58 +52,67 @@ public class DyrektorPrzegladGier extends JPanel {
         dodajGre.setActionCommand("dodajGre");
         dodajEgzemplarze.setActionCommand("dodajEgzemplarze");
 
-        uklad.gridx=0;//
-        uklad.gridy=0;
-        add(tytul,uklad);
+        uklad.gridx = 0;//
+        uklad.gridy = 0;
+        add(tytul, uklad);
 
-        uklad.gridx=1;
-        uklad.gridy=0;
-        add(filtruj,uklad);
+        uklad.gridx = 1;
+        uklad.gridy = 0;
+        add(filtruj, uklad);
 
-        uklad.gridx=3;
-        uklad.gridy=0;
-        add(dodajGre,uklad);
+        uklad.gridx = 3;
+        uklad.gridy = 0;
+        add(dodajGre, uklad);
 
-        uklad.gridx=3;
-        uklad.gridy=0;
-        add(dodajGre,uklad);
+        uklad.gridx = 3;
+        uklad.gridy = 0;
+        add(dodajGre, uklad);
 
-        uklad.gridx=0;
-        uklad.gridy=4;
-        add(scrollPane_1,uklad);
+        uklad.gridx = 0;
+        uklad.gridy = 4;
+        add(scrollPane_1, uklad);
 
-        uklad.gridx=3;
-        uklad.gridy=1;
-        add(cena,uklad);
+        uklad.gridx = 3;
+        uklad.gridy = 1;
+        add(cena, uklad);
 
-        uklad.gridx=3;
-        uklad.gridy=2;
-        add(liczba,uklad);
+        uklad.gridx = 3;
+        uklad.gridy = 2;
+        add(liczba, uklad);
 
-        uklad.gridx=3;
-        uklad.gridy=3;
-        add(dodajEgzemplarze,uklad);
+        uklad.gridx = 3;
+        uklad.gridy = 3;
+        add(dodajEgzemplarze, uklad);
 
-        uklad.gridx=3;
-        uklad.gridy=5;
-        add(wroc,uklad);
+        uklad.gridx = 3;
+        uklad.gridy = 5;
+        add(wroc, uklad);
     }
-    public int gra(){
+
+    public int gra() {
         int index = tabelaGier.getSelectedRow();
-        return (int) tabelaGier.getValueAt(index,0);
+        return (int) tabelaGier.getValueAt(index, 0);
     }
-    public int cena(){
+
+    public int cena() {
         return Integer.parseInt(wpiszCena.getText());
     }
-    public int liczba(){
+
+    public int liczba() {
         return Integer.parseInt(wpiszLiczba.getText());
     }
 
-    public void dodajDaneZBazy(Object[] obj){
-        model.addRow(obj);
+    public String getTytul(){
+        return wpiszTytul.getText().toString();
     }
 
-    public void czyscTabele(){
+    public void dodajDaneZBazy(Object[] obj) {
+
+        model.addRow(obj);
+
+    }
+
+    public void czyscTabele() {
         model.setRowCount(0);
     }
 }
