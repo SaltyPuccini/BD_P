@@ -25,7 +25,7 @@ public class DyrektorDodanieGry extends JPanel {
     JLabel etykietaKlasa =  new JLabel("Klasa:");
     JSplitPane klasa = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaKlasa,wpiszKlase);
 
-    String [] gatunki = {"Przygodowe","Rougelike","MMO","MOBA"," Battle Royal","Zręcznościowe","RPG","FPS"," Strategiczne","Bijatyki","JRPG","Platformówki"," Symulatory","Skradanki","Sportowe"};
+    String [] gatunki = {"Przygodowe","Rougelike","MMO","MOBA","Battle Royal","Zręcznościowe","RPG","FPS","Strategiczne","Bijatyki","JRPG","Platformówki","Symulacyjne","Skradanki","Sportowe"};
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JLabel etykietaGatunek =  new JLabel("Gatunek:");
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaGatunek,wpiszGatunek);

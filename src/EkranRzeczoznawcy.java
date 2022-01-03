@@ -36,14 +36,18 @@ public class EkranRzeczoznawcy extends JPanel {
     }
 
     public EkranRzeczoznawcy() {
-        listaEgzemplarzy = new JTable(model);
-        JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
         uklad.gridwidth = 1;
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
+
+        listaEgzemplarzy = new JTable(model);
+        listaEgzemplarzy.getColumnModel().getColumn(0).setMaxWidth(50);
+        JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
+        tabelaEgzemplarzy.setPreferredSize(new Dimension(800,400));
+
         wyloguj.setActionCommand("wyloguj");
         wycen.setActionCommand("wycen");
         zamowienia.setActionCommand("zamowienia");

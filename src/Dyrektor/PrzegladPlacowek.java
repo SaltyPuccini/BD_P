@@ -13,7 +13,7 @@ public class PrzegladPlacowek extends JPanel {
     private final JButton zamknijPlacowke = new JButton("Zamknij placówkę");
     private final JButton wroc = new JButton("Wróć");
 
-    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Adres", "Numer", "Numer Lokalu", "Miasto"}, 0);
+    DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Adres", "Numer", "Lokal", "Miasto"}, 0);
 
     JTable tabelaPlacowek;
 
@@ -37,15 +37,20 @@ public class PrzegladPlacowek extends JPanel {
     }
 
     public PrzegladPlacowek(){
-        tabelaPlacowek=new JTable(model);
-        JScrollPane scrollPane_1 = new JScrollPane(tabelaPlacowek);
-
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
         uklad.gridwidth = 1;
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
+
+
+        tabelaPlacowek=new JTable(model);
+        tabelaPlacowek.getColumnModel().getColumn(0).setMaxWidth(50);
+        tabelaPlacowek.getColumnModel().getColumn(2).setMaxWidth(100);
+        tabelaPlacowek.getColumnModel().getColumn(3).setMaxWidth(100);
+        JScrollPane scrollPane_1 = new JScrollPane(tabelaPlacowek);
+        scrollPane_1.setPreferredSize(new Dimension(600,400));
 
         dodajPlacowke.setActionCommand("dodajPlacowke");
         wroc.setActionCommand("wroc");
@@ -66,7 +71,6 @@ public class PrzegladPlacowek extends JPanel {
         uklad.gridheight=3;
         uklad.gridx=0;//
         uklad.gridy=0;
-        scrollPane_1.setPreferredSize(new Dimension(600,400));
         add(scrollPane_1,uklad);
     }
 

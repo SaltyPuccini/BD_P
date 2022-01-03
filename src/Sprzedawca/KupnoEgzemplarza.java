@@ -15,7 +15,6 @@ public class KupnoEgzemplarza extends JPanel {
 
     DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł", "Rok wydania", "Wydawca"}, 0);
     JTable gryLista = new JTable(model);
-    JScrollPane gry = new JScrollPane(gryLista);
 
 
     JLabel etykietaStan= new JLabel("Stan");
@@ -26,7 +25,7 @@ public class KupnoEgzemplarza extends JPanel {
     JTextArea generowanaCena = new JTextArea(1,3);
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaCena,generowanaCena);
 
-    JLabel etykietaTytul = new JLabel("tytuł:");
+    JLabel etykietaTytul = new JLabel("Tytuł:");
     JTextField wpiszTytul = new JTextField(20);
     JSplitPane tytul = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaTytul,wpiszTytul);
 
@@ -52,6 +51,12 @@ public class KupnoEgzemplarza extends JPanel {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
+
+        gryLista.getColumnModel().getColumn(0).setMaxWidth(50);
+        gryLista.getColumnModel().getColumn(2).setMaxWidth(110);
+        JScrollPane gry = new JScrollPane(gryLista);
+        gry.setPreferredSize(new Dimension(800,400));
+
         uklad.gridwidth = 1;
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);

@@ -9,7 +9,6 @@ public class EkranKoszyka extends JPanel {
 
     DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Tytuł","Stan","Cena","Rok wydania", "Wydawca"}, 0);
     JTable koszykLista = new JTable(model);
-    JScrollPane koszyk = new JScrollPane(koszykLista);
 
     JButton sprzedaj = new JButton("Sprzedaj");
     JButton usun = new JButton("Usuń egzemplarz");
@@ -40,6 +39,11 @@ public class EkranKoszyka extends JPanel {
         usun.setActionCommand("usun");
         wroc.setActionCommand("wroc");
 
+        koszykLista.getColumnModel().getColumn(0).setMaxWidth(50);
+        koszykLista.getColumnModel().getColumn(3).setMaxWidth(120);
+        koszykLista.getColumnModel().getColumn(4).setMaxWidth(110);
+        JScrollPane koszyk = new JScrollPane(koszykLista);
+        koszyk.setPreferredSize(new Dimension(1100,400));
 
         uklad.gridx = 0;
         uklad.gridy = 0;

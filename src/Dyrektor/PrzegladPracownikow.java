@@ -41,15 +41,18 @@ public class PrzegladPracownikow extends JPanel {
     }
 
     public PrzegladPracownikow(){
-        tabelaPracownikow = new JTable(model);
-        JScrollPane scrollPane_1 = new JScrollPane(tabelaPracownikow);
-
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
         uklad.gridwidth = 1;
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
+
+        tabelaPracownikow = new JTable(model);
+        tabelaPracownikow.getColumnModel().getColumn(0).setMaxWidth(50);
+        tabelaPracownikow.getColumnModel().getColumn(3).setMaxWidth(80);
+        JScrollPane scrollPane_1 = new JScrollPane(tabelaPracownikow);
+
 
         wroc.setActionCommand("wroc");
         dodajPracownika.setActionCommand("dodajPracownika");

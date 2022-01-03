@@ -18,6 +18,7 @@ public class Aplikacja extends JFrame {
     final CardLayout layout = new CardLayout();
     public Connection bazaDanych;
     int zalogowanyPracownik;
+
     EkranLogowania ekranLogowania = new EkranLogowania();
     ZmienPIN zmienPIN = new ZmienPIN();
     DodaniePlacowki dodaniePlacowki = new DodaniePlacowki();
@@ -38,6 +39,7 @@ public class Aplikacja extends JFrame {
     DyrektorDodanieGry dyrektorDodanieGry = new DyrektorDodanieGry();
     EkranZamowienRzeczoznawcy ekranZamowienRzeczoznawcy = new EkranZamowienRzeczoznawcy();
     ZmienDane zmienDane = new ZmienDane();
+
     int[][] ceny = {
             {20, 40, 60, 80, 100},
             {0, 4, 15, 30, 50},

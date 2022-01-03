@@ -64,10 +64,18 @@ public class EkranSprzedawcy extends JPanel {
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
 
+        gryLista.getColumnModel().getColumn(0).setMaxWidth(50);
+        gryLista.getColumnModel().getColumn(2).setMaxWidth(110);
+        gryLista.getColumnModel().getColumn(4).setMaxWidth(100);
+        egzemplarzeLista.getColumnModel().getColumn(0).setMaxWidth(50);
+        egzemplarzeLista.getColumnModel().getColumn(3).setMaxWidth(100);
+
         gryLista.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         egzemplarzeLista.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         JScrollPane gry = new JScrollPane(gryLista);
         JScrollPane egzemplarze = new JScrollPane(egzemplarzeLista);
+        gry.setPreferredSize(new Dimension(500,150));
+        egzemplarze.setPreferredSize(new Dimension(500,150));
 
         dodaj.setActionCommand("dodaj");
         koszyk.setActionCommand("koszyk");
@@ -119,10 +127,6 @@ public class EkranSprzedawcy extends JPanel {
         uklad.gridx = 0;
         uklad.gridy = 6;
         add(wyloguj, uklad);
-
-
-        gry.setPreferredSize(new Dimension(500,150));
-        egzemplarze.setPreferredSize(new Dimension(500,150));
 
         uklad.gridwidth = 3;
         uklad.gridheight = 2;

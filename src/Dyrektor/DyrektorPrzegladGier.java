@@ -37,15 +37,19 @@ public class DyrektorPrzegladGier extends JPanel {
     }
 
     public DyrektorPrzegladGier() {
-        tabelaGier = new JTable(model);
-        JScrollPane scrollPane_1 = new JScrollPane(tabelaGier);
-
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200, 700));
         GridBagConstraints uklad = new GridBagConstraints();
         uklad.gridwidth = 1;
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
+
+        tabelaGier = new JTable(model);
+        tabelaGier.getColumnModel().getColumn(0).setMaxWidth(50);
+        tabelaGier.getColumnModel().getColumn(2).setMaxWidth(130);
+        tabelaGier.getColumnModel().getColumn(4).setMaxWidth(130);
+        JScrollPane scrollPane_1 = new JScrollPane(tabelaGier);
+        scrollPane_1.setPreferredSize(new Dimension(800,400));
 
         filtruj.setActionCommand("filtruj");
         wroc.setActionCommand("wroc");
@@ -84,7 +88,6 @@ public class DyrektorPrzegladGier extends JPanel {
         uklad.gridheight=3;
         uklad.gridx = 0;
         uklad.gridy = 1;
-        scrollPane_1.setPreferredSize(new Dimension(800,400));
         add(scrollPane_1, uklad);
     }
 
