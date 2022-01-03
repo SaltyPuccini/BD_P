@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class DyrektorPrzegladLogow extends JPanel {
 
@@ -17,10 +18,10 @@ public class DyrektorPrzegladLogow extends JPanel {
 
 
     JLabel etykietaAkcja = new JLabel("Akcja:");
-    JLabel etykietaData = new JLabel("Data:");
+    JLabel etykietaData = new JLabel("Data(rok-miesiąc-dzień):");
     JLabel etykietaPracownik = new JLabel("Pracownik:");
 
-    String[] akcje = {"dyskwalifikacja", "dodano egzemplarz", "zamowiono", "zmiana ceny", "zmiana stanu", "zmiana statusu", "serwis"};
+    String[] akcje = {"*", "dyskwalifikacja", "dodano egzemplarz", "zamowiono", "zmiana ceny", "zmiana stanu", "zmiana statusu", "serwis"};
     JComboBox wpiszAkcje = new JComboBox(akcje);
 
     JTextField wpiszData = new JTextField(10);
@@ -82,7 +83,41 @@ public class DyrektorPrzegladLogow extends JPanel {
         uklad.gridheight=5;
         uklad.gridx=0;//
         uklad.gridy=0;
+        scrollPane_1.setPreferredSize(new Dimension(600,400));
         add(scrollPane_1,uklad);
-
     }
+
+    public void czysc(){
+        wpiszData.setText("");
+        wpiszPracownik.setText("");
+        wpiszAkcje.setSelectedIndex(0);
+    }
+
+    public String getAkcja(){
+        String akcja=wpiszAkcje.getSelectedItem().toString();
+        if(Objects.equals(akcja, "*")){
+            return null;
+        }else{
+            return akcja;
+        }
+    }
+
+    public String getID(){
+        String id=wpiszPracownik.getText().toString();
+        if(id.equals("")){
+            return null;
+        }else{
+            return id;
+        }
+    }
+
+    public String getData(){
+        String data = wpiszData.getText().toString();
+        if(data.equals("")){
+            return null;
+        }else{
+            return data;
+        }
+    }
+
 }

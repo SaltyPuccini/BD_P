@@ -10,9 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Aplikacja extends JFrame {
     final CardLayout layout = new CardLayout();
@@ -37,6 +37,7 @@ public class Aplikacja extends JFrame {
     PrzegladPracownikow przegladPracownikow = new PrzegladPracownikow();
     DyrektorDodanieGry dyrektorDodanieGry = new DyrektorDodanieGry();
     EkranZamowienRzeczoznawcy ekranZamowienRzeczoznawcy = new EkranZamowienRzeczoznawcy();
+    ZmienDane zmienDane = new ZmienDane();
     int[][] ceny = {
             {20, 40, 60, 80, 100},
             {0, 4, 15, 30, 50},
@@ -46,6 +47,7 @@ public class Aplikacja extends JFrame {
     };
     private List<Integer> koszyk = new ArrayList();
     private List<Integer[]> zamowienia = new ArrayList();
+
 
     public Aplikacja() {
         polaczenie();
@@ -170,12 +172,12 @@ public class Aplikacja extends JFrame {
                 int id;
                 switch (akcja) {
                     case "odebrano":
-                        id =ekranZamowien.getID("odebrane");
-                        zmienSatusZamowienia("dostarczone",id);
+                        id = ekranZamowien.getID("odebrane");
+                        zmienSatusZamowienia("dostarczona", id);
                         break;
                     case "wyslano":
-                        id =ekranZamowien.getID("wyslane");
-                        zmienSatusZamowienia("do odebrania",id);
+                        id = ekranZamowien.getID("wyslane");
+                        zmienSatusZamowienia("do odebrania", id);
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranRzeczoznawcy");
@@ -232,17 +234,18 @@ public class Aplikacja extends JFrame {
         add(przegladPlacowek, "przegladPlacowek");
         add(przegladPracownikow, "przegladPracownikow");
         add(dyrektorDodanieGry, "dyrektorDodanieGry");
-        add(ekranZamowienRzeczoznawcy,"ekranZamowienRzeczoznawcy");
+        add(ekranZamowienRzeczoznawcy, "ekranZamowienRzeczoznawcy");
+        add(zmienDane,"zmienDane");
     }
 
     void sprzedawca() {
         ekranSprzedawcy.addSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(e.getFirstIndex()!=-1){
-                ekranSprzedawcy.czyscTabeleEgzemplarze();
-                sprzedawcaLadujEgzemplarze();
-            }
+                if (e.getFirstIndex() != -1) {
+                    ekranSprzedawcy.czyscTabeleEgzemplarze();
+                    sprzedawcaLadujEgzemplarze();
+                }
             }
         });
         dodanieGry.addActionListener(new ActionListener() {
@@ -276,7 +279,7 @@ public class Aplikacja extends JFrame {
                                 usunZamowienie(integers[1]);
                             }
                         }
-                        koszyk.remove((Object)ekranKoszyka.getID());
+                        koszyk.remove((Object) ekranKoszyka.getID());
                         ekranKoszyka.czyscTabele();
                         wyswietlenieKoszyka();
                         break;
@@ -286,7 +289,7 @@ public class Aplikacja extends JFrame {
 
                             for (Integer[] integers : zamowienia) {
                                 if (integers[0] == i) {
-                                    zmienSatusZamowienia("sprzedana",integers[1]);
+                                    zmienSatusZamowienia("sprzedana", integers[1]);
                                 }
                             }
                         }
@@ -316,7 +319,7 @@ public class Aplikacja extends JFrame {
                         cena = kupnoEgzemplarza.getCena();
                         int idPlacowki = placowka(zalogowanyPracownik);
                         int idEgzemplarza = dodajEgzemplarz(idGry, idPlacowki, stan, cena, "do serwisu");
-                        dodajZamowienie(idEgzemplarza,idPlacowki,1);
+                        dodajZamowienie(idEgzemplarza, idPlacowki, 1);
                         break;
                     case "generujCene":
                         int klasa = klasaGry(kupnoEgzemplarza.getID());
@@ -327,7 +330,7 @@ public class Aplikacja extends JFrame {
                     case "filtruj":
                         kupnoEgzemplarza.czyscTabele();
                         String nazwa = kupnoEgzemplarza.getTytul();
-                        List<Object[]>gryPrzefiltrowane = filtrujGry(nazwa, null, null, ladujGry()) ;
+                        List<Object[]> gryPrzefiltrowane = filtrujGry(nazwa, null, null, ladujGry());
                         sprzedawcaLadujGryKupno(gryPrzefiltrowane);
                         break;
                     case "wroc":
@@ -344,12 +347,12 @@ public class Aplikacja extends JFrame {
                 int id;
                 switch (akcja) {
                     case "odebrano":
-                        id =ekranZamowien.getID("odebrane");
-                        zmienSatusZamowienia("do sprzedaży",id);
+                        id = ekranZamowien.getID("odebrane");
+                        zmienSatusZamowienia("do sprzedaży", id);
                         break;
                     case "wyslano":
-                        id =ekranZamowien.getID("wyslane");
-                        zmienSatusZamowienia("do odebrania",id);
+                        id = ekranZamowien.getID("wyslane");
+                        zmienSatusZamowienia("do odebrania", id);
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranSprzedawcy");
@@ -392,11 +395,11 @@ public class Aplikacja extends JFrame {
                         String gatunek = ekranSprzedawcy.getGatunek();
                         Integer rokwydania = ekranSprzedawcy.getRok();
                         String rok;
-                        if(rokwydania==null)
+                        if (rokwydania == null)
                             rok = null;
                         else
                             rok = rokwydania.toString();
-                        List<Object[]>gryPrzefiltrowane = filtrujGry(nazwa, gatunek, rok, ladujGry()) ;
+                        List<Object[]> gryPrzefiltrowane = filtrujGry(nazwa, gatunek, rok, ladujGry());
                         sprzedawcaLadujGry(gryPrzefiltrowane);
                         break;
                     case "kup":
@@ -442,7 +445,7 @@ public class Aplikacja extends JFrame {
                         break;
                     case "dyrektorLogiSprzedazy":
                         dyrektorPrzegladLogow.czyscTabele();
-                        ladujLogi();
+                        ladujLogi(null, null, null);
                         layout.show(getContentPane(), "dyrektorPrzegladLogow");
                         break;
                     case "dyrektorWyloguj":
@@ -461,7 +464,7 @@ public class Aplikacja extends JFrame {
                     case "filtruj":
                         dyrektorPrzegladGier.czyscTabele();
                         String nazwa = dyrektorPrzegladGier.getTytul();
-                        List<Object[]>gryPrzefiltrowane = filtrujGry(nazwa, null, null, ladujGry()) ;
+                        List<Object[]> gryPrzefiltrowane = filtrujGry(nazwa, null, null, ladujGry());
                         dyrektorLadujGry(gryPrzefiltrowane);
                         break;
                     case "wroc":
@@ -491,8 +494,19 @@ public class Aplikacja extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String command = e.getActionCommand();
                 System.out.println(command);
-                if ("powrot".equals(command)) {
-                    layout.show(getContentPane(), "interfejsDyrektora");
+                switch (command) {
+                    case "powrot":
+                        dyrektorPrzegladLogow.czysc();
+                        layout.show(getContentPane(), "interfejsDyrektora");
+                        break;
+                    case "filtruj":
+                        dyrektorPrzegladLogow.czyscTabele();
+
+                        String akcja = dyrektorPrzegladLogow.getAkcja();
+                        String data = dyrektorPrzegladLogow.getData();
+                        String id = dyrektorPrzegladLogow.getID();
+                        ladujLogi(akcja, data, id);
+                        break;
                 }
             }
         });
@@ -501,21 +515,14 @@ public class Aplikacja extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String command = e.getActionCommand();
                 System.out.println(command);
-                switch (command) {
-                    case "dodajPlacowke":
-                        String ulica = dodaniePlacowki.getUlica();
-                        int numer = dodaniePlacowki.getNumer();
-                        String miasto = dodaniePlacowki.getMiasto();
-                        int numerLokalu = dodaniePlacowki.getLokal();
-                        dodajPlacowke(ulica, numer, miasto, numerLokalu, true);
-
-                        layout.show(getContentPane(), "przegladPlacowek");
-                        break;
-                    case "wroc":
-
-                        layout.show(getContentPane(), "przegladPlacowek");
-                        break;
+                if ("dodajPlacowke".equals(command)) {
+                    String ulica = dodaniePlacowki.getUlica();
+                    int numer = dodaniePlacowki.getNumer();
+                    String miasto = dodaniePlacowki.getMiasto();
+                    int numerLokalu = dodaniePlacowki.getLokal();
+                    dodajPlacowke(ulica, numer, miasto, numerLokalu, true);
                 }
+                layout.show(getContentPane(), "przegladPlacowek");
                 przegladPlacowek.czyscTabele();
                 ladujPlacowki();
             }
@@ -567,7 +574,7 @@ public class Aplikacja extends JFrame {
                         zwolnijPracownika(przegladPracownikow.getID());
                         break;
                     case "zmienDane":
-                        //dodac zmiane danyhc
+                        layout.show(getContentPane(), "zmienDane");
                         break;
                     case "dodajPracownika":
                         layout.show(getContentPane(), "dodaniePracownika");
@@ -582,6 +589,21 @@ public class Aplikacja extends JFrame {
                 }
                 przegladPracownikow.czyscTabele();
                 ladujPracownikow();
+            }
+        });
+        zmienDane.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                System.out.println(command);
+                if ("zmienDane".equals(command)) {
+                    String imie = zmienDane.getImie();
+                    String nazwisko = zmienDane.getNazwisko();
+                    int idPracownika = przegladPracownikow.getID();
+                    zmienDane(imie, nazwisko, idPracownika);
+                }
+                zmienDane.czysc();
+                layout.show(getContentPane(), "przegladPracownikow");
             }
         });
         przegladPlacowek.addActionListener(new ActionListener() {
@@ -628,7 +650,6 @@ public class Aplikacja extends JFrame {
                 dyrektorLadujGry(ladujGry());
             }
         });
-
     }
 
 
@@ -636,7 +657,7 @@ public class Aplikacja extends JFrame {
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idPracownika, imię, nazwisko, idPlacówki FROM 00018732_kw.Pracownicy;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPracownika, imię, nazwisko, idPlacówki FROM 00018732_kw.Pracownicy WHERE status= true;");
         ) {
             while (resultSet.next()) {
                 int idPracownika = resultSet.getInt("idPracownika");
@@ -650,11 +671,40 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    void ladujLogi() {
+    void ladujLogi(String akcjaParam, String dataParam, String id) {
+        StringBuilder warunki = new StringBuilder("");
+
+        if ((akcjaParam != null) || (dataParam != null) || (id != null)) {
+            warunki.append("WHERE ");
+            int flaga = 0;
+            if (akcjaParam != null) {
+                warunki.append("akcja = \'");
+                warunki.append(akcjaParam);
+                warunki.append("\'");
+                flaga = 1;
+            }
+            if (dataParam != null) {
+                if (flaga == 1) {
+                    warunki.append(" AND ");
+                }
+                warunki.append("DATE(data) = \'");
+                warunki.append(dataParam);
+                warunki.append("\'");
+                flaga = 2;
+            }
+            if (id != null) {
+                if (flaga == 1 || flaga == 2) {
+                    warunki.append(" AND ");
+                }
+                warunki.append("idPracownika = ");
+                warunki.append(id);
+            }
+        }
+
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idLogu, idEgzemplarza, idPracownika, akcja, data FROM 00018732_kw.Log;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idLogu, idEgzemplarza, idPracownika, akcja, data FROM 00018732_kw.Log " + warunki.toString() + ";");
         ) {
             while (resultSet.next()) {
                 int idLogu = resultSet.getInt("idLogu");
@@ -663,9 +713,6 @@ public class Aplikacja extends JFrame {
                 String akcja = resultSet.getString("akcja");
                 String data = resultSet.getDate("data").toString();
 
-                System.out.println(idLogu);
-                System.out.println(idEgzemplarza);
-
                 dyrektorPrzegladLogow.dodajDaneZBazy(new Object[]{idLogu, idEgzemplarza, idPracownika, akcja, data});
             }
         } catch (SQLException ex) {
@@ -673,24 +720,45 @@ public class Aplikacja extends JFrame {
         }
     }
 
+    void ladujPlacowki() {
 
-    List<Object[]> filtrujGry(String nazwa, String gatunek, String rokWydania, List<Object[]>aktualneGry){
+        try (
+                Statement zapytanie = bazaDanych.createStatement();
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacówki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placówki WHERE status = true;");
+        ) {
+            System.out.println("JD");
+            while (resultSet.next()) {
+                int idPlacowki = resultSet.getInt("idPlacówki");
+                String ulica = resultSet.getString("ulica");
+                int numer = resultSet.getInt("numer");
+                int numerLokalu = resultSet.getInt("numerLokalu");
+                String miasto = resultSet.getString("miasto");
 
-        for(int i = 0; i < aktualneGry.size();i++){
-            if(nazwa!=null && !aktualneGry.get(i)[1].toString().toLowerCase().contains(nazwa.toLowerCase())){
-                System.out.println("Usuwam po tytule "+aktualneGry.get(i)[1].toString().toLowerCase());
+                przegladPlacowek.dodajDaneZBazy(new Object[]{idPlacowki, ulica, numer, numerLokalu, miasto});
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    List<Object[]> filtrujGry(String nazwa, String gatunek, String rokWydania, List<Object[]> aktualneGry) {
+
+        for (int i = 0; i < aktualneGry.size(); i++) {
+            if (nazwa != null && !aktualneGry.get(i)[1].toString().toLowerCase().contains(nazwa.toLowerCase())) {
+                System.out.println("Usuwam po tytule " + aktualneGry.get(i)[1].toString().toLowerCase());
                 aktualneGry.remove(i);
                 i--;
                 continue;
             }
-            if(gatunek!=null && !aktualneGry.get(i)[4].toString().toLowerCase().contains(gatunek.toLowerCase())){
-                System.out.println("Usuwam po gatunku "+aktualneGry.get(i)[4].toString().toLowerCase());
+            if (gatunek != null && !aktualneGry.get(i)[4].toString().toLowerCase().contains(gatunek.toLowerCase())) {
+                System.out.println("Usuwam po gatunku " + aktualneGry.get(i)[4].toString().toLowerCase());
                 aktualneGry.remove(i);
                 i--;
                 continue;
             }
-            if(rokWydania!=null && !aktualneGry.get(i)[2].toString().contains(rokWydania)){
-                System.out.println("Usuwam po rokWydania "+aktualneGry.get(i)[2].toString().toLowerCase());
+            if (rokWydania != null && !aktualneGry.get(i)[2].toString().contains(rokWydania)) {
+                System.out.println("Usuwam po rokWydania " + aktualneGry.get(i)[2].toString().toLowerCase());
                 aktualneGry.remove(i);
                 i--;
                 continue;
@@ -724,7 +792,7 @@ public class Aplikacja extends JFrame {
         return object;
     }
 
-    void dyrektorLadujGry( List<Object[]> object) {
+    void dyrektorLadujGry(List<Object[]> object) {
         for (Object[] ob : object) {
             dyrektorPrzegladGier.dodajDaneZBazy(ob);
         }
@@ -742,7 +810,6 @@ public class Aplikacja extends JFrame {
         }
     }
 
-
     List<Object[]> ladujEgzemplarze() {
 
         List<Object[]> object = new ArrayList<>();
@@ -751,17 +818,36 @@ public class Aplikacja extends JFrame {
                 ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacówki, status FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry());
         ) {
             while (resultSet.next()) {
-                if(!Objects.equals(resultSet.getString("status"), "gotowa do sprzedaży")){
+                if (!Objects.equals(resultSet.getString("status"), "gotowa do sprzedaży")) {
                     continue;
                 }
 
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
-                String stan = resultSet.getString("stan");
+                int stan = resultSet.getInt("stan");
                 int cena = resultSet.getInt("cena");
                 int placowka = resultSet.getInt("idPlacówki");
-
-
-                object.add(new Object[]{idEgzemplarza, stan, cena, placowka});
+                String stanEgzemplarza = null;
+                switch  (stan){
+                    case 0:
+                        stanEgzemplarza="fatalny";
+                        break;
+                    case 1:
+                        stanEgzemplarza="zły";
+                        break;
+                    case 2:
+                        stanEgzemplarza="używany";
+                        break;
+                    case 3:
+                        stanEgzemplarza="dobry";
+                        break;
+                    case 4:
+                        stanEgzemplarza="wzorowy";
+                        break;
+                    case 5:
+                        stanEgzemplarza="O kurwa, ale ja jestem silny!";
+                        break;
+                }
+                object.add(new Object[]{idEgzemplarza, stanEgzemplarza, cena, placowka});
 
             }
         } catch (SQLException ex) {
@@ -804,34 +890,13 @@ public class Aplikacja extends JFrame {
     }
 
 
-    void ladujPlacowki() {
-
-        try (
-                Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacówki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placówki;");
-        ) {
-            System.out.println("JD");
-            while (resultSet.next()) {
-                int idPlacowki = resultSet.getInt("idPlacówki");
-                String ulica = resultSet.getString("ulica");
-                int numer = resultSet.getInt("numer");
-                int numerLokalu = resultSet.getInt("numerLokalu");
-                String miasto = resultSet.getString("miasto");
-
-                przegladPlacowek.dodajDaneZBazy(new Object[]{idPlacowki, ulica, numer, numerLokalu, miasto});
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     void rzeczoznawcaZaladujTabele() {
         List<Object[]> object = rzeczoznawcaISerwisantZaladujTabele();
         for (Object[] ob : object) {
-            if(ob[6]!="do wyceny"){
+            if (ob[6] != "do wyceny") {
                 continue;
             }
-            Object[] nowyob = new Object[]{ob[0],ob[1]};
+            Object[] nowyob = new Object[]{ob[0], ob[1]};
             ekranRzeczoznawcy.dodajDaneZBazy(nowyob);
         }
     }
@@ -839,19 +904,19 @@ public class Aplikacja extends JFrame {
     void serwisantZaladujTabele() {
         List<Object[]> object = rzeczoznawcaISerwisantZaladujTabele();
         for (Object[] ob : object) {
-            if(ob[6]!="do serwisu"){
+            if (ob[6] != "do serwisu") {
                 continue;
             }
-            Object[] nowyob = new Object[]{ob[0],ob[1]};
+            Object[] nowyob = new Object[]{ob[0], ob[1]};
             ekranSerwisanta.dodajDaneZBazy(nowyob);
         }
     }
 
-    void wyswietlenieKoszyka(){
+    void wyswietlenieKoszyka() {
         List<Object[]> objects = rzeczoznawcaISerwisantZaladujTabele();
         for (Object[] ob : objects) {
-            if(koszyk.contains(ob[0])){
-                Object[] nowyob = new Object[]{ob[0],ob[1],ob[2],ob[3],ob[4],ob[5]};
+            if (koszyk.contains(ob[0])) {
+                Object[] nowyob = new Object[]{ob[0], ob[1], ob[2], ob[3], ob[4], ob[5]};
                 ekranKoszyka.dodajDaneZBazy(nowyob);
             }
         }
@@ -984,7 +1049,7 @@ public class Aplikacja extends JFrame {
         komenda.append("\");");
         System.out.println(komenda.toString());
 
-        int idEgzemplarza=-1;
+        int idEgzemplarza = -1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
@@ -1082,7 +1147,7 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void zmienSatusZamowienia(String status,int idZamowienia){
+    private void zmienSatusZamowienia(String status, int idZamowienia) {
         String komenda = "UPDATE 00018732_kw.Zamówienia SET status=" + status + " WHERE idZamówienia=" + idZamowienia + ";";
         Statement zapytanie = null;
         try {
@@ -1167,9 +1232,23 @@ public class Aplikacja extends JFrame {
     }
 
     private void zamknijPlacowke(int idPlacowki) {
+        Statement zapytanie = null;
+        try {
+            zapytanie = bazaDanych.createStatement();
+            ResultSet pracownicy= zapytanie.executeQuery("SELECT idPracownika FROM 00018732_kw.Pracownicy WHERE idPlacówki = "+idPlacowki+";");
+            while(pracownicy.next()){
+                int idPracownika = pracownicy.getInt("idPracownika");
+                zwolnijPracownika(idPracownika);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         String komenda = "UPDATE 00018732_kw.Placówki SET status=false WHERE idPlacówki=" + idPlacowki + ";";
         try {
-            Statement zapytanie = bazaDanych.createStatement();
+            zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1233,7 +1312,7 @@ public class Aplikacja extends JFrame {
             Statement zapytanie = bazaDanych.createStatement();
             ResultSet egzemplarz = zapytanie.executeQuery("SELECT idEgzemplarza, status FROM 00018732_kw.Zamówienia WHERE idZamówienia=" + idZamowienia + ";");
             egzemplarz.next();
-            if(!egzemplarz.getString("status").contains("do sprzedaży")){
+            if (!egzemplarz.getString("status").contains("do sprzedaży")) {
                 JOptionPane.showMessageDialog(null, "Brak zamowienia.");
                 return;
             }
@@ -1248,7 +1327,7 @@ public class Aplikacja extends JFrame {
         zamowienia.add(new Integer[]{idEgzemplarza, idZamowienia});
     }
 
-    private void usunZamowienie(int idZamowienia){
+    private void usunZamowienie(int idZamowienia) {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate("UPDATE 00018732_kw.Zamówienia SET status=\"do sprzedaży\" WHERE idZamówienia=" + idZamowienia + ";");

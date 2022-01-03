@@ -6,12 +6,8 @@ import java.awt.event.ActionListener;
 public class DodaniePlacowki extends JPanel {
     private final JButton dodajPlacowke = new JButton("Dodaj Placówkę");
     private final JButton wroc = new JButton("Wróć");
-    JButton generujID = new JButton("Generuj ID");
 
 
-//    JLabel napis = new JLabel("ID placówki:");
-//    JTextArea ID = new JTextArea(1, 3);
-//    JSplitPane idPlacowki = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, napis, ID);
 
     JLabel etykietaMiasto = new JLabel("Miasto:");
     JLabel etykietaUlica = new JLabel("Ulica:");
@@ -31,7 +27,6 @@ public class DodaniePlacowki extends JPanel {
     public void addActionListener(ActionListener listener) {
         wroc.addActionListener(listener);
         dodajPlacowke.addActionListener(listener);
-        generujID.addActionListener(listener);
     }
 
     public DodaniePlacowki() {
@@ -43,7 +38,6 @@ public class DodaniePlacowki extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         dodajPlacowke.setActionCommand("dodajPlacowke");
         wroc.setActionCommand("wroc");
-        generujID.setActionCommand("generujID");
 
         uklad.gridx=0;//
         uklad.gridy=0;
@@ -61,20 +55,13 @@ public class DodaniePlacowki extends JPanel {
         uklad.gridy=3;
         add(lokal,uklad);
 
-//        uklad.gridx=1;//id
-//        uklad.gridy=0;
-//        add(idPlacowki,uklad);
-
+        uklad.gridheight=2;
         uklad.gridx=1;
         uklad.gridy=1;
-        add(generujID,uklad);
-
-        uklad.gridx=1;//dodaj
-        uklad.gridy=3;
         add(dodajPlacowke,uklad);
 
-        uklad.gridx=1;//wroc
-        uklad.gridy=4;
+        uklad.gridx=1;
+        uklad.gridy=3;
         add(wroc,uklad);
     }
 
@@ -94,8 +81,6 @@ public class DodaniePlacowki extends JPanel {
         return Integer.parseInt(wpiszLokal.getText());
     }
 
-//    public void setID(Integer id) {
-//        ID.setText(id.toString());
-//    }
+
 
 }

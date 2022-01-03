@@ -66,6 +66,7 @@ public class PrzegladPlacowek extends JPanel {
         uklad.gridheight=3;
         uklad.gridx=0;//
         uklad.gridy=0;
+        scrollPane_1.setPreferredSize(new Dimension(600,400));
         add(scrollPane_1,uklad);
     }
 

@@ -52,7 +52,7 @@ public class DyrektorPrzegladGier extends JPanel {
         dodajGre.setActionCommand("dodajGre");
         dodajEgzemplarze.setActionCommand("dodajEgzemplarze");
 
-        uklad.gridx = 0;//
+        uklad.gridx = 0;
         uklad.gridy = 0;
         add(tytul, uklad);
 
@@ -63,14 +63,6 @@ public class DyrektorPrzegladGier extends JPanel {
         uklad.gridx = 3;
         uklad.gridy = 0;
         add(dodajGre, uklad);
-
-        uklad.gridx = 3;
-        uklad.gridy = 0;
-        add(dodajGre, uklad);
-
-        uklad.gridx = 0;
-        uklad.gridy = 4;
-        add(scrollPane_1, uklad);
 
         uklad.gridx = 3;
         uklad.gridy = 1;
@@ -87,6 +79,13 @@ public class DyrektorPrzegladGier extends JPanel {
         uklad.gridx = 3;
         uklad.gridy = 5;
         add(wroc, uklad);
+
+        uklad.gridwidth=2;
+        uklad.gridheight=3;
+        uklad.gridx = 0;
+        uklad.gridy = 1;
+        scrollPane_1.setPreferredSize(new Dimension(800,400));
+        add(scrollPane_1, uklad);
     }
 
     public int gra() {

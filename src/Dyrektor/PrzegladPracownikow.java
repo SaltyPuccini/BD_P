@@ -41,7 +41,6 @@ public class PrzegladPracownikow extends JPanel {
     }
 
     public PrzegladPracownikow(){
-
         tabelaPracownikow = new JTable(model);
         JScrollPane scrollPane_1 = new JScrollPane(tabelaPracownikow);
 
@@ -58,9 +57,6 @@ public class PrzegladPracownikow extends JPanel {
         generujTOKEN.setActionCommand("generujTOKEN");
         zmienDane.setActionCommand("zmienDane");
 
-        uklad.gridx=0;//
-        uklad.gridy=0;
-        add(scrollPane_1,uklad);
 
         uklad.gridx=1;
         uklad.gridy=0;
@@ -85,6 +81,12 @@ public class PrzegladPracownikow extends JPanel {
         uklad.gridx=2;
         uklad.gridy=1;
         add(TOKEN,uklad);
+
+        uklad.gridheight=3;
+        uklad.gridx=0;//
+        uklad.gridy=0;
+        scrollPane_1.setPreferredSize(new Dimension(600,400));
+        add(scrollPane_1,uklad);
     }
 
     public void setTOKEN(int TOKEN){
