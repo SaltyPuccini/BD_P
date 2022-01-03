@@ -4,9 +4,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 public class DyrektorPrzegladLogow extends JPanel {
@@ -105,7 +102,7 @@ public class DyrektorPrzegladLogow extends JPanel {
     }
 
     public String getID(){
-        String id=wpiszPracownik.getText().toString();
+        String id= wpiszPracownik.getText();
         if(id.equals("")){
             return null;
         }else{
@@ -114,7 +111,7 @@ public class DyrektorPrzegladLogow extends JPanel {
     }
 
     public String getData(){
-        String data = wpiszData.getText().toString();
+        String data = wpiszData.getText();
         if(data.equals("")){
             return null;
         }else{

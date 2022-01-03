@@ -47,8 +47,8 @@ public class Aplikacja extends JFrame {
             {0, 0, 0, 5, 10},
             {80, 100, 120, 150, 200},
     };
-    private List<Integer> koszyk = new ArrayList();
-    private List<Integer[]> zamowienia = new ArrayList();
+    private final List<Integer> koszyk = new ArrayList();
+    private final List<Integer[]> zamowienia = new ArrayList();
 
 
     public Aplikacja() {
@@ -705,7 +705,7 @@ public class Aplikacja extends JFrame {
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idPracownika, imię, nazwisko, idPlacówki FROM 00018732_kw.Pracownicy WHERE status= true;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPracownika, imię, nazwisko, idPlacówki FROM 00018732_kw.Pracownicy WHERE status= true;")
         ) {
             while (resultSet.next()) {
                 int idPracownika = resultSet.getInt("idPracownika");
@@ -720,24 +720,24 @@ public class Aplikacja extends JFrame {
     }
 
     void ladujLogi(String akcjaParam, String dataParam, String id) {
-        StringBuilder warunki = new StringBuilder("");
+        StringBuilder warunki = new StringBuilder();
 
         if ((akcjaParam != null) || (dataParam != null) || (id != null)) {
             warunki.append("WHERE ");
             int flaga = 0;
             if (akcjaParam != null) {
-                warunki.append("akcja = \'");
+                warunki.append("akcja = '");
                 warunki.append(akcjaParam);
-                warunki.append("\'");
+                warunki.append("'");
                 flaga = 1;
             }
             if (dataParam != null) {
                 if (flaga == 1) {
                     warunki.append(" AND ");
                 }
-                warunki.append("DATE(data) = \'");
+                warunki.append("DATE(data) = '");
                 warunki.append(dataParam);
-                warunki.append("\'");
+                warunki.append("'");
                 flaga = 2;
             }
             if (id != null) {
@@ -752,7 +752,7 @@ public class Aplikacja extends JFrame {
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idLogu, idEgzemplarza, idPracownika, akcja, data FROM 00018732_kw.Log " + warunki.toString() + ";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idLogu, idEgzemplarza, idPracownika, akcja, data FROM 00018732_kw.Log " + warunki + ";")
         ) {
             while (resultSet.next()) {
                 int idLogu = resultSet.getInt("idLogu");
@@ -772,7 +772,7 @@ public class Aplikacja extends JFrame {
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacówki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placówki WHERE status = true;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacówki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placówki WHERE status = true;")
         ) {
             System.out.println("JD");
             while (resultSet.next()) {
@@ -820,7 +820,7 @@ public class Aplikacja extends JFrame {
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idGry, nazwa, rokWydania, wydawca, gatunek FROM 00018732_kw.Gry;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idGry, nazwa, rokWydania, wydawca, gatunek FROM 00018732_kw.Gry;")
         ) {
             while (resultSet.next()) {
                 int idGry = resultSet.getInt("idGry");
@@ -863,7 +863,7 @@ public class Aplikacja extends JFrame {
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacówki, status FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry());
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacówki, status FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry())
         ) {
             while (resultSet.next()) {
                 if (!Objects.equals(resultSet.getString("status"), "gotowa do sprzedaży")) {
@@ -917,7 +917,7 @@ public class Aplikacja extends JFrame {
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT e.status, e.idEgzemplarza, e.stan, e.cena, g.nazwa, g.rokWydania, g.wydawca FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT e.status, e.idEgzemplarza, e.stan, e.cena, g.nazwa, g.rokWydania, g.wydawca FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;")
         ) {
             while (resultSet.next()) {
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
@@ -1022,7 +1022,7 @@ public class Aplikacja extends JFrame {
                 JOptionPane.showMessageDialog(null, "Oj, coś poszło nie tak. :(");
                 break;
         }
-        setTitle("ID pracownika: "+String.valueOf(zalogowanyPracownik)+ " Stanowisko: "+stanowisko);
+        setTitle("ID pracownika: "+ zalogowanyPracownik + " Stanowisko: "+stanowisko);
     }
 
     void zmienianiePINU() throws SQLException {
@@ -1072,7 +1072,7 @@ public class Aplikacja extends JFrame {
         komenda.append("\",\"");
         komenda.append(klasa);
         komenda.append("\");");
-        System.out.println(komenda.toString());
+        System.out.println(komenda);
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -1094,7 +1094,7 @@ public class Aplikacja extends JFrame {
         komenda.append(",\"");
         komenda.append(status);
         komenda.append("\");");
-        System.out.println(komenda.toString());
+        System.out.println(komenda);
 
         int idEgzemplarza = -1;
         try {
@@ -1126,7 +1126,7 @@ public class Aplikacja extends JFrame {
         komenda.append("\",");
         komenda.append(status);
         komenda.append(");");
-        System.out.println(komenda.toString());
+        System.out.println(komenda);
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -1148,7 +1148,7 @@ public class Aplikacja extends JFrame {
         komenda.append(",");
         komenda.append(status);
         komenda.append(");");
-        System.out.println(komenda.toString());
+        System.out.println(komenda);
 
         try {
             Statement zapytanie = bazaDanych.createStatement();

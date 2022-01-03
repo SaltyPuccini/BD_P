@@ -1,11 +1,9 @@
 package Szyfrowanie;
 
-import java.util.IllegalFormatCodePointException;
-
 public class Deszyfrator {
     private final long kluczPrywatny =  7;
     private final long modul = 10;
-    private int szyfr;
+    private final int szyfr;
     private int PIN;
 
 

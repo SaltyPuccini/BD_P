@@ -69,11 +69,11 @@ public class DodanieGry extends JPanel {
     }
 
     public String getTytul() {
-        return wpiszTytul.getText().toString();
+        return wpiszTytul.getText();
     }
 
     public String getWydawce() {
-        return wpiszWydawce.getText().toString();
+        return wpiszWydawce.getText();
     }
 
     public Integer getRok() {

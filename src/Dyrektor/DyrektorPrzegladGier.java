@@ -26,7 +26,7 @@ public class DyrektorPrzegladGier extends JPanel {
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
     JTextField wpiszLiczba = new JTextField(20);
     JSplitPane liczba = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaLiczba, wpiszLiczba);
-    private boolean[] flaga = {false, false, false};
+    private final boolean[] flaga = {false, false, false};
 
     public DyrektorPrzegladGier() {
         setLayout(new GridBagLayout());
@@ -158,7 +158,7 @@ public class DyrektorPrzegladGier extends JPanel {
     }
 
     public String getTytul() {
-        return wpiszTytul.getText().toString();
+        return wpiszTytul.getText();
     }
 
     public void dodajDaneZBazy(Object[] obj) {

@@ -3,12 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.Connection;
-import java.util.Arrays;
-import java.util.Objects;
 
 public class ZmienPIN extends JPanel {
-    private boolean[] flaga = {false,false,false,false};
+    private final boolean[] flaga = {false,false,false,false};
 
     private final JLabel ID=new JLabel("ID:");
     private final JLabel PIN=new JLabel("Nowy PIN:");

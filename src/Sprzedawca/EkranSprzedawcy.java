@@ -37,7 +37,7 @@ public class EkranSprzedawcy extends JPanel {
     DefaultTableModel modelEgzemplarza = new DefaultTableModel(new String[]{"ID", "Stan", "Cena", "Placówka"}, 0);
     JTable gryLista = new JTable(modelGry);
     JTable egzemplarzeLista = new JTable(modelEgzemplarza);
-    private String[] gatunki = {"*", "strzelanka", "strategiczne", "akcji", "bijatyki", "logiczne", "platformówki", "przygodowe", "RPG", "sportowa", "symulacje", "wyścigowe"};
+    private final String[] gatunki = {"*", "strzelanka", "strategiczne", "akcji", "bijatyki", "logiczne", "platformówki", "przygodowe", "RPG", "sportowa", "symulacje", "wyścigowe"};
     JComboBox wpiszGatunek = new JComboBox(gatunki);
     JSplitPane gatunek = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaGatunek, wpiszGatunek);
 

@@ -3,11 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
-import java.util.Objects;
 
 public class EkranLogowania extends JPanel {
-    private boolean[] flaga ={false,false};
+    private final boolean[] flaga ={false,false};
 
     private final JTextField id=new JTextField(30);
     private final JPasswordField PIN=new JPasswordField(30);

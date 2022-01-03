@@ -17,7 +17,7 @@ public class EkranRzeczoznawcy extends JPanel {
     JLabel etykietaCena = new JLabel("Cena:");
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
     DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł"}, 0);
-    private String[] gatunki = {"*", "Strzelanka", "Strategiczne", "Akcji", "Bijatyki", "Logiczne", "Platformowki", "Przygodowe", "RPG", "Sportowa", "Symulacje", "Wyscigowe"};
+    private final String[] gatunki = {"*", "Strzelanka", "Strategiczne", "Akcji", "Bijatyki", "Logiczne", "Platformowki", "Przygodowe", "RPG", "Sportowa", "Symulacje", "Wyscigowe"};
     JComboBox gatunek = new JComboBox(gatunki);
 
 
@@ -92,7 +92,7 @@ public class EkranRzeczoznawcy extends JPanel {
     }
 
     public String getGatunek() {
-        if (Objects.equals((String) gatunek.getSelectedItem(), "*")) {
+        if (Objects.equals(gatunek.getSelectedItem(), "*")) {
             return null;
         } else {
             return (String) gatunek.getSelectedItem();
