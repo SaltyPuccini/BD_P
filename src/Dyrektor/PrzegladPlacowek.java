@@ -1,6 +1,8 @@
 package Dyrektor;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -56,6 +58,15 @@ public class PrzegladPlacowek extends JPanel {
         wroc.setActionCommand("wroc");
         zamknijPlacowke.setActionCommand("zamknijPlacowke");
 
+        zamknijPlacowke.setEnabled(false);
+
+        tabelaPlacowek.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                zamknijPlacowke.setEnabled(e.getFirstIndex()!=-1);
+            }
+        });
+
         uklad.gridx=1;
         uklad.gridy=0;
         add(dodajPlacowke,uklad);
@@ -74,6 +85,9 @@ public class PrzegladPlacowek extends JPanel {
         add(scrollPane_1,uklad);
     }
 
+    public void setGuzik(boolean stan){
+        zamknijPlacowke.setEnabled(stan);
+    }
 
 
 }

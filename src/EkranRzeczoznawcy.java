@@ -1,7 +1,10 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class EkranRzeczoznawcy extends JPanel {
     JButton wyloguj = new JButton("Wyloguj");
@@ -13,27 +16,10 @@ public class EkranRzeczoznawcy extends JPanel {
     JTextField wpiszCena = new JTextField(3);
     JLabel etykietaCena = new JLabel("Cena:");
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
-
-    private String[] gatunki = {"strzelanka", "strategiczne","akcji","bijatyki","logiczne","platformówki","przygodowe","RPG","sportowa","symulacje","wyścigowe"};
+    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł"}, 0);
+    private String[] gatunki = {"*", "Strzelanka", "Strategiczne", "Akcji", "Bijatyki", "Logiczne", "Platformowki", "Przygodowe", "RPG", "Sportowa", "Symulacje", "Wyscigowe"};
     JComboBox gatunek = new JComboBox(gatunki);
 
-
-    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł"}, 0);
-
-
-    public void addActionListener(ActionListener listener) {
-        wyloguj.addActionListener(listener);
-        wycen.addActionListener(listener);
-        zamowienia.addActionListener(listener);
-    }
-
-    public void dodajDaneZBazy(Object[] obj){
-        model.addRow(obj);
-    }
-
-    public void czyscTabele(){
-        model.setRowCount(0);
-    }
 
     public EkranRzeczoznawcy() {
         setLayout(new GridBagLayout());
@@ -46,7 +32,15 @@ public class EkranRzeczoznawcy extends JPanel {
         listaEgzemplarzy = new JTable(model);
         listaEgzemplarzy.getColumnModel().getColumn(0).setMaxWidth(50);
         JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
-        tabelaEgzemplarzy.setPreferredSize(new Dimension(800,400));
+        tabelaEgzemplarzy.setPreferredSize(new Dimension(800, 400));
+
+        wycen.setEnabled(false);
+        listaEgzemplarzy.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                wycen.setEnabled(e.getFirstIndex()!=-1);
+            }
+        });
 
         wyloguj.setActionCommand("wyloguj");
         wycen.setActionCommand("wycen");
@@ -79,17 +73,40 @@ public class EkranRzeczoznawcy extends JPanel {
         add(tabelaEgzemplarzy, uklad);
     }
 
+    public void addActionListener(ActionListener listener) {
+        wyloguj.addActionListener(listener);
+        wycen.addActionListener(listener);
+        zamowienia.addActionListener(listener);
+    }
+
+    public void dodajDaneZBazy(Object[] obj) {
+        model.addRow(obj);
+    }
+
+    public void czyscTabele() {
+        model.setRowCount(0);
+    }
+
     public Integer getCena() {
         return Integer.valueOf(wpiszCena.getText());
     }
 
     public String getGatunek() {
-        return (String) gatunek.getSelectedItem();
+        if (Objects.equals((String) gatunek.getSelectedItem(), "*")) {
+            return null;
+        } else {
+            return (String) gatunek.getSelectedItem();
+        }
+
     }
 
-    public int getID(){
+    public int getID() {
         int index = listaEgzemplarzy.getSelectedRow();
-        return (int) listaEgzemplarzy.getValueAt(index,0);
+        return (int) listaEgzemplarzy.getValueAt(index, 0);
+    }
+
+    public void setWycen(boolean stan){
+        wycen.setEnabled(stan);
     }
 
 }

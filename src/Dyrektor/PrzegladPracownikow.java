@@ -1,6 +1,8 @@
 package Dyrektor;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -53,13 +55,19 @@ public class PrzegladPracownikow extends JPanel {
         tabelaPracownikow.getColumnModel().getColumn(3).setMaxWidth(80);
         JScrollPane scrollPane_1 = new JScrollPane(tabelaPracownikow);
 
-
         wroc.setActionCommand("wroc");
         dodajPracownika.setActionCommand("dodajPracownika");
         zwolnijPracownika.setActionCommand("zwolnijPracownika");
         generujTOKEN.setActionCommand("generujTOKEN");
         zmienDane.setActionCommand("zmienDane");
 
+        tabelaPracownikow.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                setGuziki(e.getFirstIndex()!=-1);
+            }
+        });
+        setGuziki(false);
 
         uklad.gridx=1;
         uklad.gridy=0;
@@ -99,5 +107,11 @@ public class PrzegladPracownikow extends JPanel {
     public int getID() {
         int index=tabelaPracownikow.getSelectedRow();
         return (int) tabelaPracownikow.getValueAt(index, 0);
+    }
+
+    public void setGuziki(boolean stan){
+        generujTOKEN.setEnabled(stan);
+        zmienDane.setEnabled(stan);
+        zwolnijPracownika.setEnabled(stan);
     }
 }

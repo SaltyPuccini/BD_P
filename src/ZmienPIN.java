@@ -1,10 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.Connection;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ZmienPIN extends JPanel {
+    private boolean[] flaga = {false,false,false,false};
+
     private final JLabel ID=new JLabel("ID:");
     private final JLabel PIN=new JLabel("Nowy PIN:");
     private final JLabel TOKEN=new JLabel("TOKEN:");
@@ -31,6 +36,93 @@ public class ZmienPIN extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
         zmienPIN.setActionCommand("zmienPin");
         anuluj.setActionCommand("anuluj");
+
+        setGuzik(false);
+        idPracownika.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (idPracownika.getText().length()>0) {
+                    flaga[0] = true;
+                    zmienPIN.setEnabled(flaga[1] && flaga[2]&&flaga[3]);
+                } else {
+                    flaga[0] = false;
+                    zmienPIN.setEnabled(false);
+                }
+            }
+        });
+        nowyPIN.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (nowyPIN.getPassword().length>0) {
+                    flaga[1] = true;
+                    zmienPIN.setEnabled(flaga[0] && flaga[2]&&flaga[3]);
+                } else {
+                    flaga[1] = false;
+                    zmienPIN.setEnabled(false);
+                }
+            }
+        });
+        powtorzPIN.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (powtorzPIN.getPassword().length>0) {
+                    flaga[2] = true;
+                    zmienPIN.setEnabled(flaga[0] && flaga[1]&&flaga[3]);
+                } else {
+                    flaga[2] = false;
+                    zmienPIN.setEnabled(false);
+                }
+            }
+        });
+        token.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (token.getPassword().length>0) {
+                    flaga[3] = true;
+                    zmienPIN.setEnabled(flaga[0] && flaga[1]&&flaga[2]);
+                } else {
+                    flaga[3] = false;
+                    zmienPIN.setEnabled(false);
+                }
+            }
+        });
 
         uklad.gridx=0;
         uklad.gridy=0;
@@ -87,6 +179,15 @@ public class ZmienPIN extends JPanel {
         nowyPIN.setText("");
         powtorzPIN.setText("");
         token.setText("");
+        setGuzik(false);
+        flaga[0]=false;
+        flaga[1]=false;
+        flaga[2]=false;
+        flaga[3]=false;
+    }
+
+    public void setGuzik(boolean stan){
+        zmienPIN.setEnabled(stan);
     }
 
 }

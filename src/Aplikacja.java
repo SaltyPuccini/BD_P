@@ -63,6 +63,8 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "zmienPIN":
+                        zmienPIN.resetTextFields();
+                        zmienPIN.setGuzik(false);
                         layout.show(getContentPane(), "zmienPIN");
                         break;
                     case "wyjdz":
@@ -122,8 +124,10 @@ public class Aplikacja extends JFrame {
                         dodajLog(ekranSerwisanta.getID(), zalogowanyPracownik, "dyskwalifikacja");
                         break;
                     case "wyloguj":
+                        setTitle("");
                         zalogowanyPracownik = -1;
                         layout.show(getContentPane(), "ekranLogowania");
+                        ekranSerwisanta.setWycen(false);
                         break;
                     case "serwis":
                         try {
@@ -135,6 +139,7 @@ public class Aplikacja extends JFrame {
                 }
             }
         });
+
         ekranRzeczoznawcy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,8 +147,10 @@ public class Aplikacja extends JFrame {
                 System.out.println(akcja);
                 switch (akcja) {
                     case "wyloguj":
+                        setTitle("");
                         zalogowanyPracownik = -1;
                         layout.show(getContentPane(), "ekranLogowania");
+                        ekranRzeczoznawcy.setWycen(false);
                         break;
                     case "zamowienia":
                         layout.show(getContentPane(), "ekranZamowienRzeczoznawcy");
@@ -241,13 +248,15 @@ public class Aplikacja extends JFrame {
     }
 
     void sprzedawca() {
-        ekranSprzedawcy.addSelectionListener(new ListSelectionListener() {
+        ekranSprzedawcy.addSelectionListenerGRY(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getFirstIndex() != -1) {
                     ekranSprzedawcy.czyscTabeleEgzemplarze();
                     sprzedawcaLadujEgzemplarze();
                 }
+                ekranSprzedawcy.setDodaj(false);
+                ekranSprzedawcy.setZamow(false);
             }
         });
         dodanieGry.addActionListener(new ActionListener() {
@@ -303,6 +312,7 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "ekranSprzedawcy");
                         break;
                 }
+                ekranKoszyka.setUsun(false);
             }
         });
         kupnoEgzemplarza.addActionListener(new ActionListener() {
@@ -313,6 +323,8 @@ public class Aplikacja extends JFrame {
                 int stan, cena;
                 switch (akcja) {
                     case "dodajGre":
+                        kupnoEgzemplarza.setZakup(false);
+                        kupnoEgzemplarza.setGeneruj(false);
                         layout.show(getContentPane(), "dodanieGry");
                         break;
                     case "zakup":
@@ -322,20 +334,27 @@ public class Aplikacja extends JFrame {
                         int idPlacowki = placowka(zalogowanyPracownik);
                         int idEgzemplarza = dodajEgzemplarz(idGry, idPlacowki, stan, cena, "do serwisu");
                         dodajZamowienie(idEgzemplarza, idPlacowki, 1);
+                        kupnoEgzemplarza.setZakup(false);
+                        kupnoEgzemplarza.setGeneruj(false);
                         break;
                     case "generujCene":
                         int klasa = klasaGry(kupnoEgzemplarza.getID());
                         stan = kupnoEgzemplarza.getStan();
                         cena = ceny[klasa][stan];
                         kupnoEgzemplarza.setCena(cena);
+                        kupnoEgzemplarza.setZakup(true);
                         break;
                     case "filtruj":
+                        kupnoEgzemplarza.setZakup(false);
+                        kupnoEgzemplarza.setGeneruj(false);
                         kupnoEgzemplarza.czyscTabele();
                         String nazwa = kupnoEgzemplarza.getTytul();
                         List<Object[]> gryPrzefiltrowane = filtrujGry(nazwa, null, null, ladujGry());
                         sprzedawcaLadujGryKupno(gryPrzefiltrowane);
                         break;
                     case "wroc":
+                        kupnoEgzemplarza.setZakup(false);
+                        kupnoEgzemplarza.setGeneruj(false);
                         layout.show(getContentPane(), "ekranSprzedawcy");
                         break;
                 }
@@ -381,6 +400,7 @@ public class Aplikacja extends JFrame {
                         sprzedawcaLadujEgzemplarze();
                         break;
                     case "koszyk":
+                        ekranKoszyka.setUsun(false);
                         ekranSprzedawcy.czyscTabeleEgzemplarze();
                         layout.show(getContentPane(), "ekranKoszyka");
                         ekranKoszyka.czyscTabele();
@@ -415,11 +435,17 @@ public class Aplikacja extends JFrame {
                         int idPlacowkiOdbierajacej = placowka(zalogowanyPracownik);
                         dodajZamowienie(idEgzemplarza, idPlacowkiWysylajacej, idPlacowkiOdbierajacej);
                         zmienStatus("zamówiona", idEgzemplarza);
+                        int idZamowienia= znajdzZamowienie(idEgzemplarza);
+                        JOptionPane.showMessageDialog(null,"ID transakcji:"+idZamowienia);
                         break;
                     case "wyloguj":
+                        setTitle("");
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
                 }
+                ekranSprzedawcy.resetID();
+                ekranSprzedawcy.setDodaj(false);
+                ekranSprzedawcy.setZamow(false);
             }
         });
     }
@@ -432,17 +458,22 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "dyrektorPracownicy":
+                        przegladPracownikow.setGuziki(false);
                         przegladPracownikow.czyscTabele();
                         ladujPracownikow();
                         layout.show(getContentPane(), "przegladPracownikow");
                         break;
                     case "dyrektorGry":
+                        dyrektorPrzegladGier.czysc();
+                        dyrektorPrzegladGier.setGuzik(false);
                         dyrektorPrzegladGier.czyscTabele();
                         dyrektorLadujGry(ladujGry());
                         layout.show(getContentPane(), "dyrektorPrzegladEgzemplarzy");
                         break;
                     case "dyrektorPlacowki":
+                        przegladPlacowek.czyscTabele();
                         ladujPlacowki();
+                        przegladPlacowek.setGuzik(false);
                         layout.show(getContentPane(), "przegladPlacowek");
                         break;
                     case "dyrektorLogiSprzedazy":
@@ -451,6 +482,7 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "dyrektorPrzegladLogow");
                         break;
                     case "dyrektorWyloguj":
+                        setTitle("");
                         zalogowanyPracownik = -1;
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
@@ -470,9 +502,13 @@ public class Aplikacja extends JFrame {
                         dyrektorLadujGry(gryPrzefiltrowane);
                         break;
                     case "wroc":
+                        dyrektorPrzegladGier.czysc();
+                        dyrektorPrzegladGier.setGuzik(false);
                         layout.show(getContentPane(), "interfejsDyrektora");
                         break;
                     case "dodajGre":
+                        dyrektorPrzegladGier.czysc();
+                        dyrektorPrzegladGier.setGuzik(false);
                         layout.show(getContentPane(), "dyrektorDodanieGry");
                         break;
                     case "dodajEgzemplarze":
@@ -487,6 +523,8 @@ public class Aplikacja extends JFrame {
                         for (int i = 0; i < ilosc; i++) {
                             dodajEgzemplarz(idGry, idPlacowki, stan, cena, status);
                         }
+                        dyrektorPrzegladGier.czysc();
+                        dyrektorPrzegladGier.setGuzik(false);
                         break;
                 }
             }
@@ -539,6 +577,7 @@ public class Aplikacja extends JFrame {
                     case "generujPIN":
                         PIN = (int) (Math.random() * 1000000);
                         dodaniePracownika.setPIN(PIN);
+                        dodaniePracownika.setGuzik(true);
                         break;
                     case "dodajPracownika":
                         int idPracownika = dodaniePracownika.getID();
@@ -554,9 +593,13 @@ public class Aplikacja extends JFrame {
                         dodajKodDostepu(idPracownika, szyfr);
 
                         layout.show(getContentPane(), "przegladPracownikow");
+                        dodaniePracownika.setGuzik(false);
+                        dodaniePracownika.czysc();
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "przegladPracownikow");
+                        dodaniePracownika.setGuzik(false);
+                        dodaniePracownika.czysc();
                         break;
                 }
                 przegladPracownikow.czyscTabele();
@@ -589,6 +632,7 @@ public class Aplikacja extends JFrame {
                         generujTOKEN(id, TOKEN);
                         break;
                 }
+                przegladPracownikow.setGuziki(false);
                 przegladPracownikow.czyscTabele();
                 ladujPracownikow();
             }
@@ -615,6 +659,7 @@ public class Aplikacja extends JFrame {
                 System.out.println(command);
                 switch (command) {
                     case "wroc":
+                        przegladPlacowek.czyscTabele();
                         layout.show(getContentPane(), "interfejsDyrektora");
                         break;
                     case "zamknijPlacowke":
@@ -624,6 +669,7 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "dodaniePlacowki");
                         break;
                 }
+                przegladPlacowek.setGuzik(false);
                 przegladPlacowek.czyscTabele();
                 ladujPlacowki();
             }
@@ -952,7 +998,6 @@ public class Aplikacja extends JFrame {
 
         stanowisko = pracownik.getString("stanowisko");
 
-
         switch (stanowisko) {
             case "Dyrektor":
                 layout.show(getContentPane(), "interfejsDyrektora");
@@ -977,7 +1022,7 @@ public class Aplikacja extends JFrame {
                 JOptionPane.showMessageDialog(null, "Oj, coś poszło nie tak. :(");
                 break;
         }
-
+        setTitle("ID pracownika: "+String.valueOf(zalogowanyPracownik)+ " Stanowisko: "+stanowisko);
     }
 
     void zmienianiePINU() throws SQLException {
@@ -1371,6 +1416,20 @@ public class Aplikacja extends JFrame {
 
 
         return klasaINT;
+    }
+
+    private int znajdzZamowienie(int idEgzemplarza){
+        int idZamowienia=-1;
+        try {
+            Statement zapytanie = bazaDanych.createStatement();
+            ResultSet zamowienie = zapytanie.executeQuery("SELECT idZamówienia FROM 00018732_kw.Zamówienia WHERE idEgzemplarza=" + idEgzemplarza + ";");
+            zamowienie.next();
+            idZamowienia = zamowienie.getInt("idZamówienia");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return idZamowienia;
     }
 
 }

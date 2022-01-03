@@ -1,6 +1,8 @@
 package Sprzedawca;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -39,6 +41,7 @@ public class KupnoEgzemplarza extends JPanel {
         model.setRowCount(0);
     }
 
+
     public void addActionListener(ActionListener listener) {
         wroc.addActionListener(listener);
         dodajGre.addActionListener(listener);
@@ -56,6 +59,17 @@ public class KupnoEgzemplarza extends JPanel {
         gryLista.getColumnModel().getColumn(2).setMaxWidth(110);
         JScrollPane gry = new JScrollPane(gryLista);
         gry.setPreferredSize(new Dimension(800,400));
+
+        generujCene.setEnabled(false);
+        zakup.setEnabled(false);
+
+        gryLista.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                generujCene.setEnabled(e.getFirstIndex()!=-1);
+                zakup.setEnabled(e.getFirstIndex()!=-1);
+            }
+        });
 
         uklad.gridwidth = 1;
         uklad.weightx = 1;
@@ -131,14 +145,26 @@ public class KupnoEgzemplarza extends JPanel {
     public void setCena(int cena){
         generowanaCena.setText(String.valueOf(cena));
     }
+
     public int getCena(){
         return Integer.parseInt(generowanaCena.getText());
     }
+
     public String getTytul(){
         return wpiszTytul.getText();
     }
+
     public int getID(){
         int index = gryLista.getSelectedRow();
         return (int) gryLista.getValueAt(index, 0);
     }
+
+    public void setGeneruj(boolean stan){
+        generujCene.setEnabled(stan);
+    }
+
+    public void setZakup(boolean stan){
+        zakup.setEnabled(stan);
+    }
+
 }

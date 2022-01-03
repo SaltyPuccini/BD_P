@@ -48,6 +48,7 @@ public class DodaniePracownika extends JPanel {
         dodajPracownika.setActionCommand("dodajPracownika");
         wroc.setActionCommand("wroc");
         generujPIN.setActionCommand("generujPIN");
+        dodajPracownika.setEnabled(false);
 
         uklad.gridx=0;//
         uklad.gridy=0;
@@ -112,6 +113,14 @@ public class DodaniePracownika extends JPanel {
 
     public int getPIN(){
         return Integer.parseInt(PIN.getText());
+    }
+
+    public void setGuzik(boolean stan){
+        dodajPracownika.setEnabled(stan);
+    }
+
+    public void czysc(){
+        PIN.setText("");
     }
 
 }

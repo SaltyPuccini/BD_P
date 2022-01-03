@@ -1,8 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class EkranLogowania extends JPanel {
+    private boolean[] flaga ={false,false};
 
     private final JTextField id=new JTextField(30);
     private final JPasswordField PIN=new JPasswordField(30);
@@ -34,6 +39,51 @@ public class EkranLogowania extends JPanel {
         wyjdz.setActionCommand("wyjdz");
         zaloguj.setActionCommand("zaloguj");
         zmienPIN.setActionCommand("zmienPIN");
+
+        setGuzik(false);
+        id.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (id.getText().length()>0) {
+                    flaga[0] = true;
+                    zaloguj.setEnabled(flaga[1]);
+                } else {
+                    flaga[0] = false;
+                    zaloguj.setEnabled(false);
+                }
+            }
+        });
+        PIN.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (PIN.getPassword().length > 0) {
+                    flaga[1] = true;
+                    zaloguj.setEnabled(flaga[0]);
+                } else {
+                    flaga[1] = false;
+                    zaloguj.setEnabled(false);
+                }
+            }
+        });
+
 
         uklad.gridx = 0;
         uklad.gridy = 0;
@@ -75,5 +125,11 @@ public class EkranLogowania extends JPanel {
     public void resetTextFields(){
         id.setText("");
         PIN.setText("");
+        flaga[0]=false;
+        flaga[1]=false;
+    }
+
+    public void setGuzik(boolean stan){
+        zaloguj.setEnabled(stan);
     }
 }

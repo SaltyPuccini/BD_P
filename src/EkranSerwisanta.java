@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -30,6 +32,9 @@ public class EkranSerwisanta extends JPanel {
         uklad.weightx = 1;
         uklad.insets = new Insets(10, 10, 10, 10);
 
+        dyskwalifikacja.setEnabled(false);
+        serwis.setEnabled(false);
+
         listaEgzemplarzy.getColumnModel().getColumn(0).setMaxWidth(50);
         JScrollPane tabelaEgzemplarzy = new JScrollPane(listaEgzemplarzy);
         tabelaEgzemplarzy.setPreferredSize(new Dimension(800,400));
@@ -37,6 +42,14 @@ public class EkranSerwisanta extends JPanel {
         wyloguj.setActionCommand("wyloguj");
         serwis.setActionCommand("serwis");
         dyskwalifikacja.setActionCommand("dyskwalifikacja");
+
+        listaEgzemplarzy.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                dyskwalifikacja.setEnabled(e.getFirstIndex()!=-1);
+                serwis.setEnabled(e.getFirstIndex()!=-1);
+            }
+        });
 
         uklad.gridx = 3;
         uklad.gridy = 2;
@@ -67,5 +80,10 @@ public class EkranSerwisanta extends JPanel {
     public int getID() {
         int index = listaEgzemplarzy.getSelectedRow();
         return (int) listaEgzemplarzy.getValueAt(index, 0);
+    }
+
+    public void setWycen(boolean stan) {
+        dyskwalifikacja.setEnabled(stan);
+        serwis.setEnabled(stan);
     }
 }
