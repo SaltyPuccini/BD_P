@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -82,7 +81,8 @@ public class Aplikacja extends JFrame {
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
-
+                        ekranLogowania.resetTextFields();
+                        ekranLogowania.setGuzik(false);
                         break;
                 }
                 ekranLogowania.resetTextFields();
@@ -106,6 +106,8 @@ public class Aplikacja extends JFrame {
                         layout.show(getContentPane(), "ekranLogowania");
                         break;
                 }
+                ekranLogowania.resetTextFields();
+                ekranLogowania.setGuzik(false);
                 zmienPIN.resetTextFields();
             }
         });
@@ -1456,7 +1458,7 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoOdbioruzBazy(){
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do odebrania\""+";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do odebrania\""+";")
         ) {
 
             while (resultSet.next()) {
@@ -1475,7 +1477,7 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoWyslaniazBazy(){
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do wysłania\""+";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do wysłania\""+";")
         ) {
 
             while (resultSet.next()) {
@@ -1494,7 +1496,7 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoOdbioruzBazyRzeczoznawca(){
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do odebrania\""+";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do odebrania\""+";")
         ) {
 
             while (resultSet.next()) {
@@ -1513,7 +1515,7 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoWyslaniazBazyRzeczoznawca(){
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do wysłania\""+";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do wysłania\""+";")
         ) {
 
             while (resultSet.next()) {

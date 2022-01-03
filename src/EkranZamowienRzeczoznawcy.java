@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -33,6 +35,19 @@ public class EkranZamowienRzeczoznawcy extends JPanel {
         wyslano.setActionCommand("wyslano");
         odebrano.setActionCommand("odebrano");
         wroc.setActionCommand("wroc");
+
+        wysylaneLista.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                setWyslanie(e.getFirstIndex()!=-1);
+            }
+        });
+        odbieraneLista.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                setOdebranie(e.getFirstIndex()!=-1);
+            }
+        });
 
         uklad.gridx = 0;
         uklad.gridy = 0;
@@ -91,6 +106,14 @@ public class EkranZamowienRzeczoznawcy extends JPanel {
             modelWyslane.removeRow(0);
         }
         wysylaneLista.setModel(modelWyslane);
+    }
+
+    public void setWyslanie(boolean stan){
+        wyslano.setEnabled(stan);
+    }
+
+    public void setOdebranie(boolean stan){
+        odebrano.setEnabled(stan);
     }
 
 }
