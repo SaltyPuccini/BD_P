@@ -16,10 +16,11 @@ public class EkranRzeczoznawcy extends JPanel {
     JTextField wpiszCena = new JTextField(3);
     JLabel etykietaCena = new JLabel("Cena:");
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
-    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł"}, 0);
+    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł", "Gatunek"}, 0);
     private String[] gatunki = {"*", "Strzelanka", "Strategiczne", "Akcji", "Bijatyki", "Logiczne", "Platformowki", "Przygodowe", "RPG", "Sportowa", "Symulacje", "Wyscigowe"};
     JComboBox gatunek = new JComboBox(gatunki);
 
+    String gatunekString=null;
 
     public EkranRzeczoznawcy() {
         setLayout(new GridBagLayout());
@@ -45,6 +46,23 @@ public class EkranRzeczoznawcy extends JPanel {
         wyloguj.setActionCommand("wyloguj");
         wycen.setActionCommand("wycen");
         zamowienia.setActionCommand("zamowienia");
+
+
+        gatunek.setEnabled(false);
+        listaEgzemplarzy.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getFirstIndex() != -1) {
+                    gatunekString = model.getValueAt(e.getFirstIndex(),2).toString();
+                    if(gatunekString != null){
+                        gatunek.setEnabled(true);
+                    }
+                } else {
+                    gatunek.setEnabled(false);
+                }
+            }
+        });
+
 
         uklad.gridx = 3;
         uklad.gridy = 1;
