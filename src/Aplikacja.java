@@ -189,6 +189,8 @@ public class Aplikacja extends JFrame {
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "ekranRzeczoznawcy");
+                        ekranRzeczoznawcy.czyscTabele();
+                        rzeczoznawcaZaladujTabele();
                         break;
                 }
             }
@@ -428,6 +430,8 @@ public class Aplikacja extends JFrame {
                         int idPlacowkiOdbierajacej = placowka(zalogowanyPracownik);
                         dodajZamowienie(idEgzemplarza, idPlacowkiWysylajacej, idPlacowkiOdbierajacej);
                         zmienStatus("zamówiona", idEgzemplarza);
+                        ekranSprzedawcy.czyscTabeleEgzemplarze();
+                        sprzedawcaLadujEgzemplarze();
                         break;
                     case "wyloguj":
                         layout.show(getContentPane(), "ekranLogowania");

@@ -44,7 +44,7 @@ public class EkranZamowienRzeczoznawcy extends JPanel {
 
         uklad.gridwidth = 1;
         uklad.weightx = 1;
-        uklad.gridx = 2;
+        uklad.gridx = 0;
         uklad.gridy = 3;
         add(wyslano, uklad);
 
@@ -52,7 +52,7 @@ public class EkranZamowienRzeczoznawcy extends JPanel {
         uklad.gridy = 3;
         add(wroc, uklad);
 
-        uklad.gridx = 0;
+        uklad.gridx = 2;
         uklad.gridy = 3;
         add(odebrano, uklad);
     }
