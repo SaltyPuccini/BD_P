@@ -5,9 +5,10 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class EkranZamowienRzeczoznawcy extends JPanel {
-    DefaultTableModel model = new DefaultTableModel(new String[] { "IDZamówienia","IDEgzemplarza", "Tytuł"}, 0);
-    JTable wysylaneLista = new JTable(model);
-    JTable odbieraneLista = new JTable(model);
+    DefaultTableModel modelWyslane = new DefaultTableModel(new String[] { "IDZamówienia","IDEgzemplarza", "Tytuł", "PlacówkaDocelowa"}, 0);
+    DefaultTableModel modelOdebrane = new DefaultTableModel(new String[] { "IDZamówienia","IDEgzemplarza", "Tytuł", "PlacówkaWysyłająca"}, 0);
+    JTable wysylaneLista = new JTable(modelWyslane);
+    JTable odbieraneLista = new JTable(modelOdebrane);
 
     JScrollPane wyslane = new JScrollPane(wysylaneLista);
     JScrollPane odebrane = new JScrollPane(odbieraneLista);
@@ -66,6 +67,30 @@ public class EkranZamowienRzeczoznawcy extends JPanel {
             index = odbieraneLista.getSelectedRow();
             return (int) odbieraneLista.getValueAt(index,0);
         }
+    }
+
+    public void dodajEgzemlarzDoOdbioru(Object[] object) {
+        modelOdebrane.addRow(object);
+    }
+
+    public void dodajEgzemlarzDoWyslania(Object[] object) {
+        modelWyslane.addRow(object);
+    }
+
+    public void czyscTabeleDoOdbioru(){
+        while(modelOdebrane.getRowCount() > 0)
+        {
+            modelOdebrane.removeRow(0);
+        }
+        odbieraneLista.setModel(modelOdebrane);
+    }
+
+    public void czyscTabeleDoWysylki(){
+        while(modelWyslane.getRowCount() > 0)
+        {
+            modelWyslane.removeRow(0);
+        }
+        wysylaneLista.setModel(modelWyslane);
     }
 
 }
