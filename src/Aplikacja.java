@@ -167,9 +167,15 @@ public class Aplikacja extends JFrame {
                         String gatunek = "\""+ekranRzeczoznawcy.getGatunek()+"\"";
                         int idEgzemplarza = ekranRzeczoznawcy.getID();
 
+                        if(Objects.equals(gatunek, "\"*\"") && Objects.equals(ekranRzeczoznawcy.getAktualnyGatunek(), "")){
+                            JOptionPane.showMessageDialog(null, "Określ gatunek!");
+                            break;
+                        }
+
                         zmienCene(cena, idEgzemplarza);
                         try {
-                            if (!Objects.equals(gatunek, "*")) {
+                            if (!Objects.equals(gatunek, "\"*\"")) {
+                                System.out.println(gatunek);
                                 zmienGatunek(gatunek, idEgzemplarza);
                             }
                         } catch (SQLException ex) {
@@ -177,7 +183,7 @@ public class Aplikacja extends JFrame {
                         }
                         zmienStatus("gotowa do sprzedaży", idEgzemplarza);
                         if(ekranRzeczoznawcy.listaEgzemplarzy.getModel().getRowCount()==1)
-                        ekranRzeczoznawcy.listaEgzemplarzy.getSelectionModel().clearSelection();
+                            ekranRzeczoznawcy.listaEgzemplarzy.getSelectionModel().clearSelection();
                         break;
                 }
                 ekranRzeczoznawcy.czyscTabele();
@@ -287,7 +293,7 @@ public class Aplikacja extends JFrame {
                         int rokWydania = dodanieGry.getRok();
                         String wydawca = dodanieGry.getWydawce();
                         String klasa = dodanieGry.getKlase();
-                        dodajGre(nazwa, rokWydania, wydawca, null, klasa);
+                        dodajGre(nazwa, rokWydania, wydawca, "", klasa);
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "kupnoEgzemplarza");

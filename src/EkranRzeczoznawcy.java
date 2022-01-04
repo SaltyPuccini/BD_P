@@ -47,14 +47,15 @@ public class EkranRzeczoznawcy extends JPanel {
         wycen.setActionCommand("wycen");
         zamowienia.setActionCommand("zamowienia");
 
-
         gatunek.setEnabled(false);
         listaEgzemplarzy.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (e.getFirstIndex() != -1) {
-                    gatunekString = model.getValueAt(e.getFirstIndex(),2).toString();
-                    if(gatunekString != null){
+                gatunek.setSelectedIndex(0);
+                gatunek.setEnabled(false);
+                if (listaEgzemplarzy.getSelectedRow() != -1) {
+                    if(Objects.equals(model.getValueAt(listaEgzemplarzy.getSelectedRow(),2).toString(), "")){
+                        System.out.println("mozna zmieniac, bo jest \"\"");
                         gatunek.setEnabled(true);
                     }
                 } else {
@@ -102,19 +103,19 @@ public class EkranRzeczoznawcy extends JPanel {
     }
 
     public void czyscTabele() {
-        model.setRowCount(0);
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+        listaEgzemplarzy.setModel(model);
     }
+
 
     public Integer getCena() {
         return Integer.valueOf(wpiszCena.getText());
     }
 
     public String getGatunek() {
-        if (Objects.equals((String) gatunek.getSelectedItem(), "*")) {
-            return null;
-        } else {
             return (String) gatunek.getSelectedItem();
-        }
 
     }
 
@@ -125,6 +126,10 @@ public class EkranRzeczoznawcy extends JPanel {
 
     public void setWycen(boolean stan){
         wycen.setEnabled(stan);
+    }
+
+    public String getAktualnyGatunek(){
+        return model.getValueAt(listaEgzemplarzy.getSelectedRow(),2).toString();
     }
 
 }
