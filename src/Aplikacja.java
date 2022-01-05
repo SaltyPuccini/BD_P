@@ -170,10 +170,10 @@ public class Aplikacja extends JFrame {
                     case "wycen":
                         int cena = ekranRzeczoznawcy.getCena();
 
-                        String gatunek = "\""+ekranRzeczoznawcy.getGatunek()+"\"";
+                        String gatunek = "\"" + ekranRzeczoznawcy.getGatunek() + "\"";
                         int idEgzemplarza = ekranRzeczoznawcy.getID();
 
-                        if(Objects.equals(gatunek, "\"*\"") && Objects.equals(ekranRzeczoznawcy.getAktualnyGatunek(), "")){
+                        if (Objects.equals(gatunek, "\"*\"") && Objects.equals(ekranRzeczoznawcy.getAktualnyGatunek(), "")) {
                             JOptionPane.showMessageDialog(null, "Określ gatunek!");
                             break;
                         }
@@ -181,14 +181,14 @@ public class Aplikacja extends JFrame {
                         zmienCene(cena, idEgzemplarza);
                         try {
                             if (!Objects.equals(gatunek, "\"*\"")) {
-                                System.out.println(gatunek);
+                                //System.out.println(gatunek);
                                 zmienGatunek(gatunek, idEgzemplarza);
                             }
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
                         zmienStatus("gotowa do sprzedaży", idEgzemplarza);
-                        if(ekranRzeczoznawcy.listaEgzemplarzy.getModel().getRowCount()==1)
+                        if (ekranRzeczoznawcy.listaEgzemplarzy.getModel().getRowCount() == 1)
                             ekranRzeczoznawcy.listaEgzemplarzy.getSelectionModel().clearSelection();
                         break;
                 }
@@ -280,8 +280,10 @@ public class Aplikacja extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getFirstIndex() != -1) {
-                    ekranSprzedawcy.czyscTabeleEgzemplarze();
-                    sprzedawcaLadujEgzemplarze();
+                    if (ekranSprzedawcy.gryLista.getSelectedRow() != -1) {
+                        ekranSprzedawcy.czyscTabeleEgzemplarze();
+                        sprzedawcaLadujEgzemplarze();
+                    }
                 }
                 ekranSprzedawcy.setDodaj(false);
                 ekranSprzedawcy.setZamow(false);
@@ -818,7 +820,6 @@ public class Aplikacja extends JFrame {
                 Statement zapytanie = bazaDanych.createStatement();
                 ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacówki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placówki WHERE status = true;")
         ) {
-            System.out.println("JD");
             while (resultSet.next()) {
                 int idPlacowki = resultSet.getInt("idPlacówki");
                 String ulica = resultSet.getString("ulica");
@@ -838,19 +839,24 @@ public class Aplikacja extends JFrame {
 
         for (int i = 0; i < aktualneGry.size(); i++) {
             if (nazwa != null && !aktualneGry.get(i)[1].toString().toLowerCase().contains(nazwa.toLowerCase())) {
-                System.out.println("Usuwam po tytule " + aktualneGry.get(i)[1].toString().toLowerCase());
+                //System.out.println("Usuwam po tytule " + aktualneGry.get(i)[1].toString().toLowerCase());
+                aktualneGry.remove(i);
+                i--;
+                continue;
+            }
+            if (aktualneGry.get(i)[4] == null && gatunek != null) {
                 aktualneGry.remove(i);
                 i--;
                 continue;
             }
             if (gatunek != null && !aktualneGry.get(i)[4].toString().toLowerCase().contains(gatunek.toLowerCase())) {
-                System.out.println("Usuwam po gatunku " + aktualneGry.get(i)[4].toString().toLowerCase());
+                //System.out.println("Usuwam po gatunku " + aktualneGry.get(i)[4].toString().toLowerCase());
                 aktualneGry.remove(i);
                 i--;
                 continue;
             }
             if (rokWydania != null && !aktualneGry.get(i)[2].toString().contains(rokWydania)) {
-                System.out.println("Usuwam po rokWydania " + aktualneGry.get(i)[2].toString().toLowerCase());
+                //System.out.println("Usuwam po rokWydania " + aktualneGry.get(i)[2].toString().toLowerCase());
                 aktualneGry.remove(i);
                 i--;
                 continue;
@@ -1068,7 +1074,7 @@ public class Aplikacja extends JFrame {
                 JOptionPane.showMessageDialog(null, "Oj, coś poszło nie tak. :(");
                 break;
         }
-        setTitle("ID pracownika: "+ zalogowanyPracownik + " Stanowisko: "+stanowisko);
+        setTitle("ID pracownika: " + zalogowanyPracownik + " Stanowisko: " + stanowisko);
     }
 
     void zmienianiePINU() throws SQLException {
@@ -1118,7 +1124,7 @@ public class Aplikacja extends JFrame {
         komenda.append("\",\"");
         komenda.append(klasa);
         komenda.append("\");");
-        System.out.println(komenda);
+        //System.out.println(komenda);
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -1140,7 +1146,7 @@ public class Aplikacja extends JFrame {
         komenda.append(",\"");
         komenda.append(status);
         komenda.append("\");");
-        System.out.println(komenda);
+        //System.out.println(komenda);
 
         int idEgzemplarza = -1;
         try {
@@ -1172,7 +1178,7 @@ public class Aplikacja extends JFrame {
         komenda.append("\",");
         komenda.append(status);
         komenda.append(");");
-        System.out.println(komenda);
+        //System.out.println(komenda);
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -1194,7 +1200,7 @@ public class Aplikacja extends JFrame {
         komenda.append(",");
         komenda.append(status);
         komenda.append(");");
-        System.out.println(komenda);
+        //System.out.println(komenda);
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -1328,8 +1334,8 @@ public class Aplikacja extends JFrame {
         Statement zapytanie = null;
         try {
             zapytanie = bazaDanych.createStatement();
-            ResultSet pracownicy= zapytanie.executeQuery("SELECT idPracownika FROM 00018732_kw.Pracownicy WHERE idPlacówki = "+idPlacowki+";");
-            while(pracownicy.next()){
+            ResultSet pracownicy = zapytanie.executeQuery("SELECT idPracownika FROM 00018732_kw.Pracownicy WHERE idPlacówki = " + idPlacowki + ";");
+            while (pracownicy.next()) {
                 int idPracownika = pracownicy.getInt("idPracownika");
                 zwolnijPracownika(idPracownika);
             }
@@ -1464,8 +1470,8 @@ public class Aplikacja extends JFrame {
         return klasaINT;
     }
 
-    private int znajdzZamowienie(int idEgzemplarza){
-        int idZamowienia=-1;
+    private int znajdzZamowienie(int idEgzemplarza) {
+        int idZamowienia = -1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
             ResultSet zamowienie = zapytanie.executeQuery("SELECT idZamówienia FROM 00018732_kw.Zamówienia WHERE idEgzemplarza=" + idEgzemplarza + ";");
@@ -1478,7 +1484,7 @@ public class Aplikacja extends JFrame {
         return idZamowienia;
     }
 
-    private void pobierzZamowieniaDoOdbioruzBazy(){
+    private void pobierzZamowieniaDoOdbioruzBazy() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
                 ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do odebrania\"" + ";");
