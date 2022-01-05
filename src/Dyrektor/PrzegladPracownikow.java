@@ -34,6 +34,10 @@ public class PrzegladPracownikow extends JPanel {
         zmienDane.addActionListener(listener);
     }
 
+    public JTable getTabelaPracownikow() {
+        return tabelaPracownikow;
+    }
+
     public void dodajDaneZBazy(Object[] obj){
         model.addRow(obj);
     }

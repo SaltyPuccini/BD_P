@@ -9,11 +9,11 @@ public class ZmienDane extends JPanel {
     JButton zmienDane=new JButton("Zmień dane");
 
     JLabel etykietaImie = new JLabel("Imię:");
-    JTextField wpiszImie= new JTextField("");
+    JTextField wpiszImie= new JTextField(20);
     JSplitPane imie = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaImie,wpiszImie);
 
     JLabel etykietaNazwisko= new JLabel("Nazwisko:");
-    JTextField wpiszNazwisko= new JTextField("");
+    JTextField wpiszNazwisko= new JTextField(20);
     JSplitPane nazwisko = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,etykietaNazwisko,wpiszNazwisko);
 
     public void addActionListener(ActionListener listener) {

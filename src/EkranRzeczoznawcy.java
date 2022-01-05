@@ -4,6 +4,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Objects;
 
 public class EkranRzeczoznawcy extends JPanel {
@@ -40,8 +42,26 @@ public class EkranRzeczoznawcy extends JPanel {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 wycen.setEnabled(e.getFirstIndex()!=-1);
+                wycen.setEnabled(getCena() != 0);
             }
         });
+
+        wpiszCena.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                wycen.setEnabled(getCena() != 0);
+
+            }
+        });
+
+
+
 
         wyloguj.setActionCommand("wyloguj");
         wycen.setActionCommand("wycen");
@@ -110,7 +130,9 @@ public class EkranRzeczoznawcy extends JPanel {
     }
 
     public Integer getCena() {
-        return Integer.valueOf(wpiszCena.getText());
+        if(wpiszCena.getText().isEmpty())
+            return 0;
+        return Integer.parseInt(wpiszCena.getText());
     }
 
     public String getGatunek() {

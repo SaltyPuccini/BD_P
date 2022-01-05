@@ -19,6 +19,7 @@ public class Aplikacja extends JFrame {
     final CardLayout layout = new CardLayout();
     public Connection bazaDanych;
     int zalogowanyPracownik;
+    int idPracownika;
 
     EkranLogowania ekranLogowania = new EkranLogowania();
     ZmienPIN zmienPIN = new ZmienPIN();
@@ -155,6 +156,7 @@ public class Aplikacja extends JFrame {
                     case "wyloguj":
                         setTitle("");
                         zalogowanyPracownik = -1;
+                        ekranRzeczoznawcy.czyscTabele();
                         layout.show(getContentPane(), "ekranLogowania");
                         ekranRzeczoznawcy.setWycen(false);
                         break;
@@ -167,6 +169,7 @@ public class Aplikacja extends JFrame {
                         break;
                     case "wycen":
                         int cena = ekranRzeczoznawcy.getCena();
+
                         String gatunek = "\""+ekranRzeczoznawcy.getGatunek()+"\"";
                         int idEgzemplarza = ekranRzeczoznawcy.getID();
 
@@ -189,7 +192,6 @@ public class Aplikacja extends JFrame {
                             ekranRzeczoznawcy.listaEgzemplarzy.getSelectionModel().clearSelection();
                         break;
                 }
-                ekranRzeczoznawcy.czyscTabele();
                 rzeczoznawcaZaladujTabele();
             }
         });
@@ -656,6 +658,8 @@ public class Aplikacja extends JFrame {
                         break;
                     case "zmienDane":
                         layout.show(getContentPane(), "zmienDane");
+                        idPracownika = przegladPracownikow.getID();
+
                         break;
                     case "dodajPracownika":
                         layout.show(getContentPane(), "dodaniePracownika");
@@ -681,10 +685,14 @@ public class Aplikacja extends JFrame {
                 if ("zmienDane".equals(command)) {
                     String imie = zmienDane.getImie();
                     String nazwisko = zmienDane.getNazwisko();
-                    int idPracownika = przegladPracownikow.getID();
+
+
                     zmienDane(imie, nazwisko, idPracownika);
+                    przegladPracownikow.getTabelaPracownikow().getSelectionModel().clearSelection();
                 }
                 zmienDane.czysc();
+                przegladPracownikow.czyscTabele();
+                ladujPracownikow();
                 layout.show(getContentPane(), "przegladPracownikow");
             }
         });
@@ -1041,6 +1049,7 @@ public class Aplikacja extends JFrame {
                 zalogowanyPracownik = id;
                 break;
             case "Rzeczoznawca":
+                ekranRzeczoznawcy.czyscTabele();
                 rzeczoznawcaZaladujTabele();
                 layout.show(getContentPane(), "ekranRzeczoznawcy");
                 zalogowanyPracownik = id;
@@ -1352,7 +1361,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void zmienDane(String imie, String nazwisko, int idPracownika) {
-        String komenda = "UPDATE 00018732_kw.Pracownicy SET imie=" + imie + ", nazwisko =" + nazwisko + " WHERE idPracownika=" + idPracownika + ";";
+        String komenda = "UPDATE 00018732_kw.Pracownicy SET imię=\"" + imie + "\", nazwisko =\"" + nazwisko + "\" WHERE idPracownika=" + idPracownika + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
