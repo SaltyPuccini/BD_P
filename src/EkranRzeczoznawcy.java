@@ -16,10 +16,11 @@ public class EkranRzeczoznawcy extends JPanel {
     JTextField wpiszCena = new JTextField(3);
     JLabel etykietaCena = new JLabel("Cena:");
     JSplitPane cena = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, etykietaCena, wpiszCena);
-    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł"}, 0);
-    private final String[] gatunki = {"*", "Strzelanka", "Strategiczne", "Akcji", "Bijatyki", "Logiczne", "Platformowki", "Przygodowe", "RPG", "Sportowa", "Symulacje", "Wyscigowe"};
+    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Tytuł", "Gatunek"}, 0);
+    private String[] gatunki = {"*", "Strzelanka", "Strategiczne", "Akcji", "Bijatyki", "Logiczne", "Platformowki", "Przygodowe", "RPG", "Sportowa", "Symulacje", "Wyscigowe"};
     JComboBox gatunek = new JComboBox(gatunki);
 
+    String gatunekString=null;
 
     public EkranRzeczoznawcy() {
         setLayout(new GridBagLayout());
@@ -45,6 +46,24 @@ public class EkranRzeczoznawcy extends JPanel {
         wyloguj.setActionCommand("wyloguj");
         wycen.setActionCommand("wycen");
         zamowienia.setActionCommand("zamowienia");
+
+        gatunek.setEnabled(false);
+        listaEgzemplarzy.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                gatunek.setSelectedIndex(0);
+                gatunek.setEnabled(false);
+                if (listaEgzemplarzy.getSelectedRow() != -1) {
+                    if(Objects.equals(model.getValueAt(listaEgzemplarzy.getSelectedRow(),2).toString(), "")){
+                        System.out.println("mozna zmieniac, bo jest \"\"");
+                        gatunek.setEnabled(true);
+                    }
+                } else {
+                    gatunek.setEnabled(false);
+                }
+            }
+        });
+
 
         uklad.gridx = 3;
         uklad.gridy = 1;
@@ -84,7 +103,10 @@ public class EkranRzeczoznawcy extends JPanel {
     }
 
     public void czyscTabele() {
-        model.setRowCount(0);
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+        listaEgzemplarzy.setModel(model);
     }
 
     public Integer getCena() {
@@ -92,11 +114,7 @@ public class EkranRzeczoznawcy extends JPanel {
     }
 
     public String getGatunek() {
-        if (Objects.equals(gatunek.getSelectedItem(), "*")) {
-            return null;
-        } else {
-            return (String) gatunek.getSelectedItem();
-        }
+        return (String) gatunek.getSelectedItem();
 
     }
 
@@ -107,6 +125,10 @@ public class EkranRzeczoznawcy extends JPanel {
 
     public void setWycen(boolean stan){
         wycen.setEnabled(stan);
+    }
+
+    public String getAktualnyGatunek(){
+        return model.getValueAt(listaEgzemplarzy.getSelectedRow(),2).toString();
     }
 
 }

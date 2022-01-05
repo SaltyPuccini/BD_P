@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -166,16 +167,26 @@ public class Aplikacja extends JFrame {
                         break;
                     case "wycen":
                         int cena = ekranRzeczoznawcy.getCena();
-                        String gatunek = ekranRzeczoznawcy.getGatunek();
+                        String gatunek = "\""+ekranRzeczoznawcy.getGatunek()+"\"";
                         int idEgzemplarza = ekranRzeczoznawcy.getID();
+
+                        if(Objects.equals(gatunek, "\"*\"") && Objects.equals(ekranRzeczoznawcy.getAktualnyGatunek(), "")){
+                            JOptionPane.showMessageDialog(null, "Określ gatunek!");
+                            break;
+                        }
 
                         zmienCene(cena, idEgzemplarza);
                         try {
-                            zmienGatunek(gatunek, idEgzemplarza);
+                            if (!Objects.equals(gatunek, "\"*\"")) {
+                                System.out.println(gatunek);
+                                zmienGatunek(gatunek, idEgzemplarza);
+                            }
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
                         zmienStatus("gotowa do sprzedaży", idEgzemplarza);
+                        if(ekranRzeczoznawcy.listaEgzemplarzy.getModel().getRowCount()==1)
+                            ekranRzeczoznawcy.listaEgzemplarzy.getSelectionModel().clearSelection();
                         break;
                 }
                 ekranRzeczoznawcy.czyscTabele();
@@ -190,14 +201,14 @@ public class Aplikacja extends JFrame {
                 int id;
                 switch (akcja) {
                     case "odebrano":
-                        id =ekranZamowienRzeczoznawcy.getID("odebrane");
-                        zmienSatusZamowienia("\"dostarczone\"",id);
+                        id = ekranZamowienRzeczoznawcy.getID("odebrane");
+                        zmienSatusZamowienia("\"dostarczone\"", id);
                         ekranZamowienRzeczoznawcy.czyscTabeleDoOdbioru();
                         pobierzZamowieniaDoOdbioruzBazyRzeczoznawca();
                         break;
                     case "wyslano":
-                        id =ekranZamowienRzeczoznawcy.getID("wyslane");
-                        zmienSatusZamowienia("\"do odebrania\"",id);
+                        id = ekranZamowienRzeczoznawcy.getID("wyslane");
+                        zmienSatusZamowienia("\"do odebrania\"", id);
                         ekranZamowienRzeczoznawcy.czyscTabeleDoWysylki();
                         pobierzZamowieniaDoWyslaniazBazyRzeczoznawca();
                         break;
@@ -259,7 +270,7 @@ public class Aplikacja extends JFrame {
         add(przegladPracownikow, "przegladPracownikow");
         add(dyrektorDodanieGry, "dyrektorDodanieGry");
         add(ekranZamowienRzeczoznawcy, "ekranZamowienRzeczoznawcy");
-        add(zmienDane,"zmienDane");
+        add(zmienDane, "zmienDane");
     }
 
     void sprzedawca() {
@@ -285,10 +296,12 @@ public class Aplikacja extends JFrame {
                         int rokWydania = dodanieGry.getRok();
                         String wydawca = dodanieGry.getWydawce();
                         String klasa = dodanieGry.getKlase();
-                        dodajGre(nazwa, rokWydania, wydawca, null, klasa);
+                        dodajGre(nazwa, rokWydania, wydawca, "", klasa);
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "kupnoEgzemplarza");
+                        kupnoEgzemplarza.czyscTabele();
+                        sprzedawcaLadujGryKupno(ladujGry());
                         break;
                 }
             }
@@ -315,7 +328,7 @@ public class Aplikacja extends JFrame {
 
                             for (Integer[] integers : zamowienia) {
                                 if (integers[0] == i) {
-                                    zmienSatusZamowienia("\"sprzedana\"",integers[1]);
+                                    zmienSatusZamowienia("\"sprzedana\"", integers[1]);
                                 }
                             }
                         }
@@ -383,14 +396,14 @@ public class Aplikacja extends JFrame {
                 int id;
                 switch (akcja) {
                     case "odebrano":
-                        id =ekranZamowien.getID("odebrane");
-                        zmienSatusZamowienia("\"do sprzedaży\"",id);
+                        id = ekranZamowien.getID("odebrane");
+                        zmienSatusZamowienia("\"do sprzedaży\"", id);
                         ekranZamowien.czyscTabeleDoOdbioru();
                         pobierzZamowieniaDoOdbioruzBazy();
                         break;
                     case "wyslano":
-                        id =ekranZamowien.getID("wyslane");
-                        zmienSatusZamowienia("\"do odebrania\"",id);
+                        id = ekranZamowien.getID("wyslane");
+                        zmienSatusZamowienia("\"do odebrania\"", id);
                         ekranZamowien.czyscTabeleDoWysylki();
                         pobierzZamowieniaDoWyslaniazBazy();
                         break;
@@ -458,8 +471,8 @@ public class Aplikacja extends JFrame {
                         int idPlacowkiOdbierajacej = placowka(zalogowanyPracownik);
                         dodajZamowienie(idEgzemplarza, idPlacowkiWysylajacej, idPlacowkiOdbierajacej);
                         zmienStatus("zamówiona", idEgzemplarza);
-                        int idZamowienia= znajdzZamowienie(idEgzemplarza);
-                        JOptionPane.showMessageDialog(null,"ID transakcji:"+idZamowienia);
+                        int idZamowienia = znajdzZamowienie(idEgzemplarza);
+                        JOptionPane.showMessageDialog(null, "ID transakcji:" + idZamowienia);
                         ekranSprzedawcy.czyscTabeleEgzemplarze();
                         sprzedawcaLadujEgzemplarze();
                         break;
@@ -898,24 +911,24 @@ public class Aplikacja extends JFrame {
                 int cena = resultSet.getInt("cena");
                 int placowka = resultSet.getInt("idPlacówki");
                 String stanEgzemplarza = null;
-                switch  (stan){
+                switch (stan) {
                     case 0:
-                        stanEgzemplarza="fatalny";
+                        stanEgzemplarza = "fatalny";
                         break;
                     case 1:
-                        stanEgzemplarza="zły";
+                        stanEgzemplarza = "zły";
                         break;
                     case 2:
-                        stanEgzemplarza="używany";
+                        stanEgzemplarza = "używany";
                         break;
                     case 3:
-                        stanEgzemplarza="dobry";
+                        stanEgzemplarza = "dobry";
                         break;
                     case 4:
-                        stanEgzemplarza="wzorowy";
+                        stanEgzemplarza = "wzorowy";
                         break;
                     case 5:
-                        stanEgzemplarza="O kurwa, ale ja jestem silny!";
+                        stanEgzemplarza = "easterEgg";
                         break;
                 }
                 object.add(new Object[]{idEgzemplarza, stanEgzemplarza, cena, placowka});
@@ -940,7 +953,7 @@ public class Aplikacja extends JFrame {
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT e.status, e.idEgzemplarza, e.stan, e.cena, g.nazwa, g.rokWydania, g.wydawca FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;")
+                ResultSet resultSet = zapytanie.executeQuery("SELECT e.status, e.idEgzemplarza, e.stan, e.cena, g.nazwa, g.rokWydania, g.wydawca, g.gatunek FROM 00018732_kw.Gry g JOIN 00018732_kw.Egzemplarze e ON e.idGry=g.idGry;");
         ) {
             while (resultSet.next()) {
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
@@ -950,7 +963,8 @@ public class Aplikacja extends JFrame {
                 String wydawca = resultSet.getString("wydawca");
                 String nazwa = resultSet.getString("nazwa");
                 String status = resultSet.getString("status");
-                object.add(new Object[]{idEgzemplarza, nazwa, stan, cena, rokWydania, wydawca, status});
+                String gatunek = resultSet.getString("gatunek");
+                object.add(new Object[]{idEgzemplarza, nazwa, stan, cena, rokWydania, wydawca, status, gatunek});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -964,10 +978,10 @@ public class Aplikacja extends JFrame {
     void rzeczoznawcaZaladujTabele() {
         List<Object[]> object = rzeczoznawcaISerwisantZaladujTabele();
         for (Object[] ob : object) {
-            if(!Objects.equals(ob[6].toString(), "do wyceny")){
+            if (!Objects.equals(ob[6].toString(), "do wyceny")) {
                 continue;
             }
-            Object[] nowyob = new Object[]{ob[0], ob[1]};
+            Object[] nowyob = new Object[]{ob[0], ob[1], ob[7]};
             ekranRzeczoznawcy.dodajDaneZBazy(nowyob);
         }
     }
@@ -975,7 +989,7 @@ public class Aplikacja extends JFrame {
     void serwisantZaladujTabele() {
         List<Object[]> object = rzeczoznawcaISerwisantZaladujTabele();
         for (Object[] ob : object) {
-            if(!Objects.equals(ob[6].toString(), "do serwisu")){
+            if (!Objects.equals(ob[6].toString(), "do serwisu")) {
                 continue;
             }
             Object[] nowyob = new Object[]{ob[0], ob[1]};
@@ -1458,7 +1472,7 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoOdbioruzBazy(){
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do odebrania\""+";")
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do odebrania\"" + ";");
         ) {
 
             while (resultSet.next()) {
@@ -1474,10 +1488,10 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void pobierzZamowieniaDoWyslaniazBazy(){
+    private void pobierzZamowieniaDoWyslaniazBazy() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do wysłania\""+";")
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
         ) {
 
             while (resultSet.next()) {
@@ -1493,10 +1507,10 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void pobierzZamowieniaDoOdbioruzBazyRzeczoznawca(){
+    private void pobierzZamowieniaDoOdbioruzBazyRzeczoznawca() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do odebrania\""+";")
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do odebrania\"" + ";");
         ) {
 
             while (resultSet.next()) {
@@ -1512,10 +1526,10 @@ public class Aplikacja extends JFrame {
         }
     }
 
-    private void pobierzZamowieniaDoWyslaniazBazyRzeczoznawca(){
+    private void pobierzZamowieniaDoWyslaniazBazyRzeczoznawca() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) +" AND z.status=\"do wysłania\""+";")
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
         ) {
 
             while (resultSet.next()) {
