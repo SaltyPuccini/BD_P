@@ -13,7 +13,7 @@ public class EkranLogowania extends JPanel {
     private final JButton wyjdz=new JButton("Wyjdź");
     private final JButton zmienPIN=new JButton("Zmień PIN");
     private final JLabel etykietaID=new JLabel("ID:");
-    private final JLabel etykietaPIN=new JLabel("PIN:");
+        private final JLabel etykietaPIN=new JLabel("PIN:");
 
     public void addActionListener(ActionListener listener) {
         zaloguj.addActionListener(listener);
@@ -27,7 +27,18 @@ public class EkranLogowania extends JPanel {
         zmienPIN.addActionListener(listener);
     }
 
+
+    @Override
+    public void paintComponent(Graphics g)    {
+        super.paintComponent(g);
+        ImageIcon img = new ImageIcon("gramrepsodia2.png");
+        g.drawImage(img.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
+    }
+
+
     public EkranLogowania() {
+        etykietaID.setForeground(Color.white);
+        etykietaPIN.setForeground(Color.white);
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200,700));
         GridBagConstraints uklad = new GridBagConstraints();
