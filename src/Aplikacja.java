@@ -1245,7 +1245,7 @@ public class Aplikacja extends JFrame {
         komenda.append(idPlacowkiWysylajacej);
         komenda.append(",");
         komenda.append(idPlacowkiOdbierajacej);
-        komenda.append(", \"do wysłania\");");
+        komenda.append(", \"do wyslania\");");
 
         try {
             Statement zapytanie = bazaDanych.createStatement();
@@ -1516,7 +1516,7 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoWyslaniazBazy() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaOdbierajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaWysylajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaOdbierajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaWysylajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wyslania\"" + ";");
         ) {
 
             while (resultSet.next()) {
@@ -1554,7 +1554,7 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoWyslaniazBazyRzeczoznawca() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaOdbierajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaWysylajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaOdbierajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaWysylajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wyslania\"" + ";");
         ) {
 
             while (resultSet.next()) {
