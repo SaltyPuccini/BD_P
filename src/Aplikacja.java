@@ -615,27 +615,31 @@ public class Aplikacja extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String command = e.getActionCommand();
                 System.out.println(command);
-                int PIN;
+                int PIN = 123456;
                 switch (command) {
                     case "generujPIN":
-                        PIN = (int) (Math.random() * 1000000);
+                        do {
+                            PIN = (int) (Math.random() * 1000000);
+                        } while (String.valueOf(PIN).contains(String.valueOf(dodaniePracownika.getID())));
                         dodaniePracownika.setPIN(PIN);
                         dodaniePracownika.setGuzik(true);
                         break;
                     case "dodajPracownika":
-                        int idPracownika = dodaniePracownika.getID();
-                        int idPlacowki = dodaniePracownika.getPlacowka();
-                        String imie = dodaniePracownika.getImie();
-                        String nazwisko = dodaniePracownika.getNazwisko();
-                        String stanowisko = dodaniePracownika.getStanowisko();
-                        dodajPracownika(idPracownika, idPlacowki, imie, nazwisko, stanowisko, true);
 
-                        PIN = dodaniePracownika.getPIN();
-                        dodajKodDostepu(idPracownika, PIN);
+                            int idPracownika = dodaniePracownika.getID();
+                            int idPlacowki = dodaniePracownika.getPlacowka();
+                            String imie = dodaniePracownika.getImie();
+                            String nazwisko = dodaniePracownika.getNazwisko();
+                            String stanowisko = dodaniePracownika.getStanowisko();
+                            dodajPracownika(idPracownika, idPlacowki, imie, nazwisko, stanowisko, true);
 
-                        layout.show(getContentPane(), "przegladPracownikow");
-                        dodaniePracownika.setGuzik(false);
-                        dodaniePracownika.czysc();
+                            PIN = dodaniePracownika.getPIN();
+                            dodajKodDostepu(idPracownika, PIN);
+
+                            layout.show(getContentPane(), "przegladPracownikow");
+                            dodaniePracownika.setGuzik(false);
+                            dodaniePracownika.czysc();
+
                         break;
                     case "wroc":
                         layout.show(getContentPane(), "przegladPracownikow");
@@ -752,13 +756,13 @@ public class Aplikacja extends JFrame {
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idPracownika, imię, nazwisko, idPlacówki FROM 00018732_kw.Pracownicy WHERE status= true;")
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPracownika, imie, nazwisko, idPlacowki FROM 00018732_kw.Pracownicy WHERE status= true;")
         ) {
             while (resultSet.next()) {
                 int idPracownika = resultSet.getInt("idPracownika");
-                String imie = resultSet.getString("imię");
+                String imie = resultSet.getString("imie");
                 String nazwisko = resultSet.getString("nazwisko");
-                int idPlacowki = resultSet.getInt("idPlacówki");
+                int idPlacowki = resultSet.getInt("idPlacowki");
                 przegladPracownikow.dodajDaneZBazy(new Object[]{idPracownika, imie, nazwisko, idPlacowki});
             }
         } catch (SQLException ex) {
@@ -819,10 +823,10 @@ public class Aplikacja extends JFrame {
 
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacówki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placówki WHERE status = true;")
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idPlacowki, ulica, numer, numerLokalu, miasto FROM 00018732_kw.Placowki WHERE status = true;")
         ) {
             while (resultSet.next()) {
-                int idPlacowki = resultSet.getInt("idPlacówki");
+                int idPlacowki = resultSet.getInt("idPlacowki");
                 String ulica = resultSet.getString("ulica");
                 int numer = resultSet.getInt("numer");
                 int numerLokalu = resultSet.getInt("numerLokalu");
@@ -914,7 +918,7 @@ public class Aplikacja extends JFrame {
         List<Object[]> object = new ArrayList<>();
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacówki, status FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry())
+                ResultSet resultSet = zapytanie.executeQuery("SELECT idEgzemplarza, stan, cena, idPlacowki, status FROM 00018732_kw.Egzemplarze WHERE idGry=" + ekranSprzedawcy.getIDGry())
         ) {
             while (resultSet.next()) {
                 if (!Objects.equals(resultSet.getString("status"), "gotowa do sprzedaży")) {
@@ -924,7 +928,7 @@ public class Aplikacja extends JFrame {
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 int stan = resultSet.getInt("stan");
                 int cena = resultSet.getInt("cena");
-                int placowka = resultSet.getInt("idPlacówki");
+                int placowka = resultSet.getInt("idPlacowki");
                 String stanEgzemplarza = null;
                 switch (stan) {
                     case 0:
@@ -1031,7 +1035,7 @@ public class Aplikacja extends JFrame {
 
 
         Statement zapytanie = bazaDanych.createStatement();
-        ResultSet pracownik = zapytanie.executeQuery("SELECT kd.PIN, p.status, p.stanowisko FROM 00018732_kw.Pracownicy p NATURAL JOIN 00018732_kw.KodyDostępu kd WHERE idPracownika=" + id);
+        ResultSet pracownik = zapytanie.executeQuery("SELECT kd.PIN, p.status, p.stanowisko FROM 00018732_kw.Pracownicy p NATURAL JOIN 00018732_kw.KodyDostepu kd WHERE idPracownika=" + id);
         pracownik.next();
         szyfr = pracownik.getInt("PIN");
         Deszyfrator deszyfrator = new Deszyfrator(szyfr);
@@ -1085,7 +1089,7 @@ public class Aplikacja extends JFrame {
         int szyfr;
 
         Statement zapytanie = bazaDanych.createStatement();
-        ResultSet pracownik = zapytanie.executeQuery("SELECT PIN FROM 00018732_kw.KodyDostępu WHERE idPracownika=" + id);
+        ResultSet pracownik = zapytanie.executeQuery("SELECT PIN FROM 00018732_kw.KodyDostepu WHERE idPracownika=" + id);
         pracownik.next();
         szyfr = pracownik.getInt("PIN");
         Deszyfrator deszyfrator = new Deszyfrator(szyfr);
@@ -1097,6 +1101,11 @@ public class Aplikacja extends JFrame {
 
 
         PIN = Integer.parseInt(zmienPIN.getNowyPIN());
+            if(String.valueOf(PIN).contains(String.valueOf(zmienPIN.getID()))){
+                JOptionPane.showMessageDialog(null, "PIN nie może zawierać w sobie ID pracownika!");
+                return;
+            }
+
         if (PIN != Integer.parseInt(zmienPIN.getPowtorzPIN())) {
             JOptionPane.showMessageDialog(null, "Nowy PIN musi być zgodny z powtórzonym nowym PINEM!");
             return;
@@ -1105,7 +1114,7 @@ public class Aplikacja extends JFrame {
         szyfr = szyfrator.szyfr();
 
         zapytanie = bazaDanych.createStatement();
-        zapytanie.executeUpdate("UPDATE 00018732_kw.KodyDostępu SET PIN=" + szyfr + " WHERE idPracownika=" + id + ";");
+        zapytanie.executeUpdate("UPDATE 00018732_kw.KodyDostepu SET PIN=" + szyfr + " WHERE idPracownika=" + id + ";");
 
         JOptionPane.showMessageDialog(null, "Poprawnie zmieniono PIN!");
         zmienPIN.resetTextFields();
@@ -1136,7 +1145,7 @@ public class Aplikacja extends JFrame {
     }
 
     private int dodajEgzemplarz(int idGry, int idPlacowki, int stan, int cena, String status) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Egzemplarze (idGry, idPlacówki, stan, cena, status) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Egzemplarze (idGry, idPlacowki, stan, cena, status) VALUES (");
         komenda.append(idGry);
         komenda.append(",");
         komenda.append(idPlacowki);
@@ -1166,7 +1175,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajPracownika(int idPracownika, int idPlacowki, String imie, String nazwisko, String stanowisko, boolean status) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Pracownicy (idPracownika, idPlacówki, imię, nazwisko, stanowisko, status) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Pracownicy (idPracownika, idPlacowki, imie, nazwisko, stanowisko, status) VALUES (");
         komenda.append(idPracownika);
         komenda.append(",");
         komenda.append(idPlacowki);
@@ -1190,7 +1199,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajPlacowke(String ulica, int numer, String miasto, int numerLokalu, boolean status) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Placówki (ulica, numer, miasto, numerLokalu, status) VALUES (\"");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Placowki (ulica, numer, miasto, numerLokalu, status) VALUES (\"");
         komenda.append(ulica);
         komenda.append("\",");
         komenda.append(numer);
@@ -1212,7 +1221,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajKodDostepu(int id, int PIN) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.KodyDostępu (idPracownika, PIN) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.KodyDostepu (idPracownika, PIN) VALUES (");
         komenda.append(id);
         komenda.append(",");
 
@@ -1230,7 +1239,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void dodajZamowienie(int idEgzemplarza, int idPlacowkiWysylajacej, int idPlacowkiOdbierajacej) {
-        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamówienia (idEgzemplarza, placówkaWysyłająca, placówkaOdbierająca, status) VALUES (");
+        StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Zamowienia (idEgzemplarza, placowkaWysylajaca, placowkaOdbierajaca, status) VALUES (");
         komenda.append(idEgzemplarza);
         komenda.append(",");
         komenda.append(idPlacowkiWysylajacej);
@@ -1248,7 +1257,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void zmienSatusZamowienia(String status, int idZamowienia) {
-        String komenda = "UPDATE 00018732_kw.Zamówienia SET status=" + status + " WHERE idZamówienia=" + idZamowienia + ";";
+        String komenda = "UPDATE 00018732_kw.Zamowienia SET status=" + status + " WHERE idZamowienia=" + idZamowienia + ";";
         Statement zapytanie = null;
         try {
             zapytanie = bazaDanych.createStatement();
@@ -1335,7 +1344,7 @@ public class Aplikacja extends JFrame {
         Statement zapytanie = null;
         try {
             zapytanie = bazaDanych.createStatement();
-            ResultSet pracownicy = zapytanie.executeQuery("SELECT idPracownika FROM 00018732_kw.Pracownicy WHERE idPlacówki = " + idPlacowki + ";");
+            ResultSet pracownicy = zapytanie.executeQuery("SELECT idPracownika FROM 00018732_kw.Pracownicy WHERE idPlacowki = " + idPlacowki + ";");
             while (pracownicy.next()) {
                 int idPracownika = pracownicy.getInt("idPracownika");
                 zwolnijPracownika(idPracownika);
@@ -1346,7 +1355,7 @@ public class Aplikacja extends JFrame {
         }
 
 
-        String komenda = "UPDATE 00018732_kw.Placówki SET status=false WHERE idPlacówki=" + idPlacowki + ";";
+        String komenda = "UPDATE 00018732_kw.Placowki SET status=false WHERE idPlacowki=" + idPlacowki + ";";
         try {
             zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
@@ -1358,7 +1367,7 @@ public class Aplikacja extends JFrame {
     private void generujTOKEN(int id, int TOKEN) {
         Szyfrator szyfrator = new Szyfrator(TOKEN);
         int szyfr = szyfrator.szyfr();
-        String komenda = "UPDATE 00018732_kw.KodyDostępu SET PIN=" + szyfr + " WHERE idPracownika=" + id + ";";
+        String komenda = "UPDATE 00018732_kw.KodyDostepu SET PIN=" + szyfr + " WHERE idPracownika=" + id + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
@@ -1368,7 +1377,7 @@ public class Aplikacja extends JFrame {
     }
 
     private void zmienDane(String imie, String nazwisko, int idPracownika) {
-        String komenda = "UPDATE 00018732_kw.Pracownicy SET imię=\"" + imie + "\", nazwisko =\"" + nazwisko + "\" WHERE idPracownika=" + idPracownika + ";";
+        String komenda = "UPDATE 00018732_kw.Pracownicy SET imie=\"" + imie + "\", nazwisko =\"" + nazwisko + "\" WHERE idPracownika=" + idPracownika + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
@@ -1396,9 +1405,9 @@ public class Aplikacja extends JFrame {
         int idPlacowki = -1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
-            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idPlacówki FROM 00018732_kw.Pracownicy WHERE idPracownika=" + idPracownika + ";");
+            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idPlacowki FROM 00018732_kw.Pracownicy WHERE idPracownika=" + idPracownika + ";");
             egzemplarz.next();
-            idPlacowki = egzemplarz.getInt("idPlacówki");
+            idPlacowki = egzemplarz.getInt("idPlacowki");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1410,7 +1419,7 @@ public class Aplikacja extends JFrame {
         int idEgzemplarza = -1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
-            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idEgzemplarza, status FROM 00018732_kw.Zamówienia WHERE idZamówienia=" + idZamowienia + ";");
+            ResultSet egzemplarz = zapytanie.executeQuery("SELECT idEgzemplarza, status FROM 00018732_kw.Zamowienia WHERE idZamowienia=" + idZamowienia + ";");
             egzemplarz.next();
             if (!egzemplarz.getString("status").contains("do sprzedaży")) {
                 JOptionPane.showMessageDialog(null, "Brak zamowienia.");
@@ -1430,7 +1439,7 @@ public class Aplikacja extends JFrame {
     private void usunZamowienie(int idZamowienia) {
         try {
             Statement zapytanie = bazaDanych.createStatement();
-            zapytanie.executeUpdate("UPDATE 00018732_kw.Zamówienia SET status=\"do sprzedaży\" WHERE idZamówienia=" + idZamowienia + ";");
+            zapytanie.executeUpdate("UPDATE 00018732_kw.Zamowienia SET status=\"do sprzedaży\" WHERE idZamowienia=" + idZamowienia + ";");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1475,9 +1484,9 @@ public class Aplikacja extends JFrame {
         int idZamowienia = -1;
         try {
             Statement zapytanie = bazaDanych.createStatement();
-            ResultSet zamowienie = zapytanie.executeQuery("SELECT idZamówienia FROM 00018732_kw.Zamówienia WHERE idEgzemplarza=" + idEgzemplarza + ";");
+            ResultSet zamowienie = zapytanie.executeQuery("SELECT idZamowienia FROM 00018732_kw.Zamowienia WHERE idEgzemplarza=" + idEgzemplarza + ";");
             zamowienie.next();
-            idZamowienia = zamowienie.getInt("idZamówienia");
+            idZamowienia = zamowienie.getInt("idZamowienia");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1488,16 +1497,16 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoOdbioruzBazy() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do odebrania\"" + ";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaWysylajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaOdbierajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do odebrania\"" + ";");
         ) {
 
             while (resultSet.next()) {
-                int idZamówienia = resultSet.getInt("idZamówienia");
+                int idZamowienia = resultSet.getInt("idZamowienia");
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 String nazwa = resultSet.getString("nazwa");
-                int placowkaWysylajaca = resultSet.getInt("placówkaWysyłająca");
+                int placowkaWysylajaca = resultSet.getInt("placowkaWysylajaca");
 
-                ekranZamowien.dodajEgzemlarzDoOdbioru(new Object[]{idZamówienia, idEgzemplarza, nazwa, placowkaWysylajaca});
+                ekranZamowien.dodajEgzemlarzDoOdbioru(new Object[]{idZamowienia, idEgzemplarza, nazwa, placowkaWysylajaca});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -1507,16 +1516,16 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoWyslaniazBazy() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaOdbierajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaWysylajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
         ) {
 
             while (resultSet.next()) {
-                int idZamówienia = resultSet.getInt("idZamówienia");
+                int idZamowienia = resultSet.getInt("idZamowienia");
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 String nazwa = resultSet.getString("nazwa");
-                int placowkaDocelowa = resultSet.getInt("placówkaOdbierająca");
+                int placowkaDocelowa = resultSet.getInt("placowkaOdbierajaca");
 
-                ekranZamowien.dodajEgzemlarzDoWyslania(new Object[]{idZamówienia, idEgzemplarza, nazwa, placowkaDocelowa});
+                ekranZamowien.dodajEgzemlarzDoWyslania(new Object[]{idZamowienia, idEgzemplarza, nazwa, placowkaDocelowa});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -1526,16 +1535,16 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoOdbioruzBazyRzeczoznawca() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaWysyłająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaOdbierająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do odebrania\"" + ";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaWysylajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaOdbierajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do odebrania\"" + ";");
         ) {
 
             while (resultSet.next()) {
-                int idZamówienia = resultSet.getInt("idZamówienia");
+                int idZamowienia = resultSet.getInt("idZamowienia");
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 String nazwa = resultSet.getString("nazwa");
-                int placowkaWysylajaca = resultSet.getInt("placówkaWysyłająca");
+                int placowkaWysylajaca = resultSet.getInt("placowkaWysylajaca");
 
-                ekranZamowienRzeczoznawcy.dodajEgzemlarzDoOdbioru(new Object[]{idZamówienia, idEgzemplarza, nazwa, placowkaWysylajaca});
+                ekranZamowienRzeczoznawcy.dodajEgzemlarzDoOdbioru(new Object[]{idZamowienia, idEgzemplarza, nazwa, placowkaWysylajaca});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -1545,16 +1554,16 @@ public class Aplikacja extends JFrame {
     private void pobierzZamowieniaDoWyslaniazBazyRzeczoznawca() {
         try (
                 Statement zapytanie = bazaDanych.createStatement();
-                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamówienia, z.idEgzemplarza, g.nazwa, z.placówkaOdbierająca FROM 00018732_kw.Zamówienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placówkaWysyłająca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
+                ResultSet resultSet = zapytanie.executeQuery("SELECT z.idZamowienia, z.idEgzemplarza, g.nazwa, z.placowkaOdbierajaca FROM 00018732_kw.Zamowienia z JOIN 00018732_kw.Egzemplarze e ON e.idEgzemplarza=z.idEgzemplarza JOIN 00018732_kw.Gry g ON g.idGry=e.idGry WHERE z.placowkaWysylajaca=" + placowka(zalogowanyPracownik) + " AND z.status=\"do wysłania\"" + ";");
         ) {
 
             while (resultSet.next()) {
-                int idZamówienia = resultSet.getInt("idZamówienia");
+                int idZamowienia = resultSet.getInt("idZamowienia");
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 String nazwa = resultSet.getString("nazwa");
-                int placowkaDocelowa = resultSet.getInt("placówkaOdbierająca");
+                int placowkaDocelowa = resultSet.getInt("placowkaOdbierajaca");
 
-                ekranZamowienRzeczoznawcy.dodajEgzemlarzDoWyslania(new Object[]{idZamówienia, idEgzemplarza, nazwa, placowkaDocelowa});
+                ekranZamowienRzeczoznawcy.dodajEgzemlarzDoWyslania(new Object[]{idZamowienia, idEgzemplarza, nazwa, placowkaDocelowa});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
