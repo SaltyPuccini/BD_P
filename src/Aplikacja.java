@@ -426,15 +426,28 @@ public class Aplikacja extends JFrame {
                 switch (akcja) {
                     case "dodaj":
                         String id = ekranSprzedawcy.getID();
-                        if (Objects.equals(id, "")) {
-                            id = String.valueOf(ekranSprzedawcy.getIDEgzemplarza());
-                            koszyk.add(Integer.valueOf(id));
-                        } else {
-                            zamowienieDoKoszyka(Integer.parseInt(id));
+
+                        System.out.println(zalogowanyPracownik);
+
+                        if(ekranSprzedawcy.getPlacowka() == placowka(zalogowanyPracownik)){
+
+                            if (Objects.equals(id, "")) {
+                                id = String.valueOf(ekranSprzedawcy.getIDEgzemplarza());
+                                koszyk.add(Integer.valueOf(id));
+                            } else {
+                                zamowienieDoKoszyka(Integer.parseInt(id));
+                            }
+                            ekranSprzedawcy.resetID();
+                            ekranSprzedawcy.czyscTabeleEgzemplarze();
+                            sprzedawcaLadujEgzemplarze();
+
+                        }else{
+
+                            JOptionPane.showMessageDialog(null, "Egzemplarz nie znajduje się w tej placówce!");
+
                         }
-                        ekranSprzedawcy.resetID();
-                        ekranSprzedawcy.czyscTabeleEgzemplarze();
-                        sprzedawcaLadujEgzemplarze();
+
+
                         break;
                     case "koszyk":
                         ekranKoszyka.setUsun(false);
