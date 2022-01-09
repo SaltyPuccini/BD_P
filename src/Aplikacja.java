@@ -249,7 +249,6 @@ public class Aplikacja extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     private void inicjaliacja() {
