@@ -1180,7 +1180,7 @@ public class Aplikacja extends JFrame {
             ezgemplarz.next();
             idEgzemplarza = ezgemplarz.getInt("idEgzemplarza");
 
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "dodano egzemplarz");
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "dodano egzemplarz za "+cena+"zl");
         } catch (SQLException e) {
             e.printStackTrace();
         }
