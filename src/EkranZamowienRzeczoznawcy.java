@@ -84,6 +84,11 @@ public class EkranZamowienRzeczoznawcy extends JPanel {
         }
     }
 
+    public int getEgzemplarz(){
+        int index = odbieraneLista.getSelectedRow();
+        return (int) odbieraneLista.getValueAt(index,1);
+    }
+
     public void dodajEgzemlarzDoOdbioru(Object[] object) {
         modelOdebrane.addRow(object);
     }

@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -188,10 +187,12 @@ public class Aplikacja extends JFrame {
                             ex.printStackTrace();
                         }
                         zmienStatus("gotowa do sprzedaży", idEgzemplarza);
-                        if (ekranRzeczoznawcy.listaEgzemplarzy.getModel().getRowCount() == 1)
+                        if (ekranRzeczoznawcy.listaEgzemplarzy.getModel().getRowCount() == 1) {
                             ekranRzeczoznawcy.listaEgzemplarzy.getSelectionModel().clearSelection();
+                        }
                         break;
                 }
+                ekranRzeczoznawcy.czyscTabele();
                 rzeczoznawcaZaladujTabele();
             }
         });
@@ -204,13 +205,14 @@ public class Aplikacja extends JFrame {
                 switch (akcja) {
                     case "odebrano":
                         id = ekranZamowienRzeczoznawcy.getID("odebrane");
-                        zmienSatusZamowienia("\"dostarczone\"", id);
+                        zmienStatusZamowienia("\"dostarczone\"", id);
+                        przeniesEgzemplarz(ekranZamowienRzeczoznawcy.getEgzemplarz());
                         ekranZamowienRzeczoznawcy.czyscTabeleDoOdbioru();
                         pobierzZamowieniaDoOdbioruzBazyRzeczoznawca();
                         break;
                     case "wyslano":
                         id = ekranZamowienRzeczoznawcy.getID("wyslane");
-                        zmienSatusZamowienia("\"do odebrania\"", id);
+                        zmienStatusZamowienia("\"do odebrania\"", id);
                         ekranZamowienRzeczoznawcy.czyscTabeleDoWysylki();
                         pobierzZamowieniaDoWyslaniazBazyRzeczoznawca();
                         break;
@@ -333,7 +335,7 @@ public class Aplikacja extends JFrame {
 
                             for (Integer[] integers : zamowienia) {
                                 if (integers[0] == i) {
-                                    zmienSatusZamowienia("\"sprzedana\"", integers[1]);
+                                    zmienStatusZamowienia("\"sprzedana\"", integers[1]);
                                 }
                             }
                         }
@@ -402,13 +404,14 @@ public class Aplikacja extends JFrame {
                 switch (akcja) {
                     case "odebrano":
                         id = ekranZamowien.getID("odebrane");
-                        zmienSatusZamowienia("\"do sprzedaży\"", id);
+                        zmienStatusZamowienia("\"do sprzedaży\"", id);
+                        przeniesEgzemplarz(ekranZamowien.getEgzemplarz());
                         ekranZamowien.czyscTabeleDoOdbioru();
                         pobierzZamowieniaDoOdbioruzBazy();
                         break;
                     case "wyslano":
                         id = ekranZamowien.getID("wyslane");
-                        zmienSatusZamowienia("\"do odebrania\"", id);
+                        zmienStatusZamowienia("\"do odebrania\"", id);
                         ekranZamowien.czyscTabeleDoWysylki();
                         pobierzZamowieniaDoWyslaniazBazy();
                         break;
@@ -429,25 +432,19 @@ public class Aplikacja extends JFrame {
 
                         System.out.println(zalogowanyPracownik);
 
-                        if(ekranSprzedawcy.getPlacowka() == placowka(zalogowanyPracownik)){
-
-                            if (Objects.equals(id, "")) {
+                        if (Objects.equals(id, "")) {
+                            if (ekranSprzedawcy.getPlacowka() == placowka(zalogowanyPracownik)) {
                                 id = String.valueOf(ekranSprzedawcy.getIDEgzemplarza());
                                 koszyk.add(Integer.valueOf(id));
+                                ekranSprzedawcy.czyscTabeleEgzemplarze();
+                                sprzedawcaLadujEgzemplarze();
                             } else {
-                                zamowienieDoKoszyka(Integer.parseInt(id));
+                                JOptionPane.showMessageDialog(null, "Egzemplarz nie znajduje się w tej placówce!");
                             }
+                        } else {
+                            zamowienieDoKoszyka(Integer.parseInt(id));
                             ekranSprzedawcy.resetID();
-                            ekranSprzedawcy.czyscTabeleEgzemplarze();
-                            sprzedawcaLadujEgzemplarze();
-
-                        }else{
-
-                            JOptionPane.showMessageDialog(null, "Egzemplarz nie znajduje się w tej placówce!");
-
                         }
-
-
                         break;
                     case "koszyk":
                         ekranKoszyka.setUsun(false);
@@ -639,19 +636,19 @@ public class Aplikacja extends JFrame {
                         break;
                     case "dodajPracownika":
 
-                            int idPracownika = dodaniePracownika.getID();
-                            int idPlacowki = dodaniePracownika.getPlacowka();
-                            String imie = dodaniePracownika.getImie();
-                            String nazwisko = dodaniePracownika.getNazwisko();
-                            String stanowisko = dodaniePracownika.getStanowisko();
-                            dodajPracownika(idPracownika, idPlacowki, imie, nazwisko, stanowisko, true);
+                        int idPracownika = dodaniePracownika.getID();
+                        int idPlacowki = dodaniePracownika.getPlacowka();
+                        String imie = dodaniePracownika.getImie();
+                        String nazwisko = dodaniePracownika.getNazwisko();
+                        String stanowisko = dodaniePracownika.getStanowisko();
+                        dodajPracownika(idPracownika, idPlacowki, imie, nazwisko, stanowisko, true);
 
-                            PIN = dodaniePracownika.getPIN();
-                            dodajKodDostepu(idPracownika, PIN);
+                        PIN = dodaniePracownika.getPIN();
+                        dodajKodDostepu(idPracownika, PIN);
 
-                            layout.show(getContentPane(), "przegladPracownikow");
-                            dodaniePracownika.setGuzik(false);
-                            dodaniePracownika.czysc();
+                        layout.show(getContentPane(), "przegladPracownikow");
+                        dodaniePracownika.setGuzik(false);
+                        dodaniePracownika.czysc();
 
                         break;
                     case "wroc":
@@ -1114,10 +1111,10 @@ public class Aplikacja extends JFrame {
 
 
         PIN = Integer.parseInt(zmienPIN.getNowyPIN());
-            if(String.valueOf(PIN).contains(String.valueOf(zmienPIN.getID()))){
-                JOptionPane.showMessageDialog(null, "PIN nie może zawierać w sobie ID pracownika!");
-                return;
-            }
+        if (String.valueOf(PIN).contains(String.valueOf(zmienPIN.getID()))) {
+            JOptionPane.showMessageDialog(null, "PIN nie może zawierać w sobie ID pracownika!");
+            return;
+        }
 
         if (PIN != Integer.parseInt(zmienPIN.getPowtorzPIN())) {
             JOptionPane.showMessageDialog(null, "Nowy PIN musi być zgodny z powtórzonym nowym PINEM!");
@@ -1134,6 +1131,16 @@ public class Aplikacja extends JFrame {
         layout.show(getContentPane(), "ekranLogowania");
     }
 
+
+    private void przeniesEgzemplarz(int idEgzemplarza) {
+        String komenda = "UPDATE 00018732_kw.Egzemplarze SET idPlacowki=" + placowka(zalogowanyPracownik) + " WHERE idEgzemplarza=" + idEgzemplarza+";";
+        try {
+            Statement zapytanie = bazaDanych.createStatement();
+            zapytanie.executeUpdate(komenda);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void dodajGre(String nazwa, int rokWydania, String wydawca, String gatunek, String klasa) {
         StringBuilder komenda = new StringBuilder("INSERT INTO 00018732_kw.Gry (nazwa, rokWydania, wydawca, gatunek, klasa) VALUES (\"");
@@ -1180,7 +1187,7 @@ public class Aplikacja extends JFrame {
             ezgemplarz.next();
             idEgzemplarza = ezgemplarz.getInt("idEgzemplarza");
 
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "dodano egzemplarz za "+cena+"zl");
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "dodano egzemplarz za " + cena + "zl");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1263,13 +1270,13 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zamowiono do placowki "+idPlacowkiOdbierajacej);
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zamowiono do placowki " + idPlacowkiOdbierajacej);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void zmienSatusZamowienia(String status, int idZamowienia) {
+    private void zmienStatusZamowienia(String status, int idZamowienia) {
         String komenda = "UPDATE 00018732_kw.Zamowienia SET status=" + status + " WHERE idZamowienia=" + idZamowienia + ";";
         Statement zapytanie = null;
         try {
@@ -1315,7 +1322,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana ceny na "+cena);
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana ceny na " + cena);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1326,7 +1333,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana statusu na "+status);
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana statusu na " + status);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1337,7 +1344,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana stanu na "+stan);
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana stanu na " + stan);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1445,7 +1452,7 @@ public class Aplikacja extends JFrame {
 
         koszyk.add(idEgzemplarza);
 
-        zmienSatusZamowienia("\"w koszyku\"", idZamowienia);
+        zmienStatusZamowienia("\"w koszyku\"", idZamowienia);
         zamowienia.add(new Integer[]{idEgzemplarza, idZamowienia});
     }
 

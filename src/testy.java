@@ -15,6 +15,8 @@ public class testy {
 
     public static void main(String[] args) {
 
+        Szyfrator szyfrator =new Szyfrator(705);
+        System.out.print(String.valueOf(szyfrator.szyfr()));
 
     }
 
