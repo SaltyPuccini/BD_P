@@ -790,9 +790,9 @@ public class Aplikacja extends JFrame {
             warunki.append("WHERE ");
             int flaga = 0;
             if (akcjaParam != null) {
-                warunki.append("akcja = '");
+                warunki.append("akcja LIKE '");
                 warunki.append(akcjaParam);
-                warunki.append("'");
+                warunki.append("%'");
                 flaga = 1;
             }
             if (dataParam != null) {
@@ -1263,7 +1263,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda.toString());
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zamowiono");
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zamowiono do placowki "+idPlacowkiOdbierajacej);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1315,7 +1315,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana ceny");
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana ceny na "+cena);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1326,7 +1326,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana statusu");
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana statusu na "+status);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1337,7 +1337,7 @@ public class Aplikacja extends JFrame {
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
-            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana stanu");
+            dodajLog(idEgzemplarza, zalogowanyPracownik, "zmiana stanu na "+stan);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1582,6 +1582,5 @@ public class Aplikacja extends JFrame {
             ex.printStackTrace();
         }
     }
-
 
 }
