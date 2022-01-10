@@ -51,11 +51,33 @@ public class Aplikacja extends JFrame {
     private final List<Integer> koszyk = new ArrayList();
     private final List<Integer[]> zamowienia = new ArrayList();
 
+    private void EGZEMPLARZATOR() {
+        try {
+            Statement zapytanie = bazaDanych.createStatement();
+            ResultSet resultSet = zapytanie.executeQuery("SELECT idGry FROM 00018732_kw.Gry WHERE idGry;");
+
+            while (resultSet.next()) {
+                int idGry = resultSet.getInt("idGry");
+                String status = "gotowa do sprzedaży";
+
+                int ilosc=(int) (Math.random() * 25 );
+                for(int i=0;i<ilosc;i++) {
+                    int idPlacowki = (int) (Math.random() * 6 + 1);
+                    int stan = (int) (Math.random() * 3 + 1);
+                    int cena = (int) (Math.random() * 150 + 10);
+                    //dodajEgzemplarz(idGry, idPlacowki, stan, cena, status);
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     public Aplikacja() {
         polaczenie();
         inicjaliacja();
-
 
         ekranLogowania.addActionListener(new ActionListener() {
             @Override
@@ -819,7 +841,7 @@ public class Aplikacja extends JFrame {
                 int idEgzemplarza = resultSet.getInt("idEgzemplarza");
                 int idPracownika = resultSet.getInt("idPracownika");
                 String akcja = resultSet.getString("akcja");
-                String data = resultSet.getDate("data").toString();
+                String data = resultSet.getTimestamp("data").toString();
 
                 dyrektorPrzegladLogow.dodajDaneZBazy(new Object[]{idLogu, idEgzemplarza, idPracownika, akcja, data});
             }
@@ -1132,7 +1154,7 @@ public class Aplikacja extends JFrame {
 
 
     private void przeniesEgzemplarz(int idEgzemplarza) {
-        String komenda = "UPDATE 00018732_kw.Egzemplarze SET idPlacowki=" + placowka(zalogowanyPracownik) + " WHERE idEgzemplarza=" + idEgzemplarza+";";
+        String komenda = "UPDATE 00018732_kw.Egzemplarze SET idPlacowki=" + placowka(zalogowanyPracownik) + " WHERE idEgzemplarza=" + idEgzemplarza + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
@@ -1294,7 +1316,7 @@ public class Aplikacja extends JFrame {
         komenda.append(",\"");
         komenda.append(akcja);
         komenda.append("\",");
-        komenda.append("CURDATE()");
+        komenda.append("CURRENT_TIMESTAMP()");
         komenda.append(");");
 
         try {

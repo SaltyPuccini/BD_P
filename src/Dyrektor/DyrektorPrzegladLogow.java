@@ -52,14 +52,14 @@ public class DyrektorPrzegladLogow extends JPanel {
         uklad.insets = new Insets(10, 10, 10, 10);
 
         tabelaLogow=new JTable(model);
-        tabelaLogow.getColumnModel().getColumn(0).setMinWidth(40);
-        tabelaLogow.getColumnModel().getColumn(0).setMaxWidth(40);
-        tabelaLogow.getColumnModel().getColumn(4).setMinWidth(80);
-        tabelaLogow.getColumnModel().getColumn(4).setMaxWidth(80);
-        tabelaLogow.getColumnModel().getColumn(1).setMinWidth(110);
-        tabelaLogow.getColumnModel().getColumn(1).setMaxWidth(110);
-        tabelaLogow.getColumnModel().getColumn(2).setMinWidth(110);
-        tabelaLogow.getColumnModel().getColumn(2).setMaxWidth(110);
+        tabelaLogow.getColumnModel().getColumn(0).setMinWidth(35);
+        tabelaLogow.getColumnModel().getColumn(0).setMaxWidth(35);
+        tabelaLogow.getColumnModel().getColumn(4).setMinWidth(140);
+        tabelaLogow.getColumnModel().getColumn(4).setMaxWidth(140);
+        tabelaLogow.getColumnModel().getColumn(1).setMinWidth(95);
+        tabelaLogow.getColumnModel().getColumn(1).setMaxWidth(95);
+        tabelaLogow.getColumnModel().getColumn(2).setMinWidth(95);
+        tabelaLogow.getColumnModel().getColumn(2).setMaxWidth(95);
         JScrollPane scrollPane_1 = new JScrollPane(tabelaLogow);
         scrollPane_1.setPreferredSize(new Dimension(600,400));
 
