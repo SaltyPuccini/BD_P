@@ -228,7 +228,7 @@ public class Aplikacja extends JFrame {
                     case "odebrano":
                         id = ekranZamowienRzeczoznawcy.getID("odebrane");
                         zmienStatusZamowienia("\"dostarczone\"", id);
-                        przeniesEgzemplarz(ekranZamowienRzeczoznawcy.getEgzemplarz());
+                        przeniesEgzemplarz(ekranZamowienRzeczoznawcy.getEgzemplarz(),placowka(zalogowanyPracownik));
                         ekranZamowienRzeczoznawcy.czyscTabeleDoOdbioru();
                         pobierzZamowieniaDoOdbioruzBazyRzeczoznawca();
                         break;
@@ -426,7 +426,7 @@ public class Aplikacja extends JFrame {
                     case "odebrano":
                         id = ekranZamowien.getID("odebrane");
                         zmienStatusZamowienia("\"do sprzedaży\"", id);
-                        przeniesEgzemplarz(ekranZamowien.getEgzemplarz());
+                        przeniesEgzemplarz(ekranZamowien.getEgzemplarz(),placowka(zalogowanyPracownik));
                         ekranZamowien.czyscTabeleDoOdbioru();
                         pobierzZamowieniaDoOdbioruzBazy();
                         break;
@@ -1153,8 +1153,8 @@ public class Aplikacja extends JFrame {
     }
 
 
-    private void przeniesEgzemplarz(int idEgzemplarza) {
-        String komenda = "UPDATE 00018732_kw.Egzemplarze SET idPlacowki=" + placowka(zalogowanyPracownik) + " WHERE idEgzemplarza=" + idEgzemplarza + ";";
+    private void przeniesEgzemplarz(int idEgzemplarza, int idPlacowki) {
+        String komenda = "UPDATE 00018732_kw.Egzemplarze SET idPlacowki=" + idPlacowki+ " WHERE idEgzemplarza=" + idEgzemplarza + ";";
         try {
             Statement zapytanie = bazaDanych.createStatement();
             zapytanie.executeUpdate(komenda);
@@ -1390,16 +1390,24 @@ public class Aplikacja extends JFrame {
                 int idPracownika = pracownicy.getInt("idPracownika");
                 zwolnijPracownika(idPracownika);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-
-        String komenda = "UPDATE 00018732_kw.Placowki SET status=false WHERE idPlacowki=" + idPlacowki + ";";
         try {
             zapytanie = bazaDanych.createStatement();
-            zapytanie.executeUpdate(komenda);
+            ResultSet egzemplarze = zapytanie.executeQuery("SELECT idEgzemplarza FROM 00018732_kw.Egzemplarze WHERE idPlacowki = " + idPlacowki + ";");
+            while(egzemplarze.next()){
+                int idEgzemplarza = egzemplarze.getInt("idEgzemplarza");
+                przeniesEgzemplarz(idEgzemplarza, 1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            zapytanie = bazaDanych.createStatement();
+            zapytanie.executeUpdate("UPDATE 00018732_kw.Placowki SET status=false WHERE idPlacowki=" + idPlacowki + ";");
         } catch (SQLException e) {
             e.printStackTrace();
         }
