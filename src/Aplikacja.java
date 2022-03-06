@@ -267,7 +267,7 @@ public class Aplikacja extends JFrame {
 
     private void polaczenie() {
         try {
-            bazaDanych = DriverManager.getConnection("jdbc:mysql://@czaplinek.home.pl:3306", "00018732_kw", "Kajet@nW0j25");
+            bazaDanych = DriverManager.getConnection("baza", "login", "hasło");
         } catch (SQLException e) {
             e.printStackTrace();
         }
